@@ -97,7 +97,7 @@
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Batcher = __webpack_require__(50)
+	var Batcher = __webpack_require__(48)
 	var nextTick = __webpack_require__(56).nextTick
 
 	describe('Batcher', function () {
@@ -196,7 +196,7 @@
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Cache = __webpack_require__(48)
+	var Cache = __webpack_require__(50)
 
 	/**
 	 * Debug function to assert cache state
@@ -441,7 +441,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var Vue = __webpack_require__(51)
-	var filters = __webpack_require__(59)
+	var filters = __webpack_require__(57)
 
 	describe('Filters', function () {
 
@@ -621,7 +621,7 @@
 /* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Observer = __webpack_require__(57)
+	var Observer = __webpack_require__(58)
 	var config = __webpack_require__(53)
 	var Binding = __webpack_require__(49)
 	var _ = __webpack_require__(56)
@@ -831,7 +831,7 @@
 
 	var Vue = __webpack_require__(51)
 	var _ = __webpack_require__(56)
-	var transition = __webpack_require__(58)
+	var transition = __webpack_require__(59)
 
 	if (_.inBrowser && !_.isIE9) {
 	  describe('Transition', function () {
@@ -5034,7 +5034,7 @@
 
 	var _ = __webpack_require__(56)
 	var Vue = __webpack_require__(51)
-	var transition = __webpack_require__(58)
+	var transition = __webpack_require__(59)
 	var def = __webpack_require__(70)
 
 	if (_.inBrowser) {
@@ -5119,7 +5119,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var def = __webpack_require__(73)
+	var def = __webpack_require__(72)
 
 	if (_.inBrowser) {
 	  describe('v-text', function () {
@@ -5156,7 +5156,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var def = __webpack_require__(72)
+	var def = __webpack_require__(73)
 
 	if (_.inBrowser) {
 	  describe('v-transition', function () {
@@ -5943,7 +5943,7 @@
 /* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var expParser = __webpack_require__(64)
+	var expParser = __webpack_require__(63)
 	var _ = __webpack_require__(56)
 
 	var testCases = [
@@ -6199,7 +6199,7 @@
 /* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Path = __webpack_require__(63)
+	var Path = __webpack_require__(64)
 
 	function assertPath (str, expected) {
 	  var path = Path.parse(str)
@@ -6326,7 +6326,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var templateParser = __webpack_require__(66)
+	var templateParser = __webpack_require__(65)
 	var parse = templateParser.parse
 	var testString = '<div>hello</div><p class="test">world</p>'
 
@@ -6450,7 +6450,7 @@
 /* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var textParser = __webpack_require__(65)
+	var textParser = __webpack_require__(66)
 	var config = __webpack_require__(53)
 	var Vue = __webpack_require__(51)
 
@@ -7182,7 +7182,7 @@
 	  })
 
 	  it('already observed instance data merge with default data', function () {
-	    var Observer = __webpack_require__(57)
+	    var Observer = __webpack_require__(58)
 	    var instanceData = { a: 123 }
 	    // observe it
 	    Observer.create(instanceData)
@@ -7220,6 +7220,131 @@
 
 /***/ },
 /* 48 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(56)
+
+	/**
+	 * The Batcher maintains a job queue to be run
+	 * async on the next event loop.
+	 */
+
+	function Batcher () {
+	  this.reset()
+	}
+
+	var p = Batcher.prototype
+
+	/**
+	 * Push a job into the job queue.
+	 * Jobs with duplicate IDs will be skipped unless it's
+	 * pushed when the queue is being flushed.
+	 *
+	 * @param {Object} job
+	 *   properties:
+	 *   - {String|Number} id
+	 *   - {Function}      run
+	 */
+
+	p.push = function (job) {
+	  if (!job.id || !this.has[job.id] || this.flushing) {
+	    this.queue.push(job)
+	    this.has[job.id] = job
+	    if (!this.waiting) {
+	      this.waiting = true
+	      _.nextTick(this.flush, this)
+	    }
+	  }
+	}
+
+	/**
+	 * Flush the queue and run the jobs.
+	 * Will call a preFlush hook if has one.
+	 */
+
+	p.flush = function () {
+	  this.flushing = true
+	  // do not cache length because more jobs might be pushed
+	  // as we run existing jobs
+	  for (var i = 0; i < this.queue.length; i++) {
+	    var job = this.queue[i]
+	    if (!job.cancelled) {
+	      job.run()
+	    }
+	  }
+	  this.reset()
+	}
+
+	/**
+	 * Reset the batcher's state.
+	 */
+
+	p.reset = function () {
+	  this.has = {}
+	  this.queue = []
+	  this.waiting = false
+	  this.flushing = false
+	}
+
+	module.exports = Batcher
+
+/***/ },
+/* 49 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var uid = 0
+
+	/**
+	 * A binding is an observable that can have multiple
+	 * directives subscribing to it.
+	 *
+	 * @constructor
+	 */
+
+	function Binding () {
+	  this.id = ++uid
+	  this.subs = []
+	}
+
+	var p = Binding.prototype
+
+	/**
+	 * Add a directive subscriber.
+	 *
+	 * @param {Directive} sub
+	 */
+
+	p.addSub = function (sub) {
+	  this.subs.push(sub)
+	}
+
+	/**
+	 * Remove a directive subscriber.
+	 *
+	 * @param {Directive} sub
+	 */
+
+	p.removeSub = function (sub) {
+	  if (this.subs.length) {
+	    var i = this.subs.indexOf(sub)
+	    if (i > -1) this.subs.splice(i, 1)
+	  }
+	}
+
+	/**
+	 * Notify all subscribers of a new value.
+	 */
+
+	p.notify = function () {
+	  for (var i = 0, l = this.subs.length; i < l; i++) {
+	    this.subs[i].update()
+	  }
+	}
+
+	module.exports = Binding
+
+/***/ },
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -7336,131 +7461,6 @@
 	module.exports = Cache
 
 /***/ },
-/* 49 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var uid = 0
-
-	/**
-	 * A binding is an observable that can have multiple
-	 * directives subscribing to it.
-	 *
-	 * @constructor
-	 */
-
-	function Binding () {
-	  this.id = ++uid
-	  this.subs = []
-	}
-
-	var p = Binding.prototype
-
-	/**
-	 * Add a directive subscriber.
-	 *
-	 * @param {Directive} sub
-	 */
-
-	p.addSub = function (sub) {
-	  this.subs.push(sub)
-	}
-
-	/**
-	 * Remove a directive subscriber.
-	 *
-	 * @param {Directive} sub
-	 */
-
-	p.removeSub = function (sub) {
-	  if (this.subs.length) {
-	    var i = this.subs.indexOf(sub)
-	    if (i > -1) this.subs.splice(i, 1)
-	  }
-	}
-
-	/**
-	 * Notify all subscribers of a new value.
-	 */
-
-	p.notify = function () {
-	  for (var i = 0, l = this.subs.length; i < l; i++) {
-	    this.subs[i].update()
-	  }
-	}
-
-	module.exports = Binding
-
-/***/ },
-/* 50 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var _ = __webpack_require__(56)
-
-	/**
-	 * The Batcher maintains a job queue to be run
-	 * async on the next event loop.
-	 */
-
-	function Batcher () {
-	  this.reset()
-	}
-
-	var p = Batcher.prototype
-
-	/**
-	 * Push a job into the job queue.
-	 * Jobs with duplicate IDs will be skipped unless it's
-	 * pushed when the queue is being flushed.
-	 *
-	 * @param {Object} job
-	 *   properties:
-	 *   - {String|Number} id
-	 *   - {Function}      run
-	 */
-
-	p.push = function (job) {
-	  if (!job.id || !this.has[job.id] || this.flushing) {
-	    this.queue.push(job)
-	    this.has[job.id] = job
-	    if (!this.waiting) {
-	      this.waiting = true
-	      _.nextTick(this.flush, this)
-	    }
-	  }
-	}
-
-	/**
-	 * Flush the queue and run the jobs.
-	 * Will call a preFlush hook if has one.
-	 */
-
-	p.flush = function () {
-	  this.flushing = true
-	  // do not cache length because more jobs might be pushed
-	  // as we run existing jobs
-	  for (var i = 0; i < this.queue.length; i++) {
-	    var job = this.queue[i]
-	    if (!job.cancelled) {
-	      job.run()
-	    }
-	  }
-	  this.reset()
-	}
-
-	/**
-	 * Reset the batcher's state.
-	 */
-
-	p.reset = function () {
-	  this.has = {}
-	  this.queue = []
-	  this.waiting = false
-	  this.flushing = false
-	}
-
-	module.exports = Batcher
-
-/***/ },
 /* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -7502,7 +7502,7 @@
 
 	Vue.options = {
 	  directives  : __webpack_require__(94),
-	  filters     : __webpack_require__(59),
+	  filters     : __webpack_require__(57),
 	  partials    : {},
 	  transitions : {},
 	  components  : {}
@@ -7556,8 +7556,8 @@
 	var _ = __webpack_require__(56)
 	var config = __webpack_require__(53)
 	var Watcher = __webpack_require__(54)
-	var textParser = __webpack_require__(65)
-	var expParser = __webpack_require__(64)
+	var textParser = __webpack_require__(66)
+	var expParser = __webpack_require__(63)
 
 	/**
 	 * A directive links a DOM element with a piece of data,
@@ -7846,9 +7846,9 @@
 
 	var _ = __webpack_require__(56)
 	var config = __webpack_require__(53)
-	var Observer = __webpack_require__(57)
-	var expParser = __webpack_require__(64)
-	var Batcher = __webpack_require__(50)
+	var Observer = __webpack_require__(58)
+	var expParser = __webpack_require__(63)
+	var Batcher = __webpack_require__(48)
 
 	var batcher = new Batcher()
 	var uid = 0
@@ -8312,11 +8312,137 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
+
+	/**
+	 * Stringify value.
+	 *
+	 * @param {Number} indent
+	 */
+
+	exports.json = function (value, indent) {
+	  return JSON.stringify(value, null, Number(indent) || 2)
+	}
+
+	/**
+	 * 'abc' => 'Abc'
+	 */
+
+	exports.capitalize = function (value) {
+	  if (!value && value !== 0) return ''
+	  value = value.toString()
+	  return value.charAt(0).toUpperCase() + value.slice(1)
+	}
+
+	/**
+	 * 'abc' => 'ABC'
+	 */
+
+	exports.uppercase = function (value) {
+	  return (value || value === 0)
+	    ? value.toString().toUpperCase()
+	    : ''
+	}
+
+	/**
+	 * 'AbC' => 'abc'
+	 */
+
+	exports.lowercase = function (value) {
+	  return (value || value === 0)
+	    ? value.toString().toLowerCase()
+	    : ''
+	}
+
+	/**
+	 * 12345 => $12,345.00
+	 *
+	 * @param {String} sign
+	 */
+
+	var digitsRE = /(\d{3})(?=\d)/g
+
+	exports.currency = function (value, sign) {
+	  value = parseFloat(value)
+	  if (!value && value !== 0) return ''
+	  sign = sign || '$'
+	  var s = Math.floor(Math.abs(value)).toString(),
+	    i = s.length % 3,
+	    h = i > 0
+	      ? (s.slice(0, i) + (s.length > 3 ? ',' : ''))
+	      : '',
+	    f = '.' + value.toFixed(2).slice(-2)
+	  return (value < 0 ? '-' : '') +
+	    sign + h + s.slice(i).replace(digitsRE, '$1,') + f
+	}
+
+	/**
+	 * 'item' => 'items'
+	 *
+	 * @params
+	 *  an array of strings corresponding to
+	 *  the single, double, triple ... forms of the word to
+	 *  be pluralized. When the number to be pluralized
+	 *  exceeds the length of the args, it will use the last
+	 *  entry in the array.
+	 *
+	 *  e.g. ['single', 'double', 'triple', 'multiple']
+	 */
+
+	exports.pluralize = function (value) {
+	  var args = _.toArray(arguments, 1)
+	  return args.length > 1
+	    ? (args[value % 10 - 1] || args[args.length - 1])
+	    : (args[0] + (value === 1 ? '' : 's'))
+	}
+
+	/**
+	 * A special filter that takes a handler function,
+	 * wraps it so it only gets triggered on specific
+	 * keypresses. v-on only.
+	 *
+	 * @param {String} key
+	 */
+
+	var keyCodes = {
+	  enter    : 13,
+	  tab      : 9,
+	  'delete' : 46,
+	  up       : 38,
+	  left     : 37,
+	  right    : 39,
+	  down     : 40,
+	  esc      : 27
+	}
+
+	exports.key = function (handler, key) {
+	  if (!handler) return
+	  var code = keyCodes[key]
+	  if (!code) {
+	    code = parseInt(key, 10)
+	  }
+	  return function (e) {
+	    if (e.keyCode === code) {
+	      return handler.call(this, e)
+	    }
+	  }
+	}
+
+	/**
+	 * Install special array filters
+	 */
+
+	_.extend(exports, __webpack_require__(83))
+
+/***/ },
+/* 58 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(56)
 	var config = __webpack_require__(53)
 	var Binding = __webpack_require__(49)
-	var arrayMethods = __webpack_require__(83)
+	var arrayMethods = __webpack_require__(84)
 	var arrayKeys = Object.getOwnPropertyNames(arrayMethods)
-	__webpack_require__(84)
+	__webpack_require__(85)
 
 	var uid = 0
 
@@ -8549,12 +8675,12 @@
 
 
 /***/ },
-/* 58 */
+/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var applyCSSTransition = __webpack_require__(85)
-	var applyJSTransition = __webpack_require__(86)
+	var applyCSSTransition = __webpack_require__(86)
+	var applyJSTransition = __webpack_require__(87)
 
 	/**
 	 * Append with transition.
@@ -8705,140 +8831,14 @@
 	}
 
 /***/ },
-/* 59 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var _ = __webpack_require__(56)
-
-	/**
-	 * Stringify value.
-	 *
-	 * @param {Number} indent
-	 */
-
-	exports.json = function (value, indent) {
-	  return JSON.stringify(value, null, Number(indent) || 2)
-	}
-
-	/**
-	 * 'abc' => 'Abc'
-	 */
-
-	exports.capitalize = function (value) {
-	  if (!value && value !== 0) return ''
-	  value = value.toString()
-	  return value.charAt(0).toUpperCase() + value.slice(1)
-	}
-
-	/**
-	 * 'abc' => 'ABC'
-	 */
-
-	exports.uppercase = function (value) {
-	  return (value || value === 0)
-	    ? value.toString().toUpperCase()
-	    : ''
-	}
-
-	/**
-	 * 'AbC' => 'abc'
-	 */
-
-	exports.lowercase = function (value) {
-	  return (value || value === 0)
-	    ? value.toString().toLowerCase()
-	    : ''
-	}
-
-	/**
-	 * 12345 => $12,345.00
-	 *
-	 * @param {String} sign
-	 */
-
-	var digitsRE = /(\d{3})(?=\d)/g
-
-	exports.currency = function (value, sign) {
-	  value = parseFloat(value)
-	  if (!value && value !== 0) return ''
-	  sign = sign || '$'
-	  var s = Math.floor(Math.abs(value)).toString(),
-	    i = s.length % 3,
-	    h = i > 0
-	      ? (s.slice(0, i) + (s.length > 3 ? ',' : ''))
-	      : '',
-	    f = '.' + value.toFixed(2).slice(-2)
-	  return (value < 0 ? '-' : '') +
-	    sign + h + s.slice(i).replace(digitsRE, '$1,') + f
-	}
-
-	/**
-	 * 'item' => 'items'
-	 *
-	 * @params
-	 *  an array of strings corresponding to
-	 *  the single, double, triple ... forms of the word to
-	 *  be pluralized. When the number to be pluralized
-	 *  exceeds the length of the args, it will use the last
-	 *  entry in the array.
-	 *
-	 *  e.g. ['single', 'double', 'triple', 'multiple']
-	 */
-
-	exports.pluralize = function (value) {
-	  var args = _.toArray(arguments, 1)
-	  return args.length > 1
-	    ? (args[value % 10 - 1] || args[args.length - 1])
-	    : (args[0] + (value === 1 ? '' : 's'))
-	}
-
-	/**
-	 * A special filter that takes a handler function,
-	 * wraps it so it only gets triggered on specific
-	 * keypresses. v-on only.
-	 *
-	 * @param {String} key
-	 */
-
-	var keyCodes = {
-	  enter    : 13,
-	  tab      : 9,
-	  'delete' : 46,
-	  up       : 38,
-	  left     : 37,
-	  right    : 39,
-	  down     : 40,
-	  esc      : 27
-	}
-
-	exports.key = function (handler, key) {
-	  if (!handler) return
-	  var code = keyCodes[key]
-	  if (!code) {
-	    code = parseInt(key, 10)
-	  }
-	  return function (e) {
-	    if (e.keyCode === code) {
-	      return handler.call(this, e)
-	    }
-	  }
-	}
-
-	/**
-	 * Install special array filters
-	 */
-
-	_.extend(exports, __webpack_require__(87))
-
-/***/ },
 /* 60 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
 	var config = __webpack_require__(53)
-	var textParser = __webpack_require__(65)
+	var textParser = __webpack_require__(66)
 	var dirParser = __webpack_require__(62)
-	var templateParser = __webpack_require__(66)
+	var templateParser = __webpack_require__(65)
 
 	/**
 	 * Compile a template and return a reusable composite link
@@ -9377,7 +9377,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var templateParser = __webpack_require__(66)
+	var templateParser = __webpack_require__(65)
 
 	/**
 	 * Process an element or a DocumentFragment based on a
@@ -9545,7 +9545,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Cache = __webpack_require__(48)
+	var Cache = __webpack_require__(50)
 	var cache = new Cache(1000)
 	var argRE = /^[^\{\?]+$|^'[^']*'$|^"[^"]*"$/
 	var filterTokenRE = /[^\s'"]+|'[^']+'|"[^"]+"/g
@@ -9709,7 +9709,238 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Cache = __webpack_require__(48)
+	var Path = __webpack_require__(64)
+	var Cache = __webpack_require__(50)
+	var expressionCache = new Cache(1000)
+
+	var keywords =
+	  'Math,break,case,catch,continue,debugger,default,' +
+	  'delete,do,else,false,finally,for,function,if,in,' +
+	  'instanceof,new,null,return,switch,this,throw,true,try,' +
+	  'typeof,var,void,while,with,undefined,abstract,boolean,' +
+	  'byte,char,class,const,double,enum,export,extends,' +
+	  'final,float,goto,implements,import,int,interface,long,' +
+	  'native,package,private,protected,public,short,static,' +
+	  'super,synchronized,throws,transient,volatile,' +
+	  'arguments,let,yield'
+
+	var wsRE = /\s/g
+	var newlineRE = /\n/g
+	var saveRE = /[\{,]\s*[\w\$_]+\s*:|'[^']*'|"[^"]*"/g
+	var restoreRE = /"(\d+)"/g
+	var pathTestRE = /^[A-Za-z_$][\w$]*(\.[A-Za-z_$][\w$]*|\['.*?'\]|\[".*?"\])*$/
+	var pathReplaceRE = /[^\w$\.]([A-Za-z_$][\w$]*(\.[A-Za-z_$][\w$]*|\['.*?'\]|\[".*?"\])*)/g
+	var keywordsRE = new RegExp('^(' + keywords.replace(/,/g, '\\b|') + '\\b)')
+
+	/**
+	 * Save / Rewrite / Restore
+	 *
+	 * When rewriting paths found in an expression, it is
+	 * possible for the same letter sequences to be found in
+	 * strings and Object literal property keys. Therefore we
+	 * remove and store these parts in a temporary array, and
+	 * restore them after the path rewrite.
+	 */
+
+	var saved = []
+
+	/**
+	 * Save replacer
+	 *
+	 * @param {String} str
+	 * @return {String} - placeholder with index
+	 */
+
+	function save (str) {
+	  var i = saved.length
+	  saved[i] = str.replace(newlineRE, '\\n')
+	  return '"' + i + '"'
+	}
+
+	/**
+	 * Path rewrite replacer
+	 *
+	 * @param {String} raw
+	 * @return {String}
+	 */
+
+	function rewrite (raw) {
+	  var c = raw.charAt(0)
+	  var path = raw.slice(1)
+	  if (keywordsRE.test(path)) {
+	    return raw
+	  } else {
+	    path = path.indexOf('"') > -1
+	      ? path.replace(restoreRE, restore)
+	      : path
+	    return c + 'scope.' + path
+	  }
+	}
+
+	/**
+	 * Restore replacer
+	 *
+	 * @param {String} str
+	 * @param {String} i - matched save index
+	 * @return {String}
+	 */
+
+	function restore (str, i) {
+	  return saved[i]
+	}
+
+	/**
+	 * Rewrite an expression, prefixing all path accessors with
+	 * `scope.` and generate getter/setter functions.
+	 *
+	 * @param {String} exp
+	 * @param {Boolean} needSet
+	 * @return {Function}
+	 */
+
+	function compileExpFns (exp, needSet) {
+	  // reset state
+	  saved.length = 0
+	  // save strings and object literal keys
+	  var body = exp
+	    .replace(saveRE, save)
+	    .replace(wsRE, '')
+	  // rewrite all paths
+	  // pad 1 space here becaue the regex matches 1 extra char
+	  body = (' ' + body)
+	    .replace(pathReplaceRE, rewrite)
+	    .replace(restoreRE, restore)
+	  var getter = makeGetter(body)
+	  if (getter) {
+	    return {
+	      get: getter,
+	      body: body,
+	      set: needSet
+	        ? makeSetter(body)
+	        : null
+	    }
+	  }
+	}
+
+	/**
+	 * Compile getter setters for a simple path.
+	 *
+	 * @param {String} exp
+	 * @return {Function}
+	 */
+
+	function compilePathFns (exp) {
+	  var getter, path
+	  if (exp.indexOf('[') < 0) {
+	    // really simple path
+	    path = exp.split('.')
+	    getter = Path.compileGetter(path)
+	  } else {
+	    // do the real parsing
+	    path = Path.parse(exp)
+	    getter = path.get
+	  }
+	  return {
+	    get: getter,
+	    // always generate setter for simple paths
+	    set: function (obj, val) {
+	      Path.set(obj, path, val)
+	    }
+	  }
+	}
+
+	/**
+	 * Build a getter function. Requires eval.
+	 *
+	 * We isolate the try/catch so it doesn't affect the
+	 * optimization of the parse function when it is not called.
+	 *
+	 * @param {String} body
+	 * @return {Function|undefined}
+	 */
+
+	function makeGetter (body) {
+	  try {
+	    return new Function('scope', 'return ' + body + ';')
+	  } catch (e) {
+	    _.warn(
+	      'Invalid expression. ' + 
+	      'Generated function body: ' + body
+	    )
+	  }
+	}
+
+	/**
+	 * Build a setter function.
+	 *
+	 * This is only needed in rare situations like "a[b]" where
+	 * a settable path requires dynamic evaluation.
+	 *
+	 * This setter function may throw error when called if the
+	 * expression body is not a valid left-hand expression in
+	 * assignment.
+	 *
+	 * @param {String} body
+	 * @return {Function|undefined}
+	 */
+
+	function makeSetter (body) {
+	  try {
+	    return new Function('scope', 'value', body + '=value;')
+	  } catch (e) {
+	    _.warn('Invalid setter function body: ' + body)
+	  }
+	}
+
+	/**
+	 * Check for setter existence on a cache hit.
+	 *
+	 * @param {Function} hit
+	 */
+
+	function checkSetter (hit) {
+	  if (!hit.set) {
+	    hit.set = makeSetter(hit.body)
+	  }
+	}
+
+	/**
+	 * Parse an expression into re-written getter/setters.
+	 *
+	 * @param {String} exp
+	 * @param {Boolean} needSet
+	 * @return {Function}
+	 */
+
+	exports.parse = function (exp, needSet) {
+	  exp = exp.trim()
+	  // try cache
+	  var hit = expressionCache.get(exp)
+	  if (hit) {
+	    if (needSet) {
+	      checkSetter(hit)
+	    }
+	    return hit
+	  }
+	  // we do a simple path check to optimize for them.
+	  // the check fails valid paths with unusal whitespaces,
+	  // but that's too rare and we don't care.
+	  var res = pathTestRE.test(exp)
+	    ? compilePathFns(exp)
+	    : compileExpFns(exp, needSet)
+	  expressionCache.put(exp, res)
+	  return res
+	}
+
+	// Export the pathRegex for external use
+	exports.pathTestRE = pathTestRE
+
+/***/ },
+/* 64 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(56)
+	var Cache = __webpack_require__(50)
 	var pathCache = new Cache(1000)
 	var identRE = /^[$_a-zA-Z]+[\w$]*$/
 
@@ -10010,425 +10241,11 @@
 	}
 
 /***/ },
-/* 64 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var _ = __webpack_require__(56)
-	var Path = __webpack_require__(63)
-	var Cache = __webpack_require__(48)
-	var expressionCache = new Cache(1000)
-
-	var keywords =
-	  'Math,break,case,catch,continue,debugger,default,' +
-	  'delete,do,else,false,finally,for,function,if,in,' +
-	  'instanceof,new,null,return,switch,this,throw,true,try,' +
-	  'typeof,var,void,while,with,undefined,abstract,boolean,' +
-	  'byte,char,class,const,double,enum,export,extends,' +
-	  'final,float,goto,implements,import,int,interface,long,' +
-	  'native,package,private,protected,public,short,static,' +
-	  'super,synchronized,throws,transient,volatile,' +
-	  'arguments,let,yield'
-
-	var wsRE = /\s/g
-	var newlineRE = /\n/g
-	var saveRE = /[\{,]\s*[\w\$_]+\s*:|'[^']*'|"[^"]*"/g
-	var restoreRE = /"(\d+)"/g
-	var pathTestRE = /^[A-Za-z_$][\w$]*(\.[A-Za-z_$][\w$]*|\['.*?'\]|\[".*?"\])*$/
-	var pathReplaceRE = /[^\w$\.]([A-Za-z_$][\w$]*(\.[A-Za-z_$][\w$]*|\['.*?'\]|\[".*?"\])*)/g
-	var keywordsRE = new RegExp('^(' + keywords.replace(/,/g, '\\b|') + '\\b)')
-
-	/**
-	 * Save / Rewrite / Restore
-	 *
-	 * When rewriting paths found in an expression, it is
-	 * possible for the same letter sequences to be found in
-	 * strings and Object literal property keys. Therefore we
-	 * remove and store these parts in a temporary array, and
-	 * restore them after the path rewrite.
-	 */
-
-	var saved = []
-
-	/**
-	 * Save replacer
-	 *
-	 * @param {String} str
-	 * @return {String} - placeholder with index
-	 */
-
-	function save (str) {
-	  var i = saved.length
-	  saved[i] = str.replace(newlineRE, '\\n')
-	  return '"' + i + '"'
-	}
-
-	/**
-	 * Path rewrite replacer
-	 *
-	 * @param {String} raw
-	 * @return {String}
-	 */
-
-	function rewrite (raw) {
-	  var c = raw.charAt(0)
-	  var path = raw.slice(1)
-	  if (keywordsRE.test(path)) {
-	    return raw
-	  } else {
-	    path = path.indexOf('"') > -1
-	      ? path.replace(restoreRE, restore)
-	      : path
-	    return c + 'scope.' + path
-	  }
-	}
-
-	/**
-	 * Restore replacer
-	 *
-	 * @param {String} str
-	 * @param {String} i - matched save index
-	 * @return {String}
-	 */
-
-	function restore (str, i) {
-	  return saved[i]
-	}
-
-	/**
-	 * Rewrite an expression, prefixing all path accessors with
-	 * `scope.` and generate getter/setter functions.
-	 *
-	 * @param {String} exp
-	 * @param {Boolean} needSet
-	 * @return {Function}
-	 */
-
-	function compileExpFns (exp, needSet) {
-	  // reset state
-	  saved.length = 0
-	  // save strings and object literal keys
-	  var body = exp
-	    .replace(saveRE, save)
-	    .replace(wsRE, '')
-	  // rewrite all paths
-	  // pad 1 space here becaue the regex matches 1 extra char
-	  body = (' ' + body)
-	    .replace(pathReplaceRE, rewrite)
-	    .replace(restoreRE, restore)
-	  var getter = makeGetter(body)
-	  if (getter) {
-	    return {
-	      get: getter,
-	      body: body,
-	      set: needSet
-	        ? makeSetter(body)
-	        : null
-	    }
-	  }
-	}
-
-	/**
-	 * Compile getter setters for a simple path.
-	 *
-	 * @param {String} exp
-	 * @return {Function}
-	 */
-
-	function compilePathFns (exp) {
-	  var getter, path
-	  if (exp.indexOf('[') < 0) {
-	    // really simple path
-	    path = exp.split('.')
-	    getter = Path.compileGetter(path)
-	  } else {
-	    // do the real parsing
-	    path = Path.parse(exp)
-	    getter = path.get
-	  }
-	  return {
-	    get: getter,
-	    // always generate setter for simple paths
-	    set: function (obj, val) {
-	      Path.set(obj, path, val)
-	    }
-	  }
-	}
-
-	/**
-	 * Build a getter function. Requires eval.
-	 *
-	 * We isolate the try/catch so it doesn't affect the
-	 * optimization of the parse function when it is not called.
-	 *
-	 * @param {String} body
-	 * @return {Function|undefined}
-	 */
-
-	function makeGetter (body) {
-	  try {
-	    return new Function('scope', 'return ' + body + ';')
-	  } catch (e) {
-	    _.warn(
-	      'Invalid expression. ' + 
-	      'Generated function body: ' + body
-	    )
-	  }
-	}
-
-	/**
-	 * Build a setter function.
-	 *
-	 * This is only needed in rare situations like "a[b]" where
-	 * a settable path requires dynamic evaluation.
-	 *
-	 * This setter function may throw error when called if the
-	 * expression body is not a valid left-hand expression in
-	 * assignment.
-	 *
-	 * @param {String} body
-	 * @return {Function|undefined}
-	 */
-
-	function makeSetter (body) {
-	  try {
-	    return new Function('scope', 'value', body + '=value;')
-	  } catch (e) {
-	    _.warn('Invalid setter function body: ' + body)
-	  }
-	}
-
-	/**
-	 * Check for setter existence on a cache hit.
-	 *
-	 * @param {Function} hit
-	 */
-
-	function checkSetter (hit) {
-	  if (!hit.set) {
-	    hit.set = makeSetter(hit.body)
-	  }
-	}
-
-	/**
-	 * Parse an expression into re-written getter/setters.
-	 *
-	 * @param {String} exp
-	 * @param {Boolean} needSet
-	 * @return {Function}
-	 */
-
-	exports.parse = function (exp, needSet) {
-	  exp = exp.trim()
-	  // try cache
-	  var hit = expressionCache.get(exp)
-	  if (hit) {
-	    if (needSet) {
-	      checkSetter(hit)
-	    }
-	    return hit
-	  }
-	  // we do a simple path check to optimize for them.
-	  // the check fails valid paths with unusal whitespaces,
-	  // but that's too rare and we don't care.
-	  var res = pathTestRE.test(exp)
-	    ? compilePathFns(exp)
-	    : compileExpFns(exp, needSet)
-	  expressionCache.put(exp, res)
-	  return res
-	}
-
-	// Export the pathRegex for external use
-	exports.pathTestRE = pathTestRE
-
-/***/ },
 /* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Cache = __webpack_require__(48)
-	var config = __webpack_require__(53)
-	var dirParser = __webpack_require__(62)
-	var regexEscapeRE = /[-.*+?^${}()|[\]\/\\]/g
-	var cache, tagRE, htmlRE, firstChar, lastChar
-
-	/**
-	 * Escape a string so it can be used in a RegExp
-	 * constructor.
-	 *
-	 * @param {String} str
-	 */
-
-	function escapeRegex (str) {
-	  return str.replace(regexEscapeRE, '\\$&')
-	}
-
-	/**
-	 * Compile the interpolation tag regex.
-	 *
-	 * @return {RegExp}
-	 */
-
-	function compileRegex () {
-	  config._delimitersChanged = false
-	  var open = config.delimiters[0]
-	  var close = config.delimiters[1]
-	  firstChar = open.charAt(0)
-	  lastChar = close.charAt(close.length - 1)
-	  var firstCharRE = escapeRegex(firstChar)
-	  var lastCharRE = escapeRegex(lastChar)
-	  var openRE = escapeRegex(open)
-	  var closeRE = escapeRegex(close)
-	  tagRE = new RegExp(
-	    firstCharRE + '?' + openRE +
-	    '(.+?)' +
-	    closeRE + lastCharRE + '?',
-	    'g'
-	  )
-	  htmlRE = new RegExp(
-	    '^' + firstCharRE + openRE +
-	    '.*' +
-	    closeRE + lastCharRE + '$'
-	  )
-	  // reset cache
-	  cache = new Cache(1000)
-	}
-
-	/**
-	 * Parse a template text string into an array of tokens.
-	 *
-	 * @param {String} text
-	 * @return {Array<Object> | null}
-	 *               - {String} type
-	 *               - {String} value
-	 *               - {Boolean} [html]
-	 *               - {Boolean} [oneTime]
-	 */
-
-	exports.parse = function (text) {
-	  if (config._delimitersChanged) {
-	    compileRegex()
-	  }
-	  var hit = cache.get(text)
-	  if (hit) {
-	    return hit
-	  }
-	  if (!tagRE.test(text)) {
-	    return null
-	  }
-	  var tokens = []
-	  var lastIndex = tagRE.lastIndex = 0
-	  var match, index, value, first, oneTime, partial
-	  /* jshint boss:true */
-	  while (match = tagRE.exec(text)) {
-	    index = match.index
-	    // push text token
-	    if (index > lastIndex) {
-	      tokens.push({
-	        value: text.slice(lastIndex, index)
-	      })
-	    }
-	    // tag token
-	    first = match[1].charCodeAt(0)
-	    oneTime = first === 0x2A // *
-	    partial = first === 0x3E // >
-	    value = (oneTime || partial)
-	      ? match[1].slice(1)
-	      : match[1]
-	    tokens.push({
-	      tag: true,
-	      value: value.trim(),
-	      html: htmlRE.test(match[0]),
-	      oneTime: oneTime,
-	      partial: partial
-	    })
-	    lastIndex = index + match[0].length
-	  }
-	  if (lastIndex < text.length) {
-	    tokens.push({
-	      value: text.slice(lastIndex)
-	    })
-	  }
-	  cache.put(text, tokens)
-	  return tokens
-	}
-
-	/**
-	 * Format a list of tokens into an expression.
-	 * e.g. tokens parsed from 'a {{b}} c' can be serialized
-	 * into one single expression as '"a " + b + " c"'.
-	 *
-	 * @param {Array} tokens
-	 * @param {Vue} [vm]
-	 * @return {String}
-	 */
-
-	exports.tokensToExp = function (tokens, vm) {
-	  return tokens.length > 1
-	    ? tokens.map(function (token) {
-	        return formatToken(token, vm)
-	      }).join('+')
-	    : formatToken(tokens[0], vm, true)
-	}
-
-	/**
-	 * Format a single token.
-	 *
-	 * @param {Object} token
-	 * @param {Vue} [vm]
-	 * @param {Boolean} single
-	 * @return {String}
-	 */
-
-	function formatToken (token, vm, single) {
-	  return token.tag
-	    ? vm && token.oneTime
-	      ? '"' + vm.$eval(token.value) + '"'
-	      : single
-	        ? token.value
-	        : inlineFilters(token.value)
-	    : '"' + token.value + '"'
-	}
-
-	/**
-	 * For an attribute with multiple interpolation tags,
-	 * e.g. attr="some-{{thing | filter}}", in order to combine
-	 * the whole thing into a single watchable expression, we
-	 * have to inline those filters. This function does exactly
-	 * that. This is a bit hacky but it avoids heavy changes
-	 * to directive parser and watcher mechanism.
-	 *
-	 * @param {String} exp
-	 * @return {String}
-	 */
-
-	var filterRE = /[^|]\|[^|]/
-	function inlineFilters (exp) {
-	  if (!filterRE.test(exp)) {
-	    return '(' + exp + ')'
-	  } else {
-	    var dir = dirParser.parse(exp)[0]
-	    if (!dir.filters) {
-	      return '(' + exp + ')'
-	    } else {
-	      exp = dir.expression
-	      for (var i = 0, l = dir.filters.length; i < l; i++) {
-	        var filter = dir.filters[i]
-	        var args = filter.args
-	          ? ',"' + filter.args.join('","') + '"'
-	          : ''
-	        exp = 'this.$options.filters["' + filter.name + '"]' +
-	          '.apply(this,[' + exp + args + '])'
-	      }
-	      return exp
-	    }
-	  }
-	}
-
-/***/ },
-/* 66 */
-/***/ function(module, exports, __webpack_require__) {
-
 	var _ = __webpack_require__(56)
-	var Cache = __webpack_require__(48)
+	var Cache = __webpack_require__(50)
 	var templateCache = new Cache(100)
 
 	/**
@@ -10651,6 +10468,189 @@
 	}
 
 /***/ },
+/* 66 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Cache = __webpack_require__(50)
+	var config = __webpack_require__(53)
+	var dirParser = __webpack_require__(62)
+	var regexEscapeRE = /[-.*+?^${}()|[\]\/\\]/g
+	var cache, tagRE, htmlRE, firstChar, lastChar
+
+	/**
+	 * Escape a string so it can be used in a RegExp
+	 * constructor.
+	 *
+	 * @param {String} str
+	 */
+
+	function escapeRegex (str) {
+	  return str.replace(regexEscapeRE, '\\$&')
+	}
+
+	/**
+	 * Compile the interpolation tag regex.
+	 *
+	 * @return {RegExp}
+	 */
+
+	function compileRegex () {
+	  config._delimitersChanged = false
+	  var open = config.delimiters[0]
+	  var close = config.delimiters[1]
+	  firstChar = open.charAt(0)
+	  lastChar = close.charAt(close.length - 1)
+	  var firstCharRE = escapeRegex(firstChar)
+	  var lastCharRE = escapeRegex(lastChar)
+	  var openRE = escapeRegex(open)
+	  var closeRE = escapeRegex(close)
+	  tagRE = new RegExp(
+	    firstCharRE + '?' + openRE +
+	    '(.+?)' +
+	    closeRE + lastCharRE + '?',
+	    'g'
+	  )
+	  htmlRE = new RegExp(
+	    '^' + firstCharRE + openRE +
+	    '.*' +
+	    closeRE + lastCharRE + '$'
+	  )
+	  // reset cache
+	  cache = new Cache(1000)
+	}
+
+	/**
+	 * Parse a template text string into an array of tokens.
+	 *
+	 * @param {String} text
+	 * @return {Array<Object> | null}
+	 *               - {String} type
+	 *               - {String} value
+	 *               - {Boolean} [html]
+	 *               - {Boolean} [oneTime]
+	 */
+
+	exports.parse = function (text) {
+	  if (config._delimitersChanged) {
+	    compileRegex()
+	  }
+	  var hit = cache.get(text)
+	  if (hit) {
+	    return hit
+	  }
+	  if (!tagRE.test(text)) {
+	    return null
+	  }
+	  var tokens = []
+	  var lastIndex = tagRE.lastIndex = 0
+	  var match, index, value, first, oneTime, partial
+	  /* jshint boss:true */
+	  while (match = tagRE.exec(text)) {
+	    index = match.index
+	    // push text token
+	    if (index > lastIndex) {
+	      tokens.push({
+	        value: text.slice(lastIndex, index)
+	      })
+	    }
+	    // tag token
+	    first = match[1].charCodeAt(0)
+	    oneTime = first === 0x2A // *
+	    partial = first === 0x3E // >
+	    value = (oneTime || partial)
+	      ? match[1].slice(1)
+	      : match[1]
+	    tokens.push({
+	      tag: true,
+	      value: value.trim(),
+	      html: htmlRE.test(match[0]),
+	      oneTime: oneTime,
+	      partial: partial
+	    })
+	    lastIndex = index + match[0].length
+	  }
+	  if (lastIndex < text.length) {
+	    tokens.push({
+	      value: text.slice(lastIndex)
+	    })
+	  }
+	  cache.put(text, tokens)
+	  return tokens
+	}
+
+	/**
+	 * Format a list of tokens into an expression.
+	 * e.g. tokens parsed from 'a {{b}} c' can be serialized
+	 * into one single expression as '"a " + b + " c"'.
+	 *
+	 * @param {Array} tokens
+	 * @param {Vue} [vm]
+	 * @return {String}
+	 */
+
+	exports.tokensToExp = function (tokens, vm) {
+	  return tokens.length > 1
+	    ? tokens.map(function (token) {
+	        return formatToken(token, vm)
+	      }).join('+')
+	    : formatToken(tokens[0], vm, true)
+	}
+
+	/**
+	 * Format a single token.
+	 *
+	 * @param {Object} token
+	 * @param {Vue} [vm]
+	 * @param {Boolean} single
+	 * @return {String}
+	 */
+
+	function formatToken (token, vm, single) {
+	  return token.tag
+	    ? vm && token.oneTime
+	      ? '"' + vm.$eval(token.value) + '"'
+	      : single
+	        ? token.value
+	        : inlineFilters(token.value)
+	    : '"' + token.value + '"'
+	}
+
+	/**
+	 * For an attribute with multiple interpolation tags,
+	 * e.g. attr="some-{{thing | filter}}", in order to combine
+	 * the whole thing into a single watchable expression, we
+	 * have to inline those filters. This function does exactly
+	 * that. This is a bit hacky but it avoids heavy changes
+	 * to directive parser and watcher mechanism.
+	 *
+	 * @param {String} exp
+	 * @return {String}
+	 */
+
+	var filterRE = /[^|]\|[^|]/
+	function inlineFilters (exp) {
+	  if (!filterRE.test(exp)) {
+	    return '(' + exp + ')'
+	  } else {
+	    var dir = dirParser.parse(exp)[0]
+	    if (!dir.filters) {
+	      return '(' + exp + ')'
+	    } else {
+	      exp = dir.expression
+	      for (var i = 0, l = dir.filters.length; i < l; i++) {
+	        var filter = dir.filters[i]
+	        var args = filter.args
+	          ? ',"' + filter.args.join('","') + '"'
+	          : ''
+	        exp = 'this.$options.filters["' + filter.name + '"]' +
+	          '.apply(this,[' + exp + args + '])'
+	      }
+	      return exp
+	    }
+	  }
+	}
+
+/***/ },
 /* 67 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -10715,7 +10715,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var templateParser = __webpack_require__(66)
+	var templateParser = __webpack_require__(65)
 
 	module.exports = {
 
@@ -10756,7 +10756,7 @@
 /* 70 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var transition = __webpack_require__(58)
+	var transition = __webpack_require__(59)
 
 	module.exports = function (value) {
 	  var el = this.el
@@ -10820,23 +10820,6 @@
 /* 72 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = {
-
-	  priority: 1000,
-	  isLiteral: true,
-
-	  bind: function () {
-	    this.el.__v_trans = {
-	      id: this.expression
-	    }
-	  }
-
-	}
-
-/***/ },
-/* 73 */
-/***/ function(module, exports, __webpack_require__) {
-
 	var _ = __webpack_require__(56)
 
 	module.exports = {
@@ -10851,6 +10834,23 @@
 	    this.el[this.attr] = _.toString(value)
 	  }
 	  
+	}
+
+/***/ },
+/* 73 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+
+	  priority: 1000,
+	  isLiteral: true,
+
+	  bind: function () {
+	    this.el.__v_trans = {
+	      id: this.expression
+	    }
+	  }
+
 	}
 
 /***/ },
@@ -11066,7 +11066,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Observer = __webpack_require__(57)
+	var Observer = __webpack_require__(58)
 	var Binding = __webpack_require__(49)
 
 	/**
@@ -11935,6 +11935,98 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
+	var Path = __webpack_require__(64)
+
+	/**
+	 * Filter filter for v-repeat
+	 *
+	 * @param {String} searchKey
+	 * @param {String} [delimiter]
+	 * @param {String} dataKey
+	 */
+
+	exports.filterBy = function (arr, searchKey, delimiter, dataKey) {
+	  // allow optional `in` delimiter
+	  // because why not
+	  if (delimiter && delimiter !== 'in') {
+	    dataKey = delimiter
+	  }
+	  // get the search string
+	  var search =
+	    _.stripQuotes(searchKey) ||
+	    this.$get(searchKey)
+	  if (!search) {
+	    return arr
+	  }
+	  search = search.toLowerCase()
+	  // get the optional dataKey
+	  dataKey =
+	    dataKey &&
+	    (_.stripQuotes(dataKey) || this.$get(dataKey))
+	  return arr.filter(function (item) {
+	    return dataKey
+	      ? contains(Path.get(item, dataKey), search)
+	      : contains(item, search)
+	  })
+	}
+
+	/**
+	 * Filter filter for v-repeat
+	 *
+	 * @param {String} sortKey
+	 * @param {String} reverseKey
+	 */
+
+	exports.orderBy = function (arr, sortKey, reverseKey) {
+	  var key =
+	    _.stripQuotes(sortKey) ||
+	    this.$get(sortKey)
+	  if (!key) {
+	    return arr
+	  }
+	  var order = 1
+	  if (reverseKey) {
+	    if (reverseKey === '-1') {
+	      order = -1
+	    } else if (reverseKey.charCodeAt(0) === 0x21) { // !
+	      reverseKey = reverseKey.slice(1)
+	      order = this.$get(reverseKey) ? 1 : -1
+	    } else {
+	      order = this.$get(reverseKey) ? -1 : 1
+	    }
+	  }
+	  // sort on a copy to avoid mutating original array
+	  return arr.slice().sort(function (a, b) {
+	    a = Path.get(a, key)
+	    b = Path.get(b, key)
+	    return a === b ? 0 : a > b ? order : -order
+	  })
+	}
+
+	/**
+	 * String contain helper
+	 *
+	 * @param {*} val
+	 * @param {String} search
+	 */
+
+	function contains (val, search) {
+	  if (_.isObject(val)) {
+	    for (var key in val) {
+	      if (contains(val[key], search)) {
+	        return true
+	      }
+	    }
+	  } else if (val != null) {
+	    return val.toString().toLowerCase().indexOf(search) > -1
+	  }
+	}
+
+/***/ },
+/* 84 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(56)
 	var arrayProto = Array.prototype
 	var arrayMethods = Object.create(arrayProto)
 
@@ -12026,7 +12118,7 @@
 	module.exports = arrayMethods
 
 /***/ },
-/* 84 */
+/* 85 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
@@ -12106,7 +12198,7 @@
 	)
 
 /***/ },
-/* 85 */
+/* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
@@ -12300,7 +12392,7 @@
 	}
 
 /***/ },
-/* 86 */
+/* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -12344,98 +12436,6 @@
 	      op()
 	      if (cb) cb()
 	    }
-	  }
-	}
-
-/***/ },
-/* 87 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var _ = __webpack_require__(56)
-	var Path = __webpack_require__(63)
-
-	/**
-	 * Filter filter for v-repeat
-	 *
-	 * @param {String} searchKey
-	 * @param {String} [delimiter]
-	 * @param {String} dataKey
-	 */
-
-	exports.filterBy = function (arr, searchKey, delimiter, dataKey) {
-	  // allow optional `in` delimiter
-	  // because why not
-	  if (delimiter && delimiter !== 'in') {
-	    dataKey = delimiter
-	  }
-	  // get the search string
-	  var search =
-	    _.stripQuotes(searchKey) ||
-	    this.$get(searchKey)
-	  if (!search) {
-	    return arr
-	  }
-	  search = search.toLowerCase()
-	  // get the optional dataKey
-	  dataKey =
-	    dataKey &&
-	    (_.stripQuotes(dataKey) || this.$get(dataKey))
-	  return arr.filter(function (item) {
-	    return dataKey
-	      ? contains(Path.get(item, dataKey), search)
-	      : contains(item, search)
-	  })
-	}
-
-	/**
-	 * Filter filter for v-repeat
-	 *
-	 * @param {String} sortKey
-	 * @param {String} reverseKey
-	 */
-
-	exports.orderBy = function (arr, sortKey, reverseKey) {
-	  var key =
-	    _.stripQuotes(sortKey) ||
-	    this.$get(sortKey)
-	  if (!key) {
-	    return arr
-	  }
-	  var order = 1
-	  if (reverseKey) {
-	    if (reverseKey === '-1') {
-	      order = -1
-	    } else if (reverseKey.charCodeAt(0) === 0x21) { // !
-	      reverseKey = reverseKey.slice(1)
-	      order = this.$get(reverseKey) ? 1 : -1
-	    } else {
-	      order = this.$get(reverseKey) ? -1 : 1
-	    }
-	  }
-	  // sort on a copy to avoid mutating original array
-	  return arr.slice().sort(function (a, b) {
-	    a = Path.get(a, key)
-	    b = Path.get(b, key)
-	    return a === b ? 0 : a > b ? order : -order
-	  })
-	}
-
-	/**
-	 * String contain helper
-	 *
-	 * @param {*} val
-	 * @param {String} search
-	 */
-
-	function contains (val, search) {
-	  if (_.isObject(val)) {
-	    for (var key in val) {
-	      if (contains(val[key], search)) {
-	        return true
-	      }
-	    }
-	  } else if (val != null) {
-	    return val.toString().toLowerCase().indexOf(search) > -1
 	  }
 	}
 
@@ -12583,10 +12583,10 @@
 
 	var _ = __webpack_require__(56)
 	var Watcher = __webpack_require__(54)
-	var Path = __webpack_require__(63)
-	var textParser = __webpack_require__(65)
+	var Path = __webpack_require__(64)
+	var textParser = __webpack_require__(66)
 	var dirParser = __webpack_require__(62)
-	var expParser = __webpack_require__(64)
+	var expParser = __webpack_require__(63)
 	var filterRE = /[^|]\|[^|]/
 
 	/**
@@ -12745,7 +12745,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var transition = __webpack_require__(58)
+	var transition = __webpack_require__(59)
 
 	/**
 	 * Append instance to target
@@ -13348,7 +13348,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	// manipulation directives
-	exports.text       = __webpack_require__(73)
+	exports.text       = __webpack_require__(72)
 	exports.html       = __webpack_require__(69)
 	exports.attr       = __webpack_require__(67)
 	exports.show       = __webpack_require__(70)
@@ -13358,7 +13358,7 @@
 	exports.cloak      = __webpack_require__(97)
 	exports.style      = __webpack_require__(71)
 	exports.partial    = __webpack_require__(98)
-	exports.transition = __webpack_require__(72)
+	exports.transition = __webpack_require__(73)
 
 	// event listener directives
 	exports.on         = __webpack_require__(99)
@@ -13439,8 +13439,8 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var templateParser = __webpack_require__(66)
-	var transition = __webpack_require__(58)
+	var templateParser = __webpack_require__(65)
+	var transition = __webpack_require__(59)
 
 	module.exports = {
 
@@ -13563,7 +13563,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var templateParser = __webpack_require__(66)
+	var templateParser = __webpack_require__(65)
 
 	module.exports = {
 
@@ -13725,9 +13725,9 @@
 
 	var _ = __webpack_require__(56)
 	var isObject = _.isObject
-	var textParser = __webpack_require__(65)
-	var expParser = __webpack_require__(64)
-	var templateParser = __webpack_require__(66)
+	var textParser = __webpack_require__(66)
+	var expParser = __webpack_require__(63)
+	var templateParser = __webpack_require__(65)
 	var compile = __webpack_require__(60)
 	var transclude = __webpack_require__(61)
 	var mergeOptions = __webpack_require__(55)
@@ -14237,8 +14237,8 @@
 
 	var _ = __webpack_require__(56)
 	var compile = __webpack_require__(60)
-	var templateParser = __webpack_require__(66)
-	var transition = __webpack_require__(58)
+	var templateParser = __webpack_require__(65)
+	var transition = __webpack_require__(59)
 
 	module.exports = {
 
