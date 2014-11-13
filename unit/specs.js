@@ -97,7 +97,7 @@
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Batcher = __webpack_require__(50)
+	var Batcher = __webpack_require__(48)
 	var nextTick = __webpack_require__(56).nextTick
 
 	describe('Batcher', function () {
@@ -157,7 +157,7 @@
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Binding = __webpack_require__(51)
+	var Binding = __webpack_require__(52)
 
 	describe('Binding', function () {
 
@@ -196,7 +196,7 @@
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Cache = __webpack_require__(52)
+	var Cache = __webpack_require__(49)
 
 	/**
 	 * Debug function to assert cache state
@@ -255,8 +255,8 @@
 /* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(48)
-	var Directive = __webpack_require__(49)
+	var Vue = __webpack_require__(50)
+	var Directive = __webpack_require__(51)
 	var nextTick = Vue.nextTick
 
 	describe('Directive', function () {
@@ -440,7 +440,7 @@
 /* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(48)
+	var Vue = __webpack_require__(50)
 	var filters = __webpack_require__(57)
 
 	describe('Filters', function () {
@@ -621,9 +621,9 @@
 /* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Observer = __webpack_require__(58)
+	var Observer = __webpack_require__(59)
 	var config = __webpack_require__(53)
-	var Binding = __webpack_require__(51)
+	var Binding = __webpack_require__(52)
 	var _ = __webpack_require__(56)
 
 	describe('Observer', function () {
@@ -829,9 +829,9 @@
 /* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(48)
+	var Vue = __webpack_require__(50)
 	var _ = __webpack_require__(56)
-	var transition = __webpack_require__(59)
+	var transition = __webpack_require__(58)
 
 	if (_.inBrowser && !_.isIE9) {
 	  describe('Transition', function () {
@@ -1236,7 +1236,7 @@
 /* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(48)
+	var Vue = __webpack_require__(50)
 	var nextTick = Vue.nextTick
 	var Watcher = __webpack_require__(54)
 	var _ = Vue.util
@@ -1618,7 +1618,7 @@
 /* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(48)
+	var Vue = __webpack_require__(50)
 
 	describe('Child API', function () {
 
@@ -1701,7 +1701,7 @@
 /* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(48)
+	var Vue = __webpack_require__(50)
 	var _ = __webpack_require__(56)
 	var nextTick = _.nextTick
 
@@ -1886,7 +1886,7 @@
 	 * those are tested in transition_spec.js.
 	 */
 
-	var Vue = __webpack_require__(48)
+	var Vue = __webpack_require__(50)
 	var _ = __webpack_require__(56)
 
 	if (_.inBrowser) {
@@ -2061,7 +2061,7 @@
 /* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(48)
+	var Vue = __webpack_require__(50)
 
 	describe('Events API', function () {
 
@@ -2200,7 +2200,7 @@
 /* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(48)
+	var Vue = __webpack_require__(50)
 	var _ = __webpack_require__(56)
 	var config = __webpack_require__(53)
 
@@ -2303,7 +2303,7 @@
 /* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(48)
+	var Vue = __webpack_require__(50)
 	var _ = __webpack_require__(56)
 	var compile = __webpack_require__(60)
 
@@ -2598,7 +2598,7 @@
 /* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(48)
+	var Vue = __webpack_require__(50)
 	var _ = __webpack_require__(56)
 	var dirParser = __webpack_require__(62)
 	var merge = __webpack_require__(55)
@@ -3021,7 +3021,7 @@
 
 	var _ = __webpack_require__(56)
 	var compile = __webpack_require__(60)
-	var Vue = __webpack_require__(48)
+	var Vue = __webpack_require__(50)
 
 	if (_.inBrowser) {
 	  describe('v-cloak', function () {
@@ -3050,7 +3050,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(48)
+	var Vue = __webpack_require__(50)
 
 	if (_.inBrowser) {
 	  describe('v-component', function () {
@@ -3233,7 +3233,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(48)
+	var Vue = __webpack_require__(50)
 
 	if (_.inBrowser) {
 	  describe('v-el', function () {
@@ -3328,7 +3328,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(48)
+	var Vue = __webpack_require__(50)
 
 	if (_.inBrowser) {
 	  describe('v-if', function () {
@@ -3506,7 +3506,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(48)
+	var Vue = __webpack_require__(50)
 
 	/**
 	 * Mock event helper
@@ -3997,7 +3997,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(48)
+	var Vue = __webpack_require__(50)
 
 	function trigger (target, event, process) {
 	  var e = document.createEvent('HTMLEvents')
@@ -4136,7 +4136,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(48)
+	var Vue = __webpack_require__(50)
 
 	if (_.inBrowser) {
 	  describe('v-partial', function () {
@@ -4256,7 +4256,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(48)
+	var Vue = __webpack_require__(50)
 
 	if (_.inBrowser) {
 	  describe('v-pre', function () {
@@ -4280,7 +4280,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(48)
+	var Vue = __webpack_require__(50)
 
 	if (_.inBrowser) {
 	  describe('v-ref', function () {
@@ -4356,7 +4356,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(48)
+	var Vue = __webpack_require__(50)
 
 	if (_.inBrowser) {
 	  describe('v-repeat', function () {
@@ -5033,8 +5033,8 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(48)
-	var transition = __webpack_require__(59)
+	var Vue = __webpack_require__(50)
+	var transition = __webpack_require__(58)
 	var def = __webpack_require__(70)
 
 	if (_.inBrowser) {
@@ -5067,7 +5067,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var def = __webpack_require__(72)
+	var def = __webpack_require__(71)
 
 	if (_.inBrowser) {
 	  describe('v-style', function () {
@@ -5119,7 +5119,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var def = __webpack_require__(71)
+	var def = __webpack_require__(72)
 
 	if (_.inBrowser) {
 	  describe('v-text', function () {
@@ -5179,7 +5179,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(48)
+	var Vue = __webpack_require__(50)
 
 	if (_.inBrowser) {
 	  describe('v-with', function () {
@@ -5311,7 +5311,7 @@
 /* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(48)
+	var Vue = __webpack_require__(50)
 	var _ = __webpack_require__(56)
 
 	describe('Instance Events', function () {
@@ -5650,7 +5650,7 @@
 /* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(48)
+	var Vue = __webpack_require__(50)
 
 	describe('Instance Scope', function () {
 
@@ -6199,7 +6199,7 @@
 /* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Path = __webpack_require__(65)
+	var Path = __webpack_require__(64)
 
 	function assertPath (str, expected) {
 	  var path = Path.parse(str)
@@ -6326,7 +6326,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var templateParser = __webpack_require__(64)
+	var templateParser = __webpack_require__(65)
 	var parse = templateParser.parse
 	var testString = '<div>hello</div><p class="test">world</p>'
 
@@ -6452,7 +6452,7 @@
 
 	var textParser = __webpack_require__(66)
 	var config = __webpack_require__(53)
-	var Vue = __webpack_require__(48)
+	var Vue = __webpack_require__(50)
 
 	var testCases = [
 	  {
@@ -6968,7 +6968,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(48)
+	var Vue = __webpack_require__(50)
 	var merge = __webpack_require__(55)
 
 	describe('Util - Option merging', function () {
@@ -7182,7 +7182,7 @@
 	  })
 
 	  it('already observed instance data merge with default data', function () {
-	    var Observer = __webpack_require__(58)
+	    var Observer = __webpack_require__(59)
 	    var instanceData = { a: 123 }
 	    // observe it
 	    Observer.create(instanceData)
@@ -7220,6 +7220,193 @@
 
 /***/ },
 /* 48 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(56)
+
+	/**
+	 * The Batcher maintains a job queue to be run
+	 * async on the next event loop.
+	 */
+
+	function Batcher () {
+	  this.reset()
+	}
+
+	var p = Batcher.prototype
+
+	/**
+	 * Push a job into the job queue.
+	 * Jobs with duplicate IDs will be skipped unless it's
+	 * pushed when the queue is being flushed.
+	 *
+	 * @param {Object} job
+	 *   properties:
+	 *   - {String|Number} id
+	 *   - {Function}      run
+	 */
+
+	p.push = function (job) {
+	  if (!job.id || !this.has[job.id] || this.flushing) {
+	    this.queue.push(job)
+	    this.has[job.id] = job
+	    if (!this.waiting) {
+	      this.waiting = true
+	      _.nextTick(this.flush, this)
+	    }
+	  }
+	}
+
+	/**
+	 * Flush the queue and run the jobs.
+	 * Will call a preFlush hook if has one.
+	 */
+
+	p.flush = function () {
+	  this.flushing = true
+	  // do not cache length because more jobs might be pushed
+	  // as we run existing jobs
+	  for (var i = 0; i < this.queue.length; i++) {
+	    var job = this.queue[i]
+	    if (!job.cancelled) {
+	      job.run()
+	    }
+	  }
+	  this.reset()
+	}
+
+	/**
+	 * Reset the batcher's state.
+	 */
+
+	p.reset = function () {
+	  this.has = {}
+	  this.queue = []
+	  this.waiting = false
+	  this.flushing = false
+	}
+
+	module.exports = Batcher
+
+/***/ },
+/* 49 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * A doubly linked list-based Least Recently Used (LRU)
+	 * cache. Will keep most recently used items while
+	 * discarding least recently used items when its limit is
+	 * reached. This is a bare-bone version of
+	 * Rasmus Andersson's js-lru:
+	 *
+	 *   https://github.com/rsms/js-lru
+	 *
+	 * @param {Number} limit
+	 * @constructor
+	 */
+
+	function Cache (limit) {
+	  this.size = 0
+	  this.limit = limit
+	  this.head = this.tail = undefined
+	  this._keymap = {}
+	}
+
+	var p = Cache.prototype
+
+	/**
+	 * Put <value> into the cache associated with <key>.
+	 * Returns the entry which was removed to make room for
+	 * the new entry. Otherwise undefined is returned.
+	 * (i.e. if there was enough room already).
+	 *
+	 * @param {String} key
+	 * @param {*} value
+	 * @return {Entry|undefined}
+	 */
+
+	p.put = function (key, value) {
+	  var entry = {
+	    key:key,
+	    value:value
+	  }
+	  this._keymap[key] = entry
+	  if (this.tail) {
+	    this.tail.newer = entry
+	    entry.older = this.tail
+	  } else {
+	    this.head = entry
+	  }
+	  this.tail = entry
+	  if (this.size === this.limit) {
+	    return this.shift()
+	  } else {
+	    this.size++
+	  }
+	}
+
+	/**
+	 * Purge the least recently used (oldest) entry from the
+	 * cache. Returns the removed entry or undefined if the
+	 * cache was empty.
+	 */
+
+	p.shift = function () {
+	  var entry = this.head
+	  if (entry) {
+	    this.head = this.head.newer
+	    this.head.older = undefined
+	    entry.newer = entry.older = undefined
+	    this._keymap[entry.key] = undefined
+	  }
+	  return entry
+	}
+
+	/**
+	 * Get and register recent use of <key>. Returns the value
+	 * associated with <key> or undefined if not in cache.
+	 *
+	 * @param {String} key
+	 * @param {Boolean} returnEntry
+	 * @return {Entry|*}
+	 */
+
+	p.get = function (key, returnEntry) {
+	  var entry = this._keymap[key]
+	  if (entry === undefined) return
+	  if (entry === this.tail) {
+	    return returnEntry
+	      ? entry
+	      : entry.value
+	  }
+	  // HEAD--------------TAIL
+	  //   <.older   .newer>
+	  //  <--- add direction --
+	  //   A  B  C  <D>  E
+	  if (entry.newer) {
+	    if (entry === this.head) {
+	      this.head = entry.newer
+	    }
+	    entry.newer.older = entry.older // C <-- E.
+	  }
+	  if (entry.older) {
+	    entry.older.newer = entry.newer // C. --> E
+	  }
+	  entry.newer = undefined // D --x
+	  entry.older = this.tail // D. --> E
+	  if (this.tail) {
+	    this.tail.newer = entry // E. <-- D
+	  }
+	  this.tail = entry
+	  return returnEntry
+	    ? entry
+	    : entry.value
+	}
+
+	module.exports = Cache
+
+/***/ },
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
@@ -7308,7 +7495,7 @@
 	module.exports = _.Vue = Vue
 
 /***/ },
-/* 49 */
+/* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
@@ -7515,77 +7702,7 @@
 	module.exports = Directive
 
 /***/ },
-/* 50 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var _ = __webpack_require__(56)
-
-	/**
-	 * The Batcher maintains a job queue to be run
-	 * async on the next event loop.
-	 */
-
-	function Batcher () {
-	  this.reset()
-	}
-
-	var p = Batcher.prototype
-
-	/**
-	 * Push a job into the job queue.
-	 * Jobs with duplicate IDs will be skipped unless it's
-	 * pushed when the queue is being flushed.
-	 *
-	 * @param {Object} job
-	 *   properties:
-	 *   - {String|Number} id
-	 *   - {Function}      run
-	 */
-
-	p.push = function (job) {
-	  if (!job.id || !this.has[job.id] || this.flushing) {
-	    this.queue.push(job)
-	    this.has[job.id] = job
-	    if (!this.waiting) {
-	      this.waiting = true
-	      _.nextTick(this.flush, this)
-	    }
-	  }
-	}
-
-	/**
-	 * Flush the queue and run the jobs.
-	 * Will call a preFlush hook if has one.
-	 */
-
-	p.flush = function () {
-	  this.flushing = true
-	  // do not cache length because more jobs might be pushed
-	  // as we run existing jobs
-	  for (var i = 0; i < this.queue.length; i++) {
-	    var job = this.queue[i]
-	    if (!job.cancelled) {
-	      job.run()
-	    }
-	  }
-	  this.reset()
-	}
-
-	/**
-	 * Reset the batcher's state.
-	 */
-
-	p.reset = function () {
-	  this.has = {}
-	  this.queue = []
-	  this.waiting = false
-	  this.flushing = false
-	}
-
-	module.exports = Batcher
-
-/***/ },
-/* 51 */
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var uid = 0
@@ -7638,123 +7755,6 @@
 	}
 
 	module.exports = Binding
-
-/***/ },
-/* 52 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * A doubly linked list-based Least Recently Used (LRU)
-	 * cache. Will keep most recently used items while
-	 * discarding least recently used items when its limit is
-	 * reached. This is a bare-bone version of
-	 * Rasmus Andersson's js-lru:
-	 *
-	 *   https://github.com/rsms/js-lru
-	 *
-	 * @param {Number} limit
-	 * @constructor
-	 */
-
-	function Cache (limit) {
-	  this.size = 0
-	  this.limit = limit
-	  this.head = this.tail = undefined
-	  this._keymap = {}
-	}
-
-	var p = Cache.prototype
-
-	/**
-	 * Put <value> into the cache associated with <key>.
-	 * Returns the entry which was removed to make room for
-	 * the new entry. Otherwise undefined is returned.
-	 * (i.e. if there was enough room already).
-	 *
-	 * @param {String} key
-	 * @param {*} value
-	 * @return {Entry|undefined}
-	 */
-
-	p.put = function (key, value) {
-	  var entry = {
-	    key:key,
-	    value:value
-	  }
-	  this._keymap[key] = entry
-	  if (this.tail) {
-	    this.tail.newer = entry
-	    entry.older = this.tail
-	  } else {
-	    this.head = entry
-	  }
-	  this.tail = entry
-	  if (this.size === this.limit) {
-	    return this.shift()
-	  } else {
-	    this.size++
-	  }
-	}
-
-	/**
-	 * Purge the least recently used (oldest) entry from the
-	 * cache. Returns the removed entry or undefined if the
-	 * cache was empty.
-	 */
-
-	p.shift = function () {
-	  var entry = this.head
-	  if (entry) {
-	    this.head = this.head.newer
-	    this.head.older = undefined
-	    entry.newer = entry.older = undefined
-	    this._keymap[entry.key] = undefined
-	  }
-	  return entry
-	}
-
-	/**
-	 * Get and register recent use of <key>. Returns the value
-	 * associated with <key> or undefined if not in cache.
-	 *
-	 * @param {String} key
-	 * @param {Boolean} returnEntry
-	 * @return {Entry|*}
-	 */
-
-	p.get = function (key, returnEntry) {
-	  var entry = this._keymap[key]
-	  if (entry === undefined) return
-	  if (entry === this.tail) {
-	    return returnEntry
-	      ? entry
-	      : entry.value
-	  }
-	  // HEAD--------------TAIL
-	  //   <.older   .newer>
-	  //  <--- add direction --
-	  //   A  B  C  <D>  E
-	  if (entry.newer) {
-	    if (entry === this.head) {
-	      this.head = entry.newer
-	    }
-	    entry.newer.older = entry.older // C <-- E.
-	  }
-	  if (entry.older) {
-	    entry.older.newer = entry.newer // C. --> E
-	  }
-	  entry.newer = undefined // D --x
-	  entry.older = this.tail // D. --> E
-	  if (this.tail) {
-	    this.tail.newer = entry // E. <-- D
-	  }
-	  this.tail = entry
-	  return returnEntry
-	    ? entry
-	    : entry.value
-	}
-
-	module.exports = Cache
 
 /***/ },
 /* 53 */
@@ -7846,9 +7846,9 @@
 
 	var _ = __webpack_require__(56)
 	var config = __webpack_require__(53)
-	var Observer = __webpack_require__(58)
+	var Observer = __webpack_require__(59)
 	var expParser = __webpack_require__(63)
-	var Batcher = __webpack_require__(50)
+	var Batcher = __webpack_require__(48)
 
 	var batcher = new Batcher()
 	var uid = 0
@@ -8438,11 +8438,167 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
+	var applyCSSTransition = __webpack_require__(84)
+	var applyJSTransition = __webpack_require__(85)
+
+	/**
+	 * Append with transition.
+	 *
+	 * @oaram {Element} el
+	 * @param {Element} target
+	 * @param {Vue} vm
+	 * @param {Function} [cb]
+	 */
+
+	exports.append = function (el, target, vm, cb) {
+	  apply(el, 1, function () {
+	    target.appendChild(el)
+	  }, vm, cb)
+	}
+
+	/**
+	 * InsertBefore with transition.
+	 *
+	 * @oaram {Element} el
+	 * @param {Element} target
+	 * @param {Vue} vm
+	 * @param {Function} [cb]
+	 */
+
+	exports.before = function (el, target, vm, cb) {
+	  apply(el, 1, function () {
+	    _.before(el, target)
+	  }, vm, cb)
+	}
+
+	/**
+	 * Remove with transition.
+	 *
+	 * @oaram {Element} el
+	 * @param {Vue} vm
+	 * @param {Function} [cb]
+	 */
+
+	exports.remove = function (el, vm, cb) {
+	  apply(el, -1, function () {
+	    _.remove(el)
+	  }, vm, cb)
+	}
+
+	/**
+	 * Remove by appending to another parent with transition.
+	 * This is only used in block operations.
+	 *
+	 * @oaram {Element} el
+	 * @param {Element} target
+	 * @param {Vue} vm
+	 * @param {Function} [cb]
+	 */
+
+	exports.removeThenAppend = function (el, target, vm, cb) {
+	  apply(el, -1, function () {
+	    target.appendChild(el)
+	  }, vm, cb)
+	}
+
+	/**
+	 * Append the childNodes of a fragment to target.
+	 *
+	 * @param {DocumentFragment} block
+	 * @param {Node} target
+	 * @param {Vue} vm
+	 */
+
+	exports.blockAppend = function (block, target, vm) {
+	  var nodes = _.toArray(block.childNodes)
+	  for (var i = 0, l = nodes.length; i < l; i++) {
+	    exports.before(nodes[i], target, vm)
+	  }
+	}
+
+	/**
+	 * Remove a block of nodes between two edge nodes.
+	 *
+	 * @param {Node} start
+	 * @param {Node} end
+	 * @param {Vue} vm
+	 */
+
+	exports.blockRemove = function (start, end, vm) {
+	  var node = start.nextSibling
+	  var next
+	  while (node !== end) {
+	    next = node.nextSibling
+	    exports.remove(node, vm)
+	    node = next
+	  }
+	}
+
+	/**
+	 * Apply transitions with an operation callback.
+	 *
+	 * @oaram {Element} el
+	 * @param {Number} direction
+	 *                  1: enter
+	 *                 -1: leave
+	 * @param {Function} op - the actual DOM operation
+	 * @param {Vue} vm
+	 * @param {Function} [cb]
+	 */
+
+	var apply = exports.apply = function (el, direction, op, vm, cb) {
+	  var transData = el.__v_trans
+	  if (
+	    !transData ||
+	    !vm._isCompiled ||
+	    // if the vm is being manipulated by a parent directive
+	    // during the parent's compilation phase, skip the
+	    // animation.
+	    (vm.$parent && !vm.$parent._isCompiled)
+	  ) {
+	    op()
+	    if (cb) cb()
+	    return
+	  }
+	  // determine the transition type on the element
+	  var jsTransition = vm.$options.transitions[transData.id]
+	  if (jsTransition) {
+	    // js
+	    applyJSTransition(
+	      el,
+	      direction,
+	      op,
+	      transData,
+	      jsTransition,
+	      vm,
+	      cb
+	    )
+	  } else if (_.transitionEndEvent) {
+	    // css
+	    applyCSSTransition(
+	      el,
+	      direction,
+	      op,
+	      transData,
+	      cb
+	    )
+	  } else {
+	    // not applicable
+	    op()
+	    if (cb) cb()
+	  }
+	}
+
+/***/ },
+/* 59 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(56)
 	var config = __webpack_require__(53)
-	var Binding = __webpack_require__(51)
-	var arrayMethods = __webpack_require__(84)
+	var Binding = __webpack_require__(52)
+	var arrayMethods = __webpack_require__(86)
 	var arrayKeys = Object.getOwnPropertyNames(arrayMethods)
-	__webpack_require__(85)
+	__webpack_require__(87)
 
 	var uid = 0
 
@@ -8675,162 +8831,6 @@
 
 
 /***/ },
-/* 59 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var _ = __webpack_require__(56)
-	var applyCSSTransition = __webpack_require__(86)
-	var applyJSTransition = __webpack_require__(87)
-
-	/**
-	 * Append with transition.
-	 *
-	 * @oaram {Element} el
-	 * @param {Element} target
-	 * @param {Vue} vm
-	 * @param {Function} [cb]
-	 */
-
-	exports.append = function (el, target, vm, cb) {
-	  apply(el, 1, function () {
-	    target.appendChild(el)
-	  }, vm, cb)
-	}
-
-	/**
-	 * InsertBefore with transition.
-	 *
-	 * @oaram {Element} el
-	 * @param {Element} target
-	 * @param {Vue} vm
-	 * @param {Function} [cb]
-	 */
-
-	exports.before = function (el, target, vm, cb) {
-	  apply(el, 1, function () {
-	    _.before(el, target)
-	  }, vm, cb)
-	}
-
-	/**
-	 * Remove with transition.
-	 *
-	 * @oaram {Element} el
-	 * @param {Vue} vm
-	 * @param {Function} [cb]
-	 */
-
-	exports.remove = function (el, vm, cb) {
-	  apply(el, -1, function () {
-	    _.remove(el)
-	  }, vm, cb)
-	}
-
-	/**
-	 * Remove by appending to another parent with transition.
-	 * This is only used in block operations.
-	 *
-	 * @oaram {Element} el
-	 * @param {Element} target
-	 * @param {Vue} vm
-	 * @param {Function} [cb]
-	 */
-
-	exports.removeThenAppend = function (el, target, vm, cb) {
-	  apply(el, -1, function () {
-	    target.appendChild(el)
-	  }, vm, cb)
-	}
-
-	/**
-	 * Append the childNodes of a fragment to target.
-	 *
-	 * @param {DocumentFragment} block
-	 * @param {Node} target
-	 * @param {Vue} vm
-	 */
-
-	exports.blockAppend = function (block, target, vm) {
-	  var nodes = _.toArray(block.childNodes)
-	  for (var i = 0, l = nodes.length; i < l; i++) {
-	    exports.before(nodes[i], target, vm)
-	  }
-	}
-
-	/**
-	 * Remove a block of nodes between two edge nodes.
-	 *
-	 * @param {Node} start
-	 * @param {Node} end
-	 * @param {Vue} vm
-	 */
-
-	exports.blockRemove = function (start, end, vm) {
-	  var node = start.nextSibling
-	  var next
-	  while (node !== end) {
-	    next = node.nextSibling
-	    exports.remove(node, vm)
-	    node = next
-	  }
-	}
-
-	/**
-	 * Apply transitions with an operation callback.
-	 *
-	 * @oaram {Element} el
-	 * @param {Number} direction
-	 *                  1: enter
-	 *                 -1: leave
-	 * @param {Function} op - the actual DOM operation
-	 * @param {Vue} vm
-	 * @param {Function} [cb]
-	 */
-
-	var apply = exports.apply = function (el, direction, op, vm, cb) {
-	  var transData = el.__v_trans
-	  if (
-	    !transData ||
-	    !vm._isCompiled ||
-	    // if the vm is being manipulated by a parent directive
-	    // during the parent's compilation phase, skip the
-	    // animation.
-	    (vm.$parent && !vm.$parent._isCompiled)
-	  ) {
-	    op()
-	    if (cb) cb()
-	    return
-	  }
-	  // determine the transition type on the element
-	  var jsTransition = vm.$options.transitions[transData.id]
-	  if (jsTransition) {
-	    // js
-	    applyJSTransition(
-	      el,
-	      direction,
-	      op,
-	      transData,
-	      jsTransition,
-	      vm,
-	      cb
-	    )
-	  } else if (_.transitionEndEvent) {
-	    // css
-	    applyCSSTransition(
-	      el,
-	      direction,
-	      op,
-	      transData,
-	      cb
-	    )
-	  } else {
-	    // not applicable
-	    op()
-	    if (cb) cb()
-	  }
-	}
-
-/***/ },
 /* 60 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -8838,7 +8838,7 @@
 	var config = __webpack_require__(53)
 	var textParser = __webpack_require__(66)
 	var dirParser = __webpack_require__(62)
-	var templateParser = __webpack_require__(64)
+	var templateParser = __webpack_require__(65)
 
 	/**
 	 * Compile a template and return a reusable composite link
@@ -9377,7 +9377,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var templateParser = __webpack_require__(64)
+	var templateParser = __webpack_require__(65)
 
 	/**
 	 * Process an element or a DocumentFragment based on a
@@ -9545,7 +9545,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Cache = __webpack_require__(52)
+	var Cache = __webpack_require__(49)
 	var cache = new Cache(1000)
 	var argRE = /^[^\{\?]+$|^'[^']*'$|^"[^"]*"$/
 	var filterTokenRE = /[^\s'"]+|'[^']+'|"[^"]+"/g
@@ -9709,8 +9709,8 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Path = __webpack_require__(65)
-	var Cache = __webpack_require__(52)
+	var Path = __webpack_require__(64)
+	var Cache = __webpack_require__(49)
 	var expressionCache = new Cache(1000)
 
 	var keywords =
@@ -9940,234 +9940,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Cache = __webpack_require__(52)
-	var templateCache = new Cache(100)
-
-	/**
-	 * Test for the presence of the Safari template cloning bug
-	 * https://bugs.webkit.org/show_bug.cgi?id=137755
-	 */
-
-	var hasBrokenTemplate = _.inBrowser
-	  ? (function () {
-	      var a = document.createElement('div')
-	      a.innerHTML = '<template>1</template>'
-	      return !a.cloneNode(true).firstChild.innerHTML
-	    })()
-	  : false
-
-	var map = {
-	  _default : [0, '', ''],
-	  legend   : [1, '<fieldset>', '</fieldset>'],
-	  tr       : [2, '<table><tbody>', '</tbody></table>'],
-	  col      : [
-	    2,
-	    '<table><tbody></tbody><colgroup>',
-	    '</colgroup></table>'
-	  ]
-	}
-
-	map.td =
-	map.th = [
-	  3,
-	  '<table><tbody><tr>',
-	  '</tr></tbody></table>'
-	]
-
-	map.option =
-	map.optgroup = [
-	  1,
-	  '<select multiple="multiple">',
-	  '</select>'
-	]
-
-	map.thead =
-	map.tbody =
-	map.colgroup =
-	map.caption =
-	map.tfoot = [1, '<table>', '</table>']
-
-	map.g =
-	map.defs =
-	map.symbol =
-	map.use =
-	map.image =
-	map.text =
-	map.circle =
-	map.ellipse =
-	map.line =
-	map.path =
-	map.polygon =
-	map.polyline =
-	map.rect = [
-	  1,
-	  '<svg ' +
-	    'xmlns="http://www.w3.org/2000/svg" ' +
-	    'xmlns:xlink="http://www.w3.org/1999/xlink" ' +
-	    'xmlns:ev="http://www.w3.org/2001/xml-events"' +
-	    'version="1.1">',
-	  '</svg>'
-	]
-
-	var TAG_RE = /<([\w:]+)/
-
-	/**
-	 * Convert a string template to a DocumentFragment.
-	 * Determines correct wrapping by tag types. Wrapping
-	 * strategy found in jQuery & component/domify.
-	 *
-	 * @param {String} templateString
-	 * @return {DocumentFragment}
-	 */
-
-	function stringToFragment (templateString) {
-	  // try a cache hit first
-	  var hit = templateCache.get(templateString)
-	  if (hit) {
-	    return hit
-	  }
-
-	  var frag = document.createDocumentFragment()
-	  var tagMatch = TAG_RE.exec(templateString)
-
-	  if (!tagMatch) {
-	    // text only, return a single text node.
-	    frag.appendChild(
-	      document.createTextNode(templateString)
-	    )
-	  } else {
-
-	    var tag    = tagMatch[1]
-	    var wrap   = map[tag] || map._default
-	    var depth  = wrap[0]
-	    var prefix = wrap[1]
-	    var suffix = wrap[2]
-	    var node   = document.createElement('div')
-
-	    node.innerHTML = prefix + templateString.trim() + suffix
-	    while (depth--) {
-	      node = node.lastChild
-	    }
-
-	    var child
-	    /* jshint boss:true */
-	    while (child = node.firstChild) {
-	      frag.appendChild(child)
-	    }
-	  }
-
-	  templateCache.put(templateString, frag)
-	  return frag
-	}
-
-	/**
-	 * Convert a template node to a DocumentFragment.
-	 *
-	 * @param {Node} node
-	 * @return {DocumentFragment}
-	 */
-
-	function nodeToFragment (node) {
-	  var tag = node.tagName
-	  // if its a template tag and the browser supports it,
-	  // its content is already a document fragment.
-	  if (
-	    tag === 'TEMPLATE' &&
-	    node.content instanceof DocumentFragment
-	  ) {
-	    return node.content
-	  }
-	  return tag === 'SCRIPT'
-	    ? stringToFragment(node.textContent)
-	    : stringToFragment(node.innerHTML)
-	}
-
-	/**
-	 * Deal with Safari cloning nested <template> bug by
-	 * manually cloning all template instances.
-	 *
-	 * @param {Element|DocumentFragment} node
-	 * @return {Element|DocumentFragment}
-	 */
-
-	exports.clone = function (node) {
-	  var res = node.cloneNode(true)
-	  /* istanbul ignore if */
-	  if (hasBrokenTemplate) {
-	    var templates = node.querySelectorAll('template')
-	    if (templates.length) {
-	      var cloned = res.querySelectorAll('template')
-	      var i = cloned.length
-	      while (i--) {
-	        cloned[i].parentNode.replaceChild(
-	          templates[i].cloneNode(true),
-	          cloned[i]
-	        )
-	      }
-	    }
-	  }
-	  return res
-	}
-
-	/**
-	 * Process the template option and normalizes it into a
-	 * a DocumentFragment that can be used as a partial or a
-	 * instance template.
-	 *
-	 * @param {*} template
-	 *    Possible values include:
-	 *    - DocumentFragment object
-	 *    - Node object of type Template
-	 *    - id selector: '#some-template-id'
-	 *    - template string: '<div><span>{{msg}}</span></div>'
-	 * @param {Boolean} clone
-	 * @return {DocumentFragment|undefined}
-	 */
-
-	exports.parse = function (template, clone) {
-	  var node, frag
-
-	  // if the template is already a document fragment,
-	  // do nothing
-	  if (template instanceof DocumentFragment) {
-	    return clone
-	      ? template.cloneNode(true)
-	      : template
-	  }
-
-	  if (typeof template === 'string') {
-	    // id selector
-	    if (template.charAt(0) === '#') {
-	      // id selector can be cached too
-	      frag = templateCache.get(template)
-	      if (!frag) {
-	        node = document.getElementById(template.slice(1))
-	        if (node) {
-	          frag = nodeToFragment(node)
-	          // save selector to cache
-	          templateCache.put(template, frag)
-	        }
-	      }
-	    } else {
-	      // normal string template
-	      frag = stringToFragment(template)
-	    }
-	  } else if (template.nodeType) {
-	    // a direct node
-	    frag = nodeToFragment(template)
-	  }
-
-	  return frag && clone
-	    ? exports.clone(frag)
-	    : frag
-	}
-
-/***/ },
-/* 65 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var _ = __webpack_require__(56)
-	var Cache = __webpack_require__(52)
+	var Cache = __webpack_require__(49)
 	var pathCache = new Cache(1000)
 	var identRE = /^[$_a-zA-Z]+[\w$]*$/
 
@@ -10468,10 +10241,237 @@
 	}
 
 /***/ },
+/* 65 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(56)
+	var Cache = __webpack_require__(49)
+	var templateCache = new Cache(100)
+
+	/**
+	 * Test for the presence of the Safari template cloning bug
+	 * https://bugs.webkit.org/show_bug.cgi?id=137755
+	 */
+
+	var hasBrokenTemplate = _.inBrowser
+	  ? (function () {
+	      var a = document.createElement('div')
+	      a.innerHTML = '<template>1</template>'
+	      return !a.cloneNode(true).firstChild.innerHTML
+	    })()
+	  : false
+
+	var map = {
+	  _default : [0, '', ''],
+	  legend   : [1, '<fieldset>', '</fieldset>'],
+	  tr       : [2, '<table><tbody>', '</tbody></table>'],
+	  col      : [
+	    2,
+	    '<table><tbody></tbody><colgroup>',
+	    '</colgroup></table>'
+	  ]
+	}
+
+	map.td =
+	map.th = [
+	  3,
+	  '<table><tbody><tr>',
+	  '</tr></tbody></table>'
+	]
+
+	map.option =
+	map.optgroup = [
+	  1,
+	  '<select multiple="multiple">',
+	  '</select>'
+	]
+
+	map.thead =
+	map.tbody =
+	map.colgroup =
+	map.caption =
+	map.tfoot = [1, '<table>', '</table>']
+
+	map.g =
+	map.defs =
+	map.symbol =
+	map.use =
+	map.image =
+	map.text =
+	map.circle =
+	map.ellipse =
+	map.line =
+	map.path =
+	map.polygon =
+	map.polyline =
+	map.rect = [
+	  1,
+	  '<svg ' +
+	    'xmlns="http://www.w3.org/2000/svg" ' +
+	    'xmlns:xlink="http://www.w3.org/1999/xlink" ' +
+	    'xmlns:ev="http://www.w3.org/2001/xml-events"' +
+	    'version="1.1">',
+	  '</svg>'
+	]
+
+	var TAG_RE = /<([\w:]+)/
+
+	/**
+	 * Convert a string template to a DocumentFragment.
+	 * Determines correct wrapping by tag types. Wrapping
+	 * strategy found in jQuery & component/domify.
+	 *
+	 * @param {String} templateString
+	 * @return {DocumentFragment}
+	 */
+
+	function stringToFragment (templateString) {
+	  // try a cache hit first
+	  var hit = templateCache.get(templateString)
+	  if (hit) {
+	    return hit
+	  }
+
+	  var frag = document.createDocumentFragment()
+	  var tagMatch = TAG_RE.exec(templateString)
+
+	  if (!tagMatch) {
+	    // text only, return a single text node.
+	    frag.appendChild(
+	      document.createTextNode(templateString)
+	    )
+	  } else {
+
+	    var tag    = tagMatch[1]
+	    var wrap   = map[tag] || map._default
+	    var depth  = wrap[0]
+	    var prefix = wrap[1]
+	    var suffix = wrap[2]
+	    var node   = document.createElement('div')
+
+	    node.innerHTML = prefix + templateString.trim() + suffix
+	    while (depth--) {
+	      node = node.lastChild
+	    }
+
+	    var child
+	    /* jshint boss:true */
+	    while (child = node.firstChild) {
+	      frag.appendChild(child)
+	    }
+	  }
+
+	  templateCache.put(templateString, frag)
+	  return frag
+	}
+
+	/**
+	 * Convert a template node to a DocumentFragment.
+	 *
+	 * @param {Node} node
+	 * @return {DocumentFragment}
+	 */
+
+	function nodeToFragment (node) {
+	  var tag = node.tagName
+	  // if its a template tag and the browser supports it,
+	  // its content is already a document fragment.
+	  if (
+	    tag === 'TEMPLATE' &&
+	    node.content instanceof DocumentFragment
+	  ) {
+	    return node.content
+	  }
+	  return tag === 'SCRIPT'
+	    ? stringToFragment(node.textContent)
+	    : stringToFragment(node.innerHTML)
+	}
+
+	/**
+	 * Deal with Safari cloning nested <template> bug by
+	 * manually cloning all template instances.
+	 *
+	 * @param {Element|DocumentFragment} node
+	 * @return {Element|DocumentFragment}
+	 */
+
+	exports.clone = function (node) {
+	  var res = node.cloneNode(true)
+	  /* istanbul ignore if */
+	  if (hasBrokenTemplate) {
+	    var templates = node.querySelectorAll('template')
+	    if (templates.length) {
+	      var cloned = res.querySelectorAll('template')
+	      var i = cloned.length
+	      while (i--) {
+	        cloned[i].parentNode.replaceChild(
+	          templates[i].cloneNode(true),
+	          cloned[i]
+	        )
+	      }
+	    }
+	  }
+	  return res
+	}
+
+	/**
+	 * Process the template option and normalizes it into a
+	 * a DocumentFragment that can be used as a partial or a
+	 * instance template.
+	 *
+	 * @param {*} template
+	 *    Possible values include:
+	 *    - DocumentFragment object
+	 *    - Node object of type Template
+	 *    - id selector: '#some-template-id'
+	 *    - template string: '<div><span>{{msg}}</span></div>'
+	 * @param {Boolean} clone
+	 * @return {DocumentFragment|undefined}
+	 */
+
+	exports.parse = function (template, clone) {
+	  var node, frag
+
+	  // if the template is already a document fragment,
+	  // do nothing
+	  if (template instanceof DocumentFragment) {
+	    return clone
+	      ? template.cloneNode(true)
+	      : template
+	  }
+
+	  if (typeof template === 'string') {
+	    // id selector
+	    if (template.charAt(0) === '#') {
+	      // id selector can be cached too
+	      frag = templateCache.get(template)
+	      if (!frag) {
+	        node = document.getElementById(template.slice(1))
+	        if (node) {
+	          frag = nodeToFragment(node)
+	          // save selector to cache
+	          templateCache.put(template, frag)
+	        }
+	      }
+	    } else {
+	      // normal string template
+	      frag = stringToFragment(template)
+	    }
+	  } else if (template.nodeType) {
+	    // a direct node
+	    frag = nodeToFragment(template)
+	  }
+
+	  return frag && clone
+	    ? exports.clone(frag)
+	    : frag
+	}
+
+/***/ },
 /* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Cache = __webpack_require__(52)
+	var Cache = __webpack_require__(49)
 	var config = __webpack_require__(53)
 	var dirParser = __webpack_require__(62)
 	var regexEscapeRE = /[-.*+?^${}()|[\]\/\\]/g
@@ -10715,7 +10715,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var templateParser = __webpack_require__(64)
+	var templateParser = __webpack_require__(65)
 
 	module.exports = {
 
@@ -10756,7 +10756,7 @@
 /* 70 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var transition = __webpack_require__(59)
+	var transition = __webpack_require__(58)
 
 	module.exports = function (value) {
 	  var el = this.el
@@ -10767,26 +10767,6 @@
 
 /***/ },
 /* 71 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var _ = __webpack_require__(56)
-
-	module.exports = {
-
-	  bind: function () {
-	    this.attr = this.el.nodeType === 3
-	      ? 'nodeValue'
-	      : 'textContent'
-	  },
-
-	  update: function (value) {
-	    this.el[this.attr] = _.toString(value)
-	  }
-	  
-	}
-
-/***/ },
-/* 72 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var prefixes = ['-webkit-', '-moz-', '-ms-']
@@ -10834,6 +10814,26 @@
 	    }
 	  }
 
+	}
+
+/***/ },
+/* 72 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(56)
+
+	module.exports = {
+
+	  bind: function () {
+	    this.attr = this.el.nodeType === 3
+	      ? 'nodeValue'
+	      : 'textContent'
+	  },
+
+	  update: function (value) {
+	    this.el[this.attr] = _.toString(value)
+	  }
+	  
 	}
 
 /***/ },
@@ -11066,8 +11066,8 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Observer = __webpack_require__(58)
-	var Binding = __webpack_require__(51)
+	var Observer = __webpack_require__(59)
+	var Binding = __webpack_require__(52)
 
 	/**
 	 * Setup the scope of an instance, which contains:
@@ -11288,7 +11288,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Directive = __webpack_require__(49)
+	var Directive = __webpack_require__(51)
 	var compile = __webpack_require__(60)
 	var transclude = __webpack_require__(61)
 
@@ -11935,7 +11935,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Path = __webpack_require__(65)
+	var Path = __webpack_require__(64)
 
 	/**
 	 * Filter filter for v-repeat
@@ -12024,181 +12024,6 @@
 
 /***/ },
 /* 84 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var _ = __webpack_require__(56)
-	var arrayProto = Array.prototype
-	var arrayMethods = Object.create(arrayProto)
-
-	/**
-	 * Intercept mutating methods and emit events
-	 */
-
-	;[
-	  'push',
-	  'pop',
-	  'shift',
-	  'unshift',
-	  'splice',
-	  'sort',
-	  'reverse'
-	]
-	.forEach(function (method) {
-	  // cache original method
-	  var original = arrayProto[method]
-	  _.define(arrayMethods, method, function mutator () {
-	    // avoid leaking arguments:
-	    // http://jsperf.com/closure-with-arguments
-	    var i = arguments.length
-	    var args = new Array(i)
-	    while (i--) {
-	      args[i] = arguments[i]
-	    }
-	    var result = original.apply(this, args)
-	    var ob = this.__ob__
-	    var inserted
-	    switch (method) {
-	      case 'push':
-	        inserted = args
-	        break
-	      case 'unshift':
-	        inserted = args
-	        break
-	      case 'splice':
-	        inserted = args.slice(2)
-	        break
-	    }
-	    if (inserted) ob.observeArray(inserted)
-	    // notify change
-	    ob.notify()
-	    return result
-	  })
-	})
-
-	/**
-	 * Swap the element at the given index with a new value
-	 * and emits corresponding event.
-	 *
-	 * @param {Number} index
-	 * @param {*} val
-	 * @return {*} - replaced element
-	 */
-
-	_.define(
-	  arrayProto,
-	  '$set',
-	  function $set (index, val) {
-	    if (index >= this.length) {
-	      this.length = index + 1
-	    }
-	    return this.splice(index, 1, val)[0]
-	  }
-	)
-
-	/**
-	 * Convenience method to remove the element at given index.
-	 *
-	 * @param {Number} index
-	 * @param {*} val
-	 */
-
-	_.define(
-	  arrayProto,
-	  '$remove',
-	  function $remove (index) {
-	    if (typeof index !== 'number') {
-	      index = this.indexOf(index)
-	    }
-	    if (index > -1) {
-	      return this.splice(index, 1)[0]
-	    }
-	  }
-	)
-
-	module.exports = arrayMethods
-
-/***/ },
-/* 85 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var _ = __webpack_require__(56)
-	var objProto = Object.prototype
-
-	/**
-	 * Add a new property to an observed object
-	 * and emits corresponding event
-	 *
-	 * @param {String} key
-	 * @param {*} val
-	 * @public
-	 */
-
-	_.define(
-	  objProto,
-	  '$add',
-	  function $add (key, val) {
-	    var ob = this.__ob__
-	    if (!ob) {
-	      this[key] = val
-	      return
-	    }
-	    if (_.isReserved(key)) {
-	      _.warn('Refused to $add reserved key: ' + key)
-	      return
-	    }
-	    if (this.hasOwnProperty(key)) return
-	    ob.convert(key, val)
-	    if (ob.vms) {
-	      var i = ob.vms.length
-	      while (i--) {
-	        var vm = ob.vms[i]
-	        vm._proxy(key)
-	        vm._digest()
-	      }
-	    } else {
-	      ob.notify()
-	    }
-	  }
-	)
-
-	/**
-	 * Deletes a property from an observed object
-	 * and emits corresponding event
-	 *
-	 * @param {String} key
-	 * @public
-	 */
-
-	_.define(
-	  objProto,
-	  '$delete',
-	  function $delete (key) {
-	    var ob = this.__ob__
-	    if (!ob) {
-	      delete this[key]
-	      return
-	    }
-	    if (_.isReserved(key)) {
-	      _.warn('Refused to $add reserved key: ' + key)
-	      return
-	    }
-	    if (!this.hasOwnProperty(key)) return
-	    delete this[key]
-	    if (ob.vms) {
-	      var i = ob.vms.length
-	      while (i--) {
-	        var vm = ob.vms[i]
-	        vm._unproxy(key)
-	        vm._digest()
-	      }
-	    } else {
-	      ob.notify()
-	    }
-	  }
-	)
-
-/***/ },
-/* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
@@ -12392,7 +12217,7 @@
 	}
 
 /***/ },
-/* 87 */
+/* 85 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -12438,6 +12263,181 @@
 	    }
 	  }
 	}
+
+/***/ },
+/* 86 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(56)
+	var arrayProto = Array.prototype
+	var arrayMethods = Object.create(arrayProto)
+
+	/**
+	 * Intercept mutating methods and emit events
+	 */
+
+	;[
+	  'push',
+	  'pop',
+	  'shift',
+	  'unshift',
+	  'splice',
+	  'sort',
+	  'reverse'
+	]
+	.forEach(function (method) {
+	  // cache original method
+	  var original = arrayProto[method]
+	  _.define(arrayMethods, method, function mutator () {
+	    // avoid leaking arguments:
+	    // http://jsperf.com/closure-with-arguments
+	    var i = arguments.length
+	    var args = new Array(i)
+	    while (i--) {
+	      args[i] = arguments[i]
+	    }
+	    var result = original.apply(this, args)
+	    var ob = this.__ob__
+	    var inserted
+	    switch (method) {
+	      case 'push':
+	        inserted = args
+	        break
+	      case 'unshift':
+	        inserted = args
+	        break
+	      case 'splice':
+	        inserted = args.slice(2)
+	        break
+	    }
+	    if (inserted) ob.observeArray(inserted)
+	    // notify change
+	    ob.notify()
+	    return result
+	  })
+	})
+
+	/**
+	 * Swap the element at the given index with a new value
+	 * and emits corresponding event.
+	 *
+	 * @param {Number} index
+	 * @param {*} val
+	 * @return {*} - replaced element
+	 */
+
+	_.define(
+	  arrayProto,
+	  '$set',
+	  function $set (index, val) {
+	    if (index >= this.length) {
+	      this.length = index + 1
+	    }
+	    return this.splice(index, 1, val)[0]
+	  }
+	)
+
+	/**
+	 * Convenience method to remove the element at given index.
+	 *
+	 * @param {Number} index
+	 * @param {*} val
+	 */
+
+	_.define(
+	  arrayProto,
+	  '$remove',
+	  function $remove (index) {
+	    if (typeof index !== 'number') {
+	      index = this.indexOf(index)
+	    }
+	    if (index > -1) {
+	      return this.splice(index, 1)[0]
+	    }
+	  }
+	)
+
+	module.exports = arrayMethods
+
+/***/ },
+/* 87 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(56)
+	var objProto = Object.prototype
+
+	/**
+	 * Add a new property to an observed object
+	 * and emits corresponding event
+	 *
+	 * @param {String} key
+	 * @param {*} val
+	 * @public
+	 */
+
+	_.define(
+	  objProto,
+	  '$add',
+	  function $add (key, val) {
+	    var ob = this.__ob__
+	    if (!ob) {
+	      this[key] = val
+	      return
+	    }
+	    if (_.isReserved(key)) {
+	      _.warn('Refused to $add reserved key: ' + key)
+	      return
+	    }
+	    if (this.hasOwnProperty(key)) return
+	    ob.convert(key, val)
+	    if (ob.vms) {
+	      var i = ob.vms.length
+	      while (i--) {
+	        var vm = ob.vms[i]
+	        vm._proxy(key)
+	        vm._digest()
+	      }
+	    } else {
+	      ob.notify()
+	    }
+	  }
+	)
+
+	/**
+	 * Deletes a property from an observed object
+	 * and emits corresponding event
+	 *
+	 * @param {String} key
+	 * @public
+	 */
+
+	_.define(
+	  objProto,
+	  '$delete',
+	  function $delete (key) {
+	    var ob = this.__ob__
+	    if (!ob) {
+	      delete this[key]
+	      return
+	    }
+	    if (_.isReserved(key)) {
+	      _.warn('Refused to $add reserved key: ' + key)
+	      return
+	    }
+	    if (!this.hasOwnProperty(key)) return
+	    delete this[key]
+	    if (ob.vms) {
+	      var i = ob.vms.length
+	      while (i--) {
+	        var vm = ob.vms[i]
+	        vm._unproxy(key)
+	        vm._digest()
+	      }
+	    } else {
+	      ob.notify()
+	    }
+	  }
+	)
 
 /***/ },
 /* 88 */
@@ -12583,7 +12583,7 @@
 
 	var _ = __webpack_require__(56)
 	var Watcher = __webpack_require__(54)
-	var Path = __webpack_require__(65)
+	var Path = __webpack_require__(64)
 	var textParser = __webpack_require__(66)
 	var dirParser = __webpack_require__(62)
 	var expParser = __webpack_require__(63)
@@ -12745,7 +12745,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var transition = __webpack_require__(59)
+	var transition = __webpack_require__(58)
 
 	/**
 	 * Append instance to target
@@ -13348,7 +13348,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	// manipulation directives
-	exports.text       = __webpack_require__(71)
+	exports.text       = __webpack_require__(72)
 	exports.html       = __webpack_require__(69)
 	exports.attr       = __webpack_require__(67)
 	exports.show       = __webpack_require__(70)
@@ -13356,7 +13356,7 @@
 	exports.el         = __webpack_require__(95)
 	exports.ref        = __webpack_require__(96)
 	exports.cloak      = __webpack_require__(97)
-	exports.style      = __webpack_require__(72)
+	exports.style      = __webpack_require__(71)
 	exports.partial    = __webpack_require__(98)
 	exports.transition = __webpack_require__(73)
 
@@ -13439,8 +13439,8 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var templateParser = __webpack_require__(64)
-	var transition = __webpack_require__(59)
+	var templateParser = __webpack_require__(65)
+	var transition = __webpack_require__(58)
 
 	module.exports = {
 
@@ -13563,7 +13563,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var templateParser = __webpack_require__(64)
+	var templateParser = __webpack_require__(65)
 
 	module.exports = {
 
@@ -13727,7 +13727,7 @@
 	var isObject = _.isObject
 	var textParser = __webpack_require__(66)
 	var expParser = __webpack_require__(63)
-	var templateParser = __webpack_require__(64)
+	var templateParser = __webpack_require__(65)
 	var compile = __webpack_require__(60)
 	var transclude = __webpack_require__(61)
 	var mergeOptions = __webpack_require__(55)
@@ -14237,8 +14237,8 @@
 
 	var _ = __webpack_require__(56)
 	var compile = __webpack_require__(60)
-	var templateParser = __webpack_require__(64)
-	var transition = __webpack_require__(59)
+	var templateParser = __webpack_require__(65)
+	var transition = __webpack_require__(58)
 
 	module.exports = {
 
@@ -14485,13 +14485,13 @@
 	      // result for different input values, and the Observer
 	      // set events won't be triggered.
 	      _.nextTick(function () {
-	        var newVal = self._watcher.value
-	        self.update(newVal)
-	        if (charsOffset != null) {
-	          var cursorPos =
-	            _.toString(newVal).length - charsOffset
-	          el.setSelectionRange(cursorPos, cursorPos)
-	        }
+	        // var newVal = self._watcher.value
+	        // self.update(newVal)
+	        // if (charsOffset != null) {
+	        //   var cursorPos =
+	        //     _.toString(newVal).length - charsOffset
+	        //   el.setSelectionRange(cursorPos, cursorPos)
+	        // }
 	      })
 	    }
 	    this.event = lazy ? 'change' : 'input'

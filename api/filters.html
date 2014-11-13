@@ -114,6 +114,13 @@
 
 <p>Will result in:</p>
 <p><em>1 =&gt; ‘1st’</em><br><em>2 =&gt; ‘2nd’</em><br><em>3 =&gt; ‘3rd’</em><br><em>4 =&gt; ‘4th’</em><br><em>5 =&gt; ‘5th’</em></p>
+<h3 id="json">json</h3>
+<ul>
+<li>this filter takes one optional argument</li>
+</ul>
+<p>JSON.stringify() incoming value rather than outputting the string representation (i.e. <code>[object Object]</code>). It also takes one optional argument which is the indent level (defaults to 2):</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="title">pre</span>&gt;</span>{&#123;$data | json 4&#125;}<span class="tag">&lt;/<span class="title">pre</span>&gt;</span></div></pre></td></tr></table></figure>
+
 <h3 id="key">key</h3>
 <ul>
 <li>this filter only works in <code>v-on</code></li>
