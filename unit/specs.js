@@ -157,7 +157,7 @@
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Binding = __webpack_require__(50)
+	var Binding = __webpack_require__(49)
 
 	describe('Binding', function () {
 
@@ -196,7 +196,7 @@
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Cache = __webpack_require__(49)
+	var Cache = __webpack_require__(50)
 
 	/**
 	 * Debug function to assert cache state
@@ -623,7 +623,7 @@
 
 	var Observer = __webpack_require__(58)
 	var config = __webpack_require__(53)
-	var Binding = __webpack_require__(50)
+	var Binding = __webpack_require__(49)
 	var _ = __webpack_require__(56)
 
 	describe('Observer', function () {
@@ -5943,7 +5943,7 @@
 /* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var expParser = __webpack_require__(64)
+	var expParser = __webpack_require__(63)
 	var _ = __webpack_require__(56)
 
 	var testCases = [
@@ -6199,7 +6199,7 @@
 /* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Path = __webpack_require__(63)
+	var Path = __webpack_require__(64)
 
 	function assertPath (str, expected) {
 	  var path = Path.parse(str)
@@ -7292,6 +7292,61 @@
 /* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var uid = 0
+
+	/**
+	 * A binding is an observable that can have multiple
+	 * directives subscribing to it.
+	 *
+	 * @constructor
+	 */
+
+	function Binding () {
+	  this.id = ++uid
+	  this.subs = []
+	}
+
+	var p = Binding.prototype
+
+	/**
+	 * Add a directive subscriber.
+	 *
+	 * @param {Directive} sub
+	 */
+
+	p.addSub = function (sub) {
+	  this.subs.push(sub)
+	}
+
+	/**
+	 * Remove a directive subscriber.
+	 *
+	 * @param {Directive} sub
+	 */
+
+	p.removeSub = function (sub) {
+	  if (this.subs.length) {
+	    var i = this.subs.indexOf(sub)
+	    if (i > -1) this.subs.splice(i, 1)
+	  }
+	}
+
+	/**
+	 * Notify all subscribers of a new value.
+	 */
+
+	p.notify = function () {
+	  for (var i = 0, l = this.subs.length; i < l; i++) {
+	    this.subs[i].update()
+	  }
+	}
+
+	module.exports = Binding
+
+/***/ },
+/* 50 */
+/***/ function(module, exports, __webpack_require__) {
+
 	/**
 	 * A doubly linked list-based Least Recently Used (LRU)
 	 * cache. Will keep most recently used items while
@@ -7406,61 +7461,6 @@
 	module.exports = Cache
 
 /***/ },
-/* 50 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var uid = 0
-
-	/**
-	 * A binding is an observable that can have multiple
-	 * directives subscribing to it.
-	 *
-	 * @constructor
-	 */
-
-	function Binding () {
-	  this.id = ++uid
-	  this.subs = []
-	}
-
-	var p = Binding.prototype
-
-	/**
-	 * Add a directive subscriber.
-	 *
-	 * @param {Directive} sub
-	 */
-
-	p.addSub = function (sub) {
-	  this.subs.push(sub)
-	}
-
-	/**
-	 * Remove a directive subscriber.
-	 *
-	 * @param {Directive} sub
-	 */
-
-	p.removeSub = function (sub) {
-	  if (this.subs.length) {
-	    var i = this.subs.indexOf(sub)
-	    if (i > -1) this.subs.splice(i, 1)
-	  }
-	}
-
-	/**
-	 * Notify all subscribers of a new value.
-	 */
-
-	p.notify = function () {
-	  for (var i = 0, l = this.subs.length; i < l; i++) {
-	    this.subs[i].update()
-	  }
-	}
-
-	module.exports = Binding
-
-/***/ },
 /* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -7557,7 +7557,7 @@
 	var config = __webpack_require__(53)
 	var Watcher = __webpack_require__(54)
 	var textParser = __webpack_require__(66)
-	var expParser = __webpack_require__(64)
+	var expParser = __webpack_require__(63)
 
 	/**
 	 * A directive links a DOM element with a piece of data,
@@ -7748,7 +7748,7 @@
 	    if (lock) {
 	      var self = this
 	      _.nextTick(function () {
-	        self._locked = false        
+	        self._locked = false
 	      })
 	    }
 	  }
@@ -7847,7 +7847,7 @@
 	var _ = __webpack_require__(56)
 	var config = __webpack_require__(53)
 	var Observer = __webpack_require__(58)
-	var expParser = __webpack_require__(64)
+	var expParser = __webpack_require__(63)
 	var Batcher = __webpack_require__(48)
 
 	var batcher = new Batcher()
@@ -8427,6 +8427,9 @@
 	  }
 	}
 
+	// expose keycode hash
+	exports.key.keyCodes = keyCodes
+
 	/**
 	 * Install special array filters
 	 */
@@ -8439,7 +8442,7 @@
 
 	var _ = __webpack_require__(56)
 	var config = __webpack_require__(53)
-	var Binding = __webpack_require__(50)
+	var Binding = __webpack_require__(49)
 	var arrayMethods = __webpack_require__(84)
 	var arrayKeys = Object.getOwnPropertyNames(arrayMethods)
 	__webpack_require__(85)
@@ -8958,7 +8961,7 @@
 	    var realLinkFn = linkFn
 	    linkFn = function (vm, el) {
 	      el.value = vm.$interpolate(el.value)
-	      if (realLinkFn) realLinkFn(vm, el)      
+	      if (realLinkFn) realLinkFn(vm, el)
 	    }
 	    linkFn.terminal = true
 	  }
@@ -9007,41 +9010,50 @@
 	    return null
 	  }
 	  var frag = document.createDocumentFragment()
-	  var dirs = options.directives
-	  var el, token, value
+	  var el, token
 	  for (var i = 0, l = tokens.length; i < l; i++) {
 	    token = tokens[i]
-	    value = token.value
-	    if (token.tag) {
-	      if (token.oneTime) {
-	        el = document.createTextNode(value)
-	      } else {
-	        if (token.html) {
-	          el = document.createComment('v-html')
-	          token.type = 'html'
-	          token.def = dirs.html
-	          token.descriptor = dirParser.parse(value)[0]
-	        } else if (token.partial) {
-	          el = document.createComment('v-partial')
-	          token.type = 'partial'
-	          token.def = dirs.partial
-	          token.descriptor = dirParser.parse(value)[0]
-	        } else {
-	          // IE will clean up empty textNodes during
-	          // frag.cloneNode(true), so we have to give it
-	          // something here...
-	          el = document.createTextNode(' ')
-	          token.type = 'text'
-	          token.def = dirs.text
-	          token.descriptor = dirParser.parse(value)[0]
-	        }
-	      }
-	    } else {
-	      el = document.createTextNode(value)
-	    }
+	    el = token.tag
+	      ? processTextToken(token, options)
+	      : document.createTextNode(token.value)
 	    frag.appendChild(el)
 	  }
 	  return makeTextNodeLinkFn(tokens, frag, options)
+	}
+
+	/**
+	 * Process a single text token.
+	 *
+	 * @param {Object} token
+	 * @param {Object} options
+	 * @return {Node}
+	 */
+
+	function processTextToken (token, options) {
+	  var el
+	  if (token.oneTime) {
+	    el = document.createTextNode(token.value)
+	  } else {
+	    if (token.html) {
+	      el = document.createComment('v-html')
+	      setTokenType('html')
+	    } else if (token.partial) {
+	      el = document.createComment('v-partial')
+	      setTokenType('partial')
+	    } else {
+	      // IE will clean up empty textNodes during
+	      // frag.cloneNode(true), so we have to give it
+	      // something here...
+	      el = document.createTextNode(' ')
+	      setTokenType('text')
+	    }
+	  }
+	  function setTokenType (type) {
+	    token.type = type
+	    token.def = options.directives[type]
+	    token.descriptor = dirParser.parse(token.value)[0]
+	  }
+	  return el
 	}
 
 	/**
@@ -9545,7 +9557,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Cache = __webpack_require__(49)
+	var Cache = __webpack_require__(50)
 	var cache = new Cache(1000)
 	var argRE = /^[^\{\?]+$|^'[^']*'$|^"[^"]*"$/
 	var filterTokenRE = /[^\s'"]+|'[^']+'|"[^"]+"/g
@@ -9709,7 +9721,238 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Cache = __webpack_require__(49)
+	var Path = __webpack_require__(64)
+	var Cache = __webpack_require__(50)
+	var expressionCache = new Cache(1000)
+
+	var keywords =
+	  'Math,break,case,catch,continue,debugger,default,' +
+	  'delete,do,else,false,finally,for,function,if,in,' +
+	  'instanceof,new,null,return,switch,this,throw,true,try,' +
+	  'typeof,var,void,while,with,undefined,abstract,boolean,' +
+	  'byte,char,class,const,double,enum,export,extends,' +
+	  'final,float,goto,implements,import,int,interface,long,' +
+	  'native,package,private,protected,public,short,static,' +
+	  'super,synchronized,throws,transient,volatile,' +
+	  'arguments,let,yield'
+
+	var wsRE = /\s/g
+	var newlineRE = /\n/g
+	var saveRE = /[\{,]\s*[\w\$_]+\s*:|'[^']*'|"[^"]*"/g
+	var restoreRE = /"(\d+)"/g
+	var pathTestRE = /^[A-Za-z_$][\w$]*(\.[A-Za-z_$][\w$]*|\['.*?'\]|\[".*?"\]|\[\d+\])*$/
+	var pathReplaceRE = /[^\w$\.]([A-Za-z_$][\w$]*(\.[A-Za-z_$][\w$]*|\['.*?'\]|\[".*?"\])*)/g
+	var keywordsRE = new RegExp('^(' + keywords.replace(/,/g, '\\b|') + '\\b)')
+
+	/**
+	 * Save / Rewrite / Restore
+	 *
+	 * When rewriting paths found in an expression, it is
+	 * possible for the same letter sequences to be found in
+	 * strings and Object literal property keys. Therefore we
+	 * remove and store these parts in a temporary array, and
+	 * restore them after the path rewrite.
+	 */
+
+	var saved = []
+
+	/**
+	 * Save replacer
+	 *
+	 * @param {String} str
+	 * @return {String} - placeholder with index
+	 */
+
+	function save (str) {
+	  var i = saved.length
+	  saved[i] = str.replace(newlineRE, '\\n')
+	  return '"' + i + '"'
+	}
+
+	/**
+	 * Path rewrite replacer
+	 *
+	 * @param {String} raw
+	 * @return {String}
+	 */
+
+	function rewrite (raw) {
+	  var c = raw.charAt(0)
+	  var path = raw.slice(1)
+	  if (keywordsRE.test(path)) {
+	    return raw
+	  } else {
+	    path = path.indexOf('"') > -1
+	      ? path.replace(restoreRE, restore)
+	      : path
+	    return c + 'scope.' + path
+	  }
+	}
+
+	/**
+	 * Restore replacer
+	 *
+	 * @param {String} str
+	 * @param {String} i - matched save index
+	 * @return {String}
+	 */
+
+	function restore (str, i) {
+	  return saved[i]
+	}
+
+	/**
+	 * Rewrite an expression, prefixing all path accessors with
+	 * `scope.` and generate getter/setter functions.
+	 *
+	 * @param {String} exp
+	 * @param {Boolean} needSet
+	 * @return {Function}
+	 */
+
+	function compileExpFns (exp, needSet) {
+	  // reset state
+	  saved.length = 0
+	  // save strings and object literal keys
+	  var body = exp
+	    .replace(saveRE, save)
+	    .replace(wsRE, '')
+	  // rewrite all paths
+	  // pad 1 space here becaue the regex matches 1 extra char
+	  body = (' ' + body)
+	    .replace(pathReplaceRE, rewrite)
+	    .replace(restoreRE, restore)
+	  var getter = makeGetter(body)
+	  if (getter) {
+	    return {
+	      get: getter,
+	      body: body,
+	      set: needSet
+	        ? makeSetter(body)
+	        : null
+	    }
+	  }
+	}
+
+	/**
+	 * Compile getter setters for a simple path.
+	 *
+	 * @param {String} exp
+	 * @return {Function}
+	 */
+
+	function compilePathFns (exp) {
+	  var getter, path
+	  if (exp.indexOf('[') < 0) {
+	    // really simple path
+	    path = exp.split('.')
+	    getter = Path.compileGetter(path)
+	  } else {
+	    // do the real parsing
+	    path = Path.parse(exp)
+	    getter = path.get
+	  }
+	  return {
+	    get: getter,
+	    // always generate setter for simple paths
+	    set: function (obj, val) {
+	      Path.set(obj, path, val)
+	    }
+	  }
+	}
+
+	/**
+	 * Build a getter function. Requires eval.
+	 *
+	 * We isolate the try/catch so it doesn't affect the
+	 * optimization of the parse function when it is not called.
+	 *
+	 * @param {String} body
+	 * @return {Function|undefined}
+	 */
+
+	function makeGetter (body) {
+	  try {
+	    return new Function('scope', 'return ' + body + ';')
+	  } catch (e) {
+	    _.warn(
+	      'Invalid expression. ' +
+	      'Generated function body: ' + body
+	    )
+	  }
+	}
+
+	/**
+	 * Build a setter function.
+	 *
+	 * This is only needed in rare situations like "a[b]" where
+	 * a settable path requires dynamic evaluation.
+	 *
+	 * This setter function may throw error when called if the
+	 * expression body is not a valid left-hand expression in
+	 * assignment.
+	 *
+	 * @param {String} body
+	 * @return {Function|undefined}
+	 */
+
+	function makeSetter (body) {
+	  try {
+	    return new Function('scope', 'value', body + '=value;')
+	  } catch (e) {
+	    _.warn('Invalid setter function body: ' + body)
+	  }
+	}
+
+	/**
+	 * Check for setter existence on a cache hit.
+	 *
+	 * @param {Function} hit
+	 */
+
+	function checkSetter (hit) {
+	  if (!hit.set) {
+	    hit.set = makeSetter(hit.body)
+	  }
+	}
+
+	/**
+	 * Parse an expression into re-written getter/setters.
+	 *
+	 * @param {String} exp
+	 * @param {Boolean} needSet
+	 * @return {Function}
+	 */
+
+	exports.parse = function (exp, needSet) {
+	  exp = exp.trim()
+	  // try cache
+	  var hit = expressionCache.get(exp)
+	  if (hit) {
+	    if (needSet) {
+	      checkSetter(hit)
+	    }
+	    return hit
+	  }
+	  // we do a simple path check to optimize for them.
+	  // the check fails valid paths with unusal whitespaces,
+	  // but that's too rare and we don't care.
+	  var res = pathTestRE.test(exp)
+	    ? compilePathFns(exp)
+	    : compileExpFns(exp, needSet)
+	  expressionCache.put(exp, res)
+	  return res
+	}
+
+	// Export the pathRegex for external use
+	exports.pathTestRE = pathTestRE
+
+/***/ },
+/* 64 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(56)
+	var Cache = __webpack_require__(50)
 	var pathCache = new Cache(1000)
 	var identRE = /^[$_a-zA-Z]+[\w$]*$/
 
@@ -10010,242 +10253,11 @@
 	}
 
 /***/ },
-/* 64 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var _ = __webpack_require__(56)
-	var Path = __webpack_require__(63)
-	var Cache = __webpack_require__(49)
-	var expressionCache = new Cache(1000)
-
-	var keywords =
-	  'Math,break,case,catch,continue,debugger,default,' +
-	  'delete,do,else,false,finally,for,function,if,in,' +
-	  'instanceof,new,null,return,switch,this,throw,true,try,' +
-	  'typeof,var,void,while,with,undefined,abstract,boolean,' +
-	  'byte,char,class,const,double,enum,export,extends,' +
-	  'final,float,goto,implements,import,int,interface,long,' +
-	  'native,package,private,protected,public,short,static,' +
-	  'super,synchronized,throws,transient,volatile,' +
-	  'arguments,let,yield'
-
-	var wsRE = /\s/g
-	var newlineRE = /\n/g
-	var saveRE = /[\{,]\s*[\w\$_]+\s*:|'[^']*'|"[^"]*"/g
-	var restoreRE = /"(\d+)"/g
-	var pathTestRE = /^[A-Za-z_$][\w$]*(\.[A-Za-z_$][\w$]*|\['.*?'\]|\[".*?"\])*$/
-	var pathReplaceRE = /[^\w$\.]([A-Za-z_$][\w$]*(\.[A-Za-z_$][\w$]*|\['.*?'\]|\[".*?"\])*)/g
-	var keywordsRE = new RegExp('^(' + keywords.replace(/,/g, '\\b|') + '\\b)')
-
-	/**
-	 * Save / Rewrite / Restore
-	 *
-	 * When rewriting paths found in an expression, it is
-	 * possible for the same letter sequences to be found in
-	 * strings and Object literal property keys. Therefore we
-	 * remove and store these parts in a temporary array, and
-	 * restore them after the path rewrite.
-	 */
-
-	var saved = []
-
-	/**
-	 * Save replacer
-	 *
-	 * @param {String} str
-	 * @return {String} - placeholder with index
-	 */
-
-	function save (str) {
-	  var i = saved.length
-	  saved[i] = str.replace(newlineRE, '\\n')
-	  return '"' + i + '"'
-	}
-
-	/**
-	 * Path rewrite replacer
-	 *
-	 * @param {String} raw
-	 * @return {String}
-	 */
-
-	function rewrite (raw) {
-	  var c = raw.charAt(0)
-	  var path = raw.slice(1)
-	  if (keywordsRE.test(path)) {
-	    return raw
-	  } else {
-	    path = path.indexOf('"') > -1
-	      ? path.replace(restoreRE, restore)
-	      : path
-	    return c + 'scope.' + path
-	  }
-	}
-
-	/**
-	 * Restore replacer
-	 *
-	 * @param {String} str
-	 * @param {String} i - matched save index
-	 * @return {String}
-	 */
-
-	function restore (str, i) {
-	  return saved[i]
-	}
-
-	/**
-	 * Rewrite an expression, prefixing all path accessors with
-	 * `scope.` and generate getter/setter functions.
-	 *
-	 * @param {String} exp
-	 * @param {Boolean} needSet
-	 * @return {Function}
-	 */
-
-	function compileExpFns (exp, needSet) {
-	  // reset state
-	  saved.length = 0
-	  // save strings and object literal keys
-	  var body = exp
-	    .replace(saveRE, save)
-	    .replace(wsRE, '')
-	  // rewrite all paths
-	  // pad 1 space here becaue the regex matches 1 extra char
-	  body = (' ' + body)
-	    .replace(pathReplaceRE, rewrite)
-	    .replace(restoreRE, restore)
-	  var getter = makeGetter(body)
-	  if (getter) {
-	    return {
-	      get: getter,
-	      body: body,
-	      set: needSet
-	        ? makeSetter(body)
-	        : null
-	    }
-	  }
-	}
-
-	/**
-	 * Compile getter setters for a simple path.
-	 *
-	 * @param {String} exp
-	 * @return {Function}
-	 */
-
-	function compilePathFns (exp) {
-	  var getter, path
-	  if (exp.indexOf('[') < 0) {
-	    // really simple path
-	    path = exp.split('.')
-	    getter = Path.compileGetter(path)
-	  } else {
-	    // do the real parsing
-	    path = Path.parse(exp)
-	    getter = path.get
-	  }
-	  return {
-	    get: getter,
-	    // always generate setter for simple paths
-	    set: function (obj, val) {
-	      Path.set(obj, path, val)
-	    }
-	  }
-	}
-
-	/**
-	 * Build a getter function. Requires eval.
-	 *
-	 * We isolate the try/catch so it doesn't affect the
-	 * optimization of the parse function when it is not called.
-	 *
-	 * @param {String} body
-	 * @return {Function|undefined}
-	 */
-
-	function makeGetter (body) {
-	  try {
-	    return new Function('scope', 'return ' + body + ';')
-	  } catch (e) {
-	    _.warn(
-	      'Invalid expression. ' + 
-	      'Generated function body: ' + body
-	    )
-	  }
-	}
-
-	/**
-	 * Build a setter function.
-	 *
-	 * This is only needed in rare situations like "a[b]" where
-	 * a settable path requires dynamic evaluation.
-	 *
-	 * This setter function may throw error when called if the
-	 * expression body is not a valid left-hand expression in
-	 * assignment.
-	 *
-	 * @param {String} body
-	 * @return {Function|undefined}
-	 */
-
-	function makeSetter (body) {
-	  try {
-	    return new Function('scope', 'value', body + '=value;')
-	  } catch (e) {
-	    _.warn('Invalid setter function body: ' + body)
-	  }
-	}
-
-	/**
-	 * Check for setter existence on a cache hit.
-	 *
-	 * @param {Function} hit
-	 */
-
-	function checkSetter (hit) {
-	  if (!hit.set) {
-	    hit.set = makeSetter(hit.body)
-	  }
-	}
-
-	/**
-	 * Parse an expression into re-written getter/setters.
-	 *
-	 * @param {String} exp
-	 * @param {Boolean} needSet
-	 * @return {Function}
-	 */
-
-	exports.parse = function (exp, needSet) {
-	  exp = exp.trim()
-	  // try cache
-	  var hit = expressionCache.get(exp)
-	  if (hit) {
-	    if (needSet) {
-	      checkSetter(hit)
-	    }
-	    return hit
-	  }
-	  // we do a simple path check to optimize for them.
-	  // the check fails valid paths with unusal whitespaces,
-	  // but that's too rare and we don't care.
-	  var res = pathTestRE.test(exp)
-	    ? compilePathFns(exp)
-	    : compileExpFns(exp, needSet)
-	  expressionCache.put(exp, res)
-	  return res
-	}
-
-	// Export the pathRegex for external use
-	exports.pathTestRE = pathTestRE
-
-/***/ },
 /* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Cache = __webpack_require__(49)
+	var Cache = __webpack_require__(50)
 	var templateCache = new Cache(100)
 
 	/**
@@ -10471,7 +10483,7 @@
 /* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Cache = __webpack_require__(49)
+	var Cache = __webpack_require__(50)
 	var config = __webpack_require__(53)
 	var dirParser = __webpack_require__(62)
 	var regexEscapeRE = /[-.*+?^${}()|[\]\/\\]/g
@@ -11067,7 +11079,7 @@
 
 	var _ = __webpack_require__(56)
 	var Observer = __webpack_require__(58)
-	var Binding = __webpack_require__(50)
+	var Binding = __webpack_require__(49)
 
 	/**
 	 * Setup the scope of an instance, which contains:
@@ -11935,7 +11947,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Path = __webpack_require__(63)
+	var Path = __webpack_require__(64)
 
 	/**
 	 * Filter filter for v-repeat
@@ -12583,10 +12595,10 @@
 
 	var _ = __webpack_require__(56)
 	var Watcher = __webpack_require__(54)
-	var Path = __webpack_require__(63)
+	var Path = __webpack_require__(64)
 	var textParser = __webpack_require__(66)
 	var dirParser = __webpack_require__(62)
-	var expParser = __webpack_require__(64)
+	var expParser = __webpack_require__(63)
 	var filterRE = /[^|]\|[^|]/
 
 	/**
@@ -12756,13 +12768,10 @@
 	 */
 
 	exports.$appendTo = function (target, cb, withTransition) {
-	  target = query(target)
-	  var targetIsDetached = !_.inDoc(target)
-	  var op = withTransition === false || targetIsDetached
-	    ? append
-	    : transition.append
-	  insert(this, target, op, targetIsDetached, cb)
-	  return this
+	  return insert(
+	    this, target, cb, withTransition,
+	    append, transition.append
+	  )
 	}
 
 	/**
@@ -12792,13 +12801,10 @@
 	 */
 
 	exports.$before = function (target, cb, withTransition) {
-	  target = query(target)
-	  var targetIsDetached = !_.inDoc(target)
-	  var op = withTransition === false || targetIsDetached
-	    ? before
-	    : transition.before
-	  insert(this, target, op, targetIsDetached, cb)
-	  return this
+	  return insert(
+	    this, target, cb, withTransition,
+	    before, transition.before
+	  )
 	}
 
 	/**
@@ -12843,7 +12849,7 @@
 	  ) {
 	    op = withTransition === false
 	      ? append
-	      : transition.removeThenAppend 
+	      : transition.removeThenAppend
 	    blockOp(this, this._blockFragment, op, realCb)
 	  } else {
 	    op = withTransition === false
@@ -12859,12 +12865,19 @@
 	 *
 	 * @param {Vue} vm
 	 * @param {Element} target
-	 * @param {Function} op
-	 * @param {Boolean} targetIsDetached
 	 * @param {Function} [cb]
+	 * @param {Boolean} [withTransition]
+	 * @param {Function} op1 - op for non-transition insert
+	 * @param {Function} op2 - op for transition insert
+	 * @return vm
 	 */
 
-	function insert (vm, target, op, targetIsDetached, cb) {
+	function insert (vm, target, cb, withTransition, op1, op2) {
+	  target = query(target)
+	  var targetIsDetached = !_.inDoc(target)
+	  var op = withTransition === false || targetIsDetached
+	    ? op1
+	    : op2
 	  var shouldCallHook =
 	    !targetIsDetached &&
 	    !vm._isAttached &&
@@ -12877,6 +12890,7 @@
 	  if (shouldCallHook) {
 	    vm._callHook('attached')
 	  }
+	  return vm
 	}
 
 	/**
@@ -13328,7 +13342,7 @@
 	  vm._isDestroyed = true
 	  vm._callHook('destroyed')
 	  // turn off all instance listeners.
-	  vm.$off() 
+	  vm.$off()
 	}
 
 	/**
@@ -13726,7 +13740,7 @@
 	var _ = __webpack_require__(56)
 	var isObject = _.isObject
 	var textParser = __webpack_require__(66)
-	var expParser = __webpack_require__(64)
+	var expParser = __webpack_require__(63)
 	var templateParser = __webpack_require__(65)
 	var compile = __webpack_require__(60)
 	var transclude = __webpack_require__(61)

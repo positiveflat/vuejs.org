@@ -165,12 +165,12 @@
 <h3 id="v-repeat">v-repeat</h3>
 <ul>
 <li>This directive creates child Vue instances.</li>
-<li>This directive requires the value to be an Array or Object.</li>
+<li>This directive requires the value to be an Array, Object or Number.</li>
 <li>This directive can trigger transitions.</li>
 <li>This directive accepts an optional argument.</li>
 <li>Directive params: <code>trackby</code></li>
 </ul>
-<p>Create a child ViewModel for every item in the binding Array. These child ViewModels will be automatically created / destroyed when mutating methods, e.g. <code>push()</code>, are called on the Array.</p>
+<p>Create a child ViewModel for every item in the binding Array or Object. If the value is a whole Number then that many child ViewModels are created. These child ViewModels will be automatically created / destroyed when mutating methods, e.g. <code>push()</code>, are called on the Array or Object, or the number is increased or decreased.</p>
 <p>When no argument is provided, the child ViewModel will directly use the assigned element in the Array as its <code>$data</code>. If the value is not an object, a wrapper data object will be created and the value will be set on that object using the alias key <code>$value</code>.</p>
 <p><strong>Example:</strong></p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="title">ul</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="title">li</span> <span class="attribute">v-repeat</span>=<span class="value">"users"</span>&gt;</span></div><div class="line">    {&#123;name&#125;} {&#123;email&#125;}</div><div class="line">  <span class="tag">&lt;/<span class="title">li</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="title">ul</span>&gt;</span></div></pre></td></tr></table></figure>

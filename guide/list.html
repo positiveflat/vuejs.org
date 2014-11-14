@@ -227,6 +227,23 @@ new Vue({
 
 <p class="tip">In ECMAScript 5 there is no way to detect when a new property is added to an Object, or when a property is deleted from an Object. To deal with that, observed objects will be augmented with two methods: <code>$add(key, value)</code> and <code>$delete(key)</code>. These methods can be used to add / delete properties from observed objects while triggering the desired View updates.</p>
 
+<h2 id="Iterating_Over_a_Range">Iterating Over a Range</h2>
+<p><code>v-repeat</code> can also take an integer Number. In this case it will repeat the template that many times.</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">id</span>=<span class="value">"range"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">div</span> <span class="attribute">v-repeat</span>=<span class="value">"val"</span>&gt;</span>Hi! {&#123;$index&#125;}<span class="tag">&lt;/<span class="title">div</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="title">div</span>&gt;</span></div></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">new</span> Vue({</div><div class="line">  el: <span class="string">'#range'</span>,</div><div class="line">  data: {</div><div class="line">    val: <span class="number">3</span></div><div class="line">  }</div><div class="line">});</div></pre></td></tr></table></figure>
+
+<p><strong>Result:</strong></p>
+<p><ul id="range" class="demo"><li v-repeat="val">Hi! {&#123;$index&#125;}</li></ul></p>
+<script>
+new Vue({
+  el: '#range',
+  data: { val: 3 }
+});
+</script>
+
 <h2 id="Array_Filters">Array Filters</h2>
 <p>Sometimes we only need to display a filtered or sorted version of the Array without actually mutating or resetting the original data. Vue provides two built-in filters to simplify such usage: <code>filterBy</code> and <code>orderBy</code>. Check out their <a href="/api/filters.html#filterBy">documentations</a> for more details.</p>
 <p>Next up: <a href="/guide/events.html">Listening for Events</a>.</p>
