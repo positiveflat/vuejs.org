@@ -97,7 +97,7 @@
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Batcher = __webpack_require__(48)
+	var Batcher = __webpack_require__(50)
 	var nextTick = __webpack_require__(56).nextTick
 
 	describe('Batcher', function () {
@@ -157,7 +157,7 @@
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Binding = __webpack_require__(49)
+	var Binding = __webpack_require__(48)
 
 	describe('Binding', function () {
 
@@ -196,7 +196,7 @@
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Cache = __webpack_require__(50)
+	var Cache = __webpack_require__(49)
 
 	/**
 	 * Debug function to assert cache state
@@ -623,7 +623,7 @@
 
 	var Observer = __webpack_require__(58)
 	var config = __webpack_require__(53)
-	var Binding = __webpack_require__(49)
+	var Binding = __webpack_require__(48)
 	var _ = __webpack_require__(56)
 
 	describe('Observer', function () {
@@ -7222,76 +7222,6 @@
 /* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-
-	/**
-	 * The Batcher maintains a job queue to be run
-	 * async on the next event loop.
-	 */
-
-	function Batcher () {
-	  this.reset()
-	}
-
-	var p = Batcher.prototype
-
-	/**
-	 * Push a job into the job queue.
-	 * Jobs with duplicate IDs will be skipped unless it's
-	 * pushed when the queue is being flushed.
-	 *
-	 * @param {Object} job
-	 *   properties:
-	 *   - {String|Number} id
-	 *   - {Function}      run
-	 */
-
-	p.push = function (job) {
-	  if (!job.id || !this.has[job.id] || this.flushing) {
-	    this.queue.push(job)
-	    this.has[job.id] = job
-	    if (!this.waiting) {
-	      this.waiting = true
-	      _.nextTick(this.flush, this)
-	    }
-	  }
-	}
-
-	/**
-	 * Flush the queue and run the jobs.
-	 * Will call a preFlush hook if has one.
-	 */
-
-	p.flush = function () {
-	  this.flushing = true
-	  // do not cache length because more jobs might be pushed
-	  // as we run existing jobs
-	  for (var i = 0; i < this.queue.length; i++) {
-	    var job = this.queue[i]
-	    if (!job.cancelled) {
-	      job.run()
-	    }
-	  }
-	  this.reset()
-	}
-
-	/**
-	 * Reset the batcher's state.
-	 */
-
-	p.reset = function () {
-	  this.has = {}
-	  this.queue = []
-	  this.waiting = false
-	  this.flushing = false
-	}
-
-	module.exports = Batcher
-
-/***/ },
-/* 49 */
-/***/ function(module, exports, __webpack_require__) {
-
 	var uid = 0
 
 	/**
@@ -7344,7 +7274,7 @@
 	module.exports = Binding
 
 /***/ },
-/* 50 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -7459,6 +7389,76 @@
 	}
 
 	module.exports = Cache
+
+/***/ },
+/* 50 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(56)
+
+	/**
+	 * The Batcher maintains a job queue to be run
+	 * async on the next event loop.
+	 */
+
+	function Batcher () {
+	  this.reset()
+	}
+
+	var p = Batcher.prototype
+
+	/**
+	 * Push a job into the job queue.
+	 * Jobs with duplicate IDs will be skipped unless it's
+	 * pushed when the queue is being flushed.
+	 *
+	 * @param {Object} job
+	 *   properties:
+	 *   - {String|Number} id
+	 *   - {Function}      run
+	 */
+
+	p.push = function (job) {
+	  if (!job.id || !this.has[job.id] || this.flushing) {
+	    this.queue.push(job)
+	    this.has[job.id] = job
+	    if (!this.waiting) {
+	      this.waiting = true
+	      _.nextTick(this.flush, this)
+	    }
+	  }
+	}
+
+	/**
+	 * Flush the queue and run the jobs.
+	 * Will call a preFlush hook if has one.
+	 */
+
+	p.flush = function () {
+	  this.flushing = true
+	  // do not cache length because more jobs might be pushed
+	  // as we run existing jobs
+	  for (var i = 0; i < this.queue.length; i++) {
+	    var job = this.queue[i]
+	    if (!job.cancelled) {
+	      job.run()
+	    }
+	  }
+	  this.reset()
+	}
+
+	/**
+	 * Reset the batcher's state.
+	 */
+
+	p.reset = function () {
+	  this.has = {}
+	  this.queue = []
+	  this.waiting = false
+	  this.flushing = false
+	}
+
+	module.exports = Batcher
 
 /***/ },
 /* 51 */
@@ -7848,7 +7848,7 @@
 	var config = __webpack_require__(53)
 	var Observer = __webpack_require__(58)
 	var expParser = __webpack_require__(63)
-	var Batcher = __webpack_require__(48)
+	var Batcher = __webpack_require__(50)
 
 	var batcher = new Batcher()
 	var uid = 0
@@ -8442,7 +8442,7 @@
 
 	var _ = __webpack_require__(56)
 	var config = __webpack_require__(53)
-	var Binding = __webpack_require__(49)
+	var Binding = __webpack_require__(48)
 	var arrayMethods = __webpack_require__(84)
 	var arrayKeys = Object.getOwnPropertyNames(arrayMethods)
 	__webpack_require__(85)
@@ -9557,7 +9557,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Cache = __webpack_require__(50)
+	var Cache = __webpack_require__(49)
 	var cache = new Cache(1000)
 	var argRE = /^[^\{\?]+$|^'[^']*'$|^"[^"]*"$/
 	var filterTokenRE = /[^\s'"]+|'[^']+'|"[^"]+"/g
@@ -9722,7 +9722,7 @@
 
 	var _ = __webpack_require__(56)
 	var Path = __webpack_require__(64)
-	var Cache = __webpack_require__(50)
+	var Cache = __webpack_require__(49)
 	var expressionCache = new Cache(1000)
 
 	var keywords =
@@ -9952,7 +9952,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Cache = __webpack_require__(50)
+	var Cache = __webpack_require__(49)
 	var pathCache = new Cache(1000)
 	var identRE = /^[$_a-zA-Z]+[\w$]*$/
 
@@ -10257,7 +10257,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Cache = __webpack_require__(50)
+	var Cache = __webpack_require__(49)
 	var templateCache = new Cache(100)
 
 	/**
@@ -10483,7 +10483,7 @@
 /* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Cache = __webpack_require__(50)
+	var Cache = __webpack_require__(49)
 	var config = __webpack_require__(53)
 	var dirParser = __webpack_require__(62)
 	var regexEscapeRE = /[-.*+?^${}()|[\]\/\\]/g
@@ -11079,7 +11079,7 @@
 
 	var _ = __webpack_require__(56)
 	var Observer = __webpack_require__(58)
-	var Binding = __webpack_require__(49)
+	var Binding = __webpack_require__(48)
 
 	/**
 	 * Setup the scope of an instance, which contains:
