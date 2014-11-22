@@ -238,6 +238,18 @@
 <li><strong>element</strong> <code>HTMLElement</code></li>
 </ul>
 <p>Partially compile a piece of DOM (Element or DocumentFragment). The method returns a <code>decompile</code> function that tearsdown the directives created during the process. Note the decompile function does not remove the DOM. This method is exposed primarily for writing advanced custom directives.</p>
+<h3 id="vm-$addChild(_[options,_constructor]_)">vm.$addChild( [options, constructor] )</h3>
+<ul>
+<li><strong>options</strong> <code>Object</code> <em>optional</em></li>
+<li><strong>constructor</strong> <code>Function</code> <em>optional</em></li>
+</ul>
+<p>Adds a child instance to the current instance. The options object is the same in manually instantiating an instance. Optionally you can pass in a constructor created from <code>Vue.extend()</code>.</p>
+<p>There are three implications of a parent-child relationship between instances:</p>
+<ol>
+<li>The parent and child can communicate via <a href="#Events">the event system</a>.</li>
+<li>The child has access to all parent assets (e.g. custom directives).</li>
+<li>The child, if inheriting parent scope, has access to parent scope data properties.</li>
+</ol>
 
     <div class="footer">Caught a mistake or want to contribute to the documentation? <a href="https://github.com/vuejs/vuejs.org" target="_blank">Fork this site on Github</a>!</div>
 </div>
