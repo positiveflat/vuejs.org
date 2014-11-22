@@ -5035,7 +5035,7 @@
 	var _ = __webpack_require__(56)
 	var Vue = __webpack_require__(51)
 	var transition = __webpack_require__(59)
-	var def = __webpack_require__(71)
+	var def = __webpack_require__(70)
 
 	if (_.inBrowser) {
 	  describe('v-show', function () {
@@ -5067,7 +5067,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var def = __webpack_require__(70)
+	var def = __webpack_require__(71)
 
 	if (_.inBrowser) {
 	  describe('v-style', function () {
@@ -10768,6 +10768,19 @@
 /* 70 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var transition = __webpack_require__(59)
+
+	module.exports = function (value) {
+	  var el = this.el
+	  transition.apply(el, value ? 1 : -1, function () {
+	    el.style.display = value ? '' : 'none'
+	  }, this.vm)
+	}
+
+/***/ },
+/* 71 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var prefixes = ['-webkit-', '-moz-', '-ms-']
 	var importantRE = /!important;?$/
 
@@ -10813,19 +10826,6 @@
 	    }
 	  }
 
-	}
-
-/***/ },
-/* 71 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var transition = __webpack_require__(59)
-
-	module.exports = function (value) {
-	  var el = this.el
-	  transition.apply(el, value ? 1 : -1, function () {
-	    el.style.display = value ? '' : 'none'
-	  }, this.vm)
 	}
 
 /***/ },
@@ -13365,12 +13365,12 @@
 	exports.text       = __webpack_require__(72)
 	exports.html       = __webpack_require__(69)
 	exports.attr       = __webpack_require__(67)
-	exports.show       = __webpack_require__(71)
+	exports.show       = __webpack_require__(70)
 	exports['class']   = __webpack_require__(68)
 	exports.el         = __webpack_require__(95)
 	exports.ref        = __webpack_require__(96)
 	exports.cloak      = __webpack_require__(97)
-	exports.style      = __webpack_require__(70)
+	exports.style      = __webpack_require__(71)
 	exports.partial    = __webpack_require__(98)
 	exports.transition = __webpack_require__(73)
 
