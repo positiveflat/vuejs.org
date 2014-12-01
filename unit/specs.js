@@ -44,18 +44,21 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
+	__webpack_require__(5);
+	__webpack_require__(6);
+	__webpack_require__(7);
+	__webpack_require__(8);
 	__webpack_require__(9);
 	__webpack_require__(10);
-	__webpack_require__(11);
-	__webpack_require__(12);
-	__webpack_require__(13);
-	__webpack_require__(14);
 	__webpack_require__(1);
 	__webpack_require__(2);
+	__webpack_require__(11);
+	__webpack_require__(12);
 	__webpack_require__(3);
+	__webpack_require__(13);
+	__webpack_require__(14);
 	__webpack_require__(15);
 	__webpack_require__(16);
-	__webpack_require__(4);
 	__webpack_require__(17);
 	__webpack_require__(18);
 	__webpack_require__(19);
@@ -74,23 +77,20 @@
 	__webpack_require__(32);
 	__webpack_require__(33);
 	__webpack_require__(34);
-	__webpack_require__(5);
 	__webpack_require__(35);
 	__webpack_require__(36);
 	__webpack_require__(37);
-	__webpack_require__(6);
 	__webpack_require__(38);
 	__webpack_require__(39);
 	__webpack_require__(40);
 	__webpack_require__(41);
 	__webpack_require__(42);
-	__webpack_require__(7);
 	__webpack_require__(43);
 	__webpack_require__(44);
 	__webpack_require__(45);
 	__webpack_require__(46);
 	__webpack_require__(47);
-	module.exports = __webpack_require__(8);
+	module.exports = __webpack_require__(4);
 
 
 /***/ },
@@ -157,46 +157,7 @@
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Binding = __webpack_require__(49)
-
-	describe('Binding', function () {
-
-	  var b
-	  beforeEach(function () {
-	    b = new Binding()
-	  })
-
-	  it('addSub', function () {
-	    var sub = {}
-	    b.addSub(sub)
-	    expect(b.subs.length).toBe(1)
-	    expect(b.subs.indexOf(sub)).toBe(0)
-	  })
-
-	  it('removeSub', function () {
-	    var sub = {}
-	    b.addSub(sub)
-	    b.removeSub(sub)
-	    expect(b.subs.length).toBe(0)
-	    expect(b.subs.indexOf(sub)).toBe(-1)
-	  })
-
-	  it('notify', function () {
-	    var sub = {
-	      update: jasmine.createSpy('sub')
-	    }
-	    b.addSub(sub)
-	    b.notify()
-	    expect(sub.update).toHaveBeenCalled()
-	  })
-
-	})
-
-/***/ },
-/* 3 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Cache = __webpack_require__(50)
+	var Cache = __webpack_require__(49)
 
 	/**
 	 * Debug function to assert cache state
@@ -252,11 +213,11 @@
 	})
 
 /***/ },
-/* 4 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(51)
-	var Directive = __webpack_require__(52)
+	var Vue = __webpack_require__(50)
+	var Directive = __webpack_require__(51)
 	var nextTick = Vue.nextTick
 
 	describe('Directive', function () {
@@ -272,7 +233,8 @@
 	    }
 	    vm = new Vue({
 	      data:{
-	        a:1
+	        a:1,
+	        b: { c: { d: 2 }}
 	      },
 	      filters: {
 	        test: function (v) {
@@ -405,6 +367,18 @@
 	    })
 	  })
 
+	  it('deep', function (done) {
+	    def.deep = true
+	    var d = new Directive('test', el, vm, {
+	      expression: 'b'
+	    }, def)
+	    vm.b.c.d = 3
+	    nextTick(function () {
+	      expect(def.update.calls.count()).toBe(2)
+	      done()
+	    })
+	  })
+
 	  it('function def', function () {
 	    var d = new Directive('test', el, vm, {
 	      expression: 'a'
@@ -437,808 +411,12 @@
 	})
 
 /***/ },
-/* 5 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(51)
-	var filters = __webpack_require__(57)
-
-	describe('Filters', function () {
-
-	  it('json', function () {
-	    var filter = filters.json
-	    var obj = {a:{b:2}}
-	    expect(filter(obj)).toBe(JSON.stringify(obj, null, 2))
-	    expect(filter(obj, 4)).toBe(JSON.stringify(obj, null, 4))
-	  })
-	  
-	  it('capitalize', function () {
-	    var filter = filters.capitalize
-	    var res = filter('fsefsfsef')
-	    expect(res.charAt(0)).toBe('F')
-	    expect(res.slice(1)).toBe('sefsfsef')
-	    assertNumberAndFalsy(filter)
-	  })
-
-	  it('uppercase', function () {
-	    var filter = filters.uppercase
-	    expect(filter('fsefef')).toBe('FSEFEF')
-	    assertNumberAndFalsy(filter)
-	  })
-
-	  it('lowercase', function () {
-	    var filter = filters.lowercase
-	    expect(filter('AWEsoME')).toBe('awesome')
-	    assertNumberAndFalsy(filter)
-	  })
-
-	  it('pluralize', function () {
-	    var filter = filters.pluralize
-	    // single arg
-	    var arg = 'item'
-	    expect(filter(0, arg)).toBe('items')
-	    expect(filter(1, arg)).toBe('item')
-	    expect(filter(2, arg)).toBe('items')
-	    // multi args
-	    expect(filter(0, 'st', 'nd', 'rd', 'th')).toBe('th')
-	    expect(filter(1, 'st', 'nd', 'rd', 'th')).toBe('st')
-	    expect(filter(2, 'st', 'nd', 'rd', 'th')).toBe('nd')
-	    expect(filter(3, 'st', 'nd', 'rd', 'th')).toBe('rd')
-	    expect(filter(4, 'st', 'nd', 'rd', 'th')).toBe('th')
-	  })
-
-	  it('currency', function () {
-	    var filter = filters.currency
-	    // default
-	    expect(filter(1234)).toBe('$1,234.00')
-	    expect(filter(1234.45)).toBe('$1,234.45')
-	    expect(filter(123443434.4343434)).toBe('$123,443,434.43')
-	    // sign arg
-	    expect(filter(2134, '@')).toBe('@2,134.00')
-	    // falsy and 0
-	    expect(filter(0)).toBe('$0.00')
-	    expect(filter(false)).toBe('')
-	    expect(filter(null)).toBe('')
-	    expect(filter(undefined)).toBe('')
-	    // negative numbers
-	    expect(filter(-50)).toBe('-$50.00')
-	    expect(filter(-150.43)).toBe('-$150.43')
-	    expect(filter(-1500.4343434)).toBe('-$1,500.43')
-	  })
-
-	  it('key', function () {
-	    var filter = filters.key
-	    expect(filter(null)).toBeUndefined()
-	    var spy = jasmine.createSpy('filter:key')
-	    var handler = filter(spy, 'enter')
-	    handler({ keyCode: 0 })
-	    expect(spy).not.toHaveBeenCalled()
-	    handler({ keyCode: 13 })
-	    expect(spy).toHaveBeenCalled()
-	    // direct keycode
-	    spy = jasmine.createSpy('filter:key')
-	    handler = filter(spy, 13)
-	    handler({ keyCode: 0 })
-	    expect(spy).not.toHaveBeenCalled()
-	    handler({ keyCode: 13 })
-	    expect(spy).toHaveBeenCalled()
-	  })
-
-	  it('filterBy', function () {
-	    var filter = filters.filterBy
-	    var arr = [
-	      { a: 1, b: { c: 'hello' }},
-	      { a: 1, b: 'hello'},
-	      { a: 1, b: 2 }
-	    ]
-	    var vm = new Vue({
-	      data: {
-	        search: {
-	          key: 'hello',
-	          datakey: 'b.c'
-	        }
-	      }
-	    })
-	    var res
-	    // normal
-	    res = filter.call(vm, arr, 'search.key')
-	    expect(res.length).toBe(2)
-	    expect(res[0]).toBe(arr[0])
-	    expect(res[1]).toBe(arr[1])
-	    // data key
-	    res = filter.call(vm, arr, 'search.key', 'search.datakey')
-	    expect(res.length).toBe(1)
-	    expect(res[0]).toBe(arr[0])
-	    // quotes
-	    res = filter.call(vm, arr, "'hello'", "'b.c'")
-	    expect(res.length).toBe(1)
-	    expect(res[0]).toBe(arr[0])
-	    // delimiter
-	    res = filter.call(vm, arr, 'search.key', 'in', 'search.datakey')
-	    expect(res.length).toBe(1)
-	    expect(res[0]).toBe(arr[0])
-	    // no search key
-	    res = filter.call(vm, arr, 'abc')
-	    expect(res).toBe(arr)
-	  })
-
-	  it('orderBy', function () {
-	    var filter = filters.orderBy
-	    var arr = [
-	      { a: { b: 0 }, c: 'b'},
-	      { a: { b: 2 }, c: 'c'},
-	      { a: { b: 1 }, c: 'a'}
-	    ]
-	    var res
-	    // sort key
-	    res = filter.call(new Vue({
-	      data: {
-	        sortby: 'a.b',
-	      }
-	    }), arr, 'sortby')
-	    expect(res.length).toBe(3)
-	    expect(res[0].a.b).toBe(0)
-	    expect(res[1].a.b).toBe(1)
-	    expect(res[2].a.b).toBe(2)
-	    // reverse key
-	    res = filter.call(new Vue({
-	      data: { sortby: 'a.b', reverse: true }
-	    }), arr, 'sortby', 'reverse')
-	    expect(res.length).toBe(3)
-	    expect(res[0].a.b).toBe(2)
-	    expect(res[1].a.b).toBe(1)
-	    expect(res[2].a.b).toBe(0)
-	    // literal args
-	    res = filter.call(new Vue(), arr, "'c'", '-1')
-	    expect(res.length).toBe(3)
-	    expect(res[0].c).toBe('c')
-	    expect(res[1].c).toBe('b')
-	    expect(res[2].c).toBe('a')
-	    // negate reverse
-	    res = filter.call(new Vue({
-	      data: { reverse: true }
-	    }), arr, "'c'", '!reverse')
-	    expect(res.length).toBe(3)
-	    expect(res[0].c).toBe('a')
-	    expect(res[1].c).toBe('b')
-	    expect(res[2].c).toBe('c')
-	    // no sort key
-	    res = filter.call(new Vue(), arr, 'abc')
-	    expect(res).toBe(arr)
-	  })
-	})
-
-	function assertNumberAndFalsy (filter) {
-	  // should stringify numbers
-	  expect(filter(12345)).toBe('12345')
-	  expect(filter(0)).toBe('0')
-	  expect(filter(undefined)).toBe('')
-	  expect(filter(null)).toBe('')
-	  expect(filter(false)).toBe('')
-	}
-
-/***/ },
-/* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Observer = __webpack_require__(58)
-	var config = __webpack_require__(53)
-	var Binding = __webpack_require__(49)
-	var _ = __webpack_require__(56)
-
-	describe('Observer', function () {
-
-	  var spy
-	  beforeEach(function () {
-	    spy = jasmine.createSpy('observer')
-	  })
-
-	  it('create on non-observables', function () {
-	    // skip primitive value
-	    var ob = Observer.create(1)
-	    expect(ob).toBeUndefined()
-	    // avoid vue instance
-	    ob = Observer.create(new _.Vue())
-	    expect(ob).toBeUndefined()
-	  })
-
-	  it('create on object', function () {
-	    // on object
-	    var obj = {
-	      a: {},
-	      b: {}
-	    }
-	    var ob = Observer.create(obj)
-	    expect(ob instanceof Observer).toBe(true)
-	    expect(ob.active).toBe(true)
-	    expect(ob.value).toBe(obj)
-	    expect(obj.__ob__).toBe(ob)
-	    // should've walked children
-	    expect(obj.a.__ob__ instanceof Observer).toBe(true)
-	    expect(obj.b.__ob__ instanceof Observer).toBe(true)
-	    // should return existing ob on already observed objects
-	    var ob2 = Observer.create(obj)
-	    expect(ob2).toBe(ob)
-	  })
-
-	  it('create on array', function () {
-	    // on object
-	    var arr = [{}, {}]
-	    var ob = Observer.create(arr)
-	    expect(ob instanceof Observer).toBe(true)
-	    expect(ob.active).toBe(true)
-	    expect(ob.value).toBe(arr)
-	    expect(arr.__ob__).toBe(ob)
-	    // should've walked children
-	    expect(arr[0].__ob__ instanceof Observer).toBe(true)
-	    expect(arr[1].__ob__ instanceof Observer).toBe(true)
-	  })
-
-	  it('observing object prop change', function () {
-	    var obj = { a: { b: 2 } }
-	    Observer.create(obj)
-	    // mock a watcher!
-	    var watcher = {
-	      deps: [],
-	      addDep: function (binding) {
-	        this.deps.push(binding)
-	        binding.addSub(this)
-	      },
-	      update: jasmine.createSpy()
-	    }
-	    var dump
-	    // collect dep
-	    Observer.target = watcher
-	    dump = obj.a.b
-	    Observer.target = null
-	    expect(watcher.deps.length).toBe(2)
-	    dump = obj.a.b = 3
-	    expect(watcher.update.calls.count()).toBe(1)
-	    // swap object
-	    var oldA = obj.a
-	    obj.a = { b: 4 }
-	    expect(watcher.update.calls.count()).toBe(2)
-	    expect(oldA.__ob__.bindings.length).toBe(0)
-	    expect(obj.a.__ob__.bindings.length).toBe(1)
-	    // recollect dep
-	    var oldDeps = watcher.deps
-	    watcher.deps = []
-	    Observer.target = watcher
-	    dump = obj.a.b
-	    Observer.target = null
-	    expect(watcher.deps.length).toBe(2)
-	    // set on the swapped object
-	    obj.a.b = 5
-	    expect(watcher.update.calls.count()).toBe(3)
-	  })
-
-	  it('observing $add/$delete', function () {
-	    var obj = { a: 1 }
-	    var ob = Observer.create(obj)
-	    var binding = new Binding()
-	    ob.bindings.push(binding)
-	    spyOn(binding, 'notify')
-	    obj.$add('b', 2)
-	    expect(obj.b).toBe(2)
-	    expect(binding.notify.calls.count()).toBe(1)
-	    obj.$delete('a')
-	    expect(obj.hasOwnProperty('a')).toBe(false)
-	    expect(binding.notify.calls.count()).toBe(2)
-	    // should ignore adding an existing key
-	    obj.$add('b', 3)
-	    expect(obj.b).toBe(2)
-	    expect(binding.notify.calls.count()).toBe(2)
-	    // should ignore deleting non-existing key
-	    obj.$delete('a')
-	    expect(binding.notify.calls.count()).toBe(2)
-	    // should work on non-observed objects
-	    var obj2 = { a: 1 }
-	    obj2.$delete('a')
-	    expect(obj2.hasOwnProperty('a')).toBe(false)
-	  })
-
-	  it('observing array mutation', function () {
-	    var arr = []
-	    var ob = Observer.create(arr)
-	    var binding = new Binding()
-	    ob.bindings.push(binding)
-	    spyOn(binding, 'notify')
-	    var objs = [{}, {}, {}]
-	    arr.push(objs[0])
-	    arr.pop()
-	    arr.unshift(objs[1])
-	    arr.shift()
-	    arr.splice(0, 0, objs[2])
-	    arr.sort()
-	    arr.reverse()
-	    expect(binding.notify.calls.count()).toBe(7)
-	    // inserted elements should be observed
-	    objs.forEach(function (obj) {
-	      expect(obj.__ob__ instanceof Observer).toBe(true)
-	    })
-	  })
-
-	  it('array $set', function () {
-	    var arr = [1]
-	    var ob = Observer.create(arr)
-	    var binding = new Binding()
-	    ob.bindings.push(binding)
-	    spyOn(binding, 'notify')
-	    arr.$set(0, 2)
-	    expect(arr[0]).toBe(2)
-	    expect(binding.notify.calls.count()).toBe(1)
-	    // setting out of bound index
-	    arr.$set(2, 3)
-	    expect(arr[2]).toBe(3)
-	    expect(binding.notify.calls.count()).toBe(2)
-	  })
-
-	  it('array $remove', function () {
-	    var arr = [{}, {}]
-	    var obj1 = arr[0]
-	    var obj2 = arr[1]
-	    var ob = Observer.create(arr)
-	    var binding = new Binding()
-	    ob.bindings.push(binding)
-	    spyOn(binding, 'notify')
-	    // remove by index
-	    arr.$remove(0)
-	    expect(arr.length).toBe(1)
-	    expect(arr[0]).toBe(obj2)
-	    expect(binding.notify.calls.count()).toBe(1)
-	    // remove by identity, not in array
-	    arr.$remove(obj1)
-	    expect(arr.length).toBe(1)
-	    expect(arr[0]).toBe(obj2)
-	    expect(binding.notify.calls.count()).toBe(1)
-	    // remove by identity, in array
-	    arr.$remove(obj2)
-	    expect(arr.length).toBe(0)
-	    expect(binding.notify.calls.count()).toBe(2)
-	  })
-
-	  it('no proto', function () {
-	    config.proto = false
-	    // object
-	    var obj = {a:1}
-	    var ob = Observer.create(obj)
-	    expect(obj.$add).toBeTruthy()
-	    expect(obj.$delete).toBeTruthy()
-	    var binding = new Binding()
-	    ob.bindings.push(binding)
-	    spyOn(binding, 'notify')
-	    obj.$add('b', 2)
-	    expect(binding.notify).toHaveBeenCalled()
-	    // array
-	    var arr = [1, 2, 3]
-	    var ob2 = Observer.create(arr)
-	    expect(arr.$set).toBeTruthy()
-	    expect(arr.$remove).toBeTruthy()
-	    expect(arr.push).not.toBe([].push)
-	    var binding2 = new Binding()
-	    ob2.bindings.push(binding2)
-	    spyOn(binding2, 'notify')
-	    arr.push(1)
-	    expect(binding2.notify).toHaveBeenCalled()
-	    config.proto = true
-	  })
-
-	})
-
-/***/ },
-/* 7 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Vue = __webpack_require__(51)
-	var _ = __webpack_require__(56)
-	var transition = __webpack_require__(59)
-
-	if (_.inBrowser && !_.isIE9) {
-	  describe('Transition', function () {
-
-	    describe('Wrapper methods', function () {
-	      
-	      var spy, el, target, parent, vm
-	      beforeEach(function () {
-	        el = document.createElement('div')
-	        target = document.createElement('div')
-	        parent = document.createElement('div')
-	        parent.appendChild(target)
-	        spy = jasmine.createSpy('transition skip')
-	        vm = new Vue()
-	        spyOn(transition, 'apply')
-	      })
-
-	      it('append', function () {
-	        transition.append(el, parent, vm, spy)
-	        expect(parent.lastChild).toBe(el)
-	        expect(spy).toHaveBeenCalled()
-	      })
-
-	      it('before', function () {
-	        transition.before(el, target, vm, spy)
-	        expect(parent.firstChild).toBe(el)
-	        expect(el.nextSibling).toBe(target)
-	        expect(spy).toHaveBeenCalled()
-	      })
-
-	      it('remove', function () {
-	        transition.remove(target, vm, spy)
-	        expect(parent.childNodes.length).toBe(0)
-	        expect(spy).toHaveBeenCalled()
-	      })
-
-	      it('removeThenAppend', function () {
-	        transition.removeThenAppend(target, el, vm, spy)
-	        expect(parent.childNodes.length).toBe(0)
-	        expect(el.firstChild).toBe(target)
-	        expect(spy).toHaveBeenCalled()
-	      })
-
-	    })
-
-	    describe('Skipping', function () {
-
-	      var el, vm, op, cb
-	      beforeEach(function () {
-	        el = document.createElement('div')
-	        op = jasmine.createSpy('transition skip op')
-	        cb = jasmine.createSpy('transition skip cb')
-	        vm = new Vue()
-	      })
-	      
-	      it('skip el with no transition data', function () {
-	        transition.apply(el, 1, op, vm, cb)
-	        expect(op).toHaveBeenCalled()
-	        expect(cb).toHaveBeenCalled()
-	      })
-
-	      it('skip vm still being compiled', function () {
-	        el.__v_trans = { id: 'test' }
-	        transition.apply(el, 1, op, vm, cb)
-	        expect(op).toHaveBeenCalled()
-	        expect(cb).toHaveBeenCalled()
-	      })
-
-	      it('skip vm with parent still being compiled', function () {
-	        el.__v_trans = { id: 'test' }
-	        var child = vm.$addChild({
-	          el: el
-	        })
-	        expect(child._isCompiled).toBe(true)
-	        transition.apply(el, 1, op, child, cb)
-	        expect(op).toHaveBeenCalled()
-	        expect(cb).toHaveBeenCalled()
-	      })
-
-	      it('skip when no transition available', function () {
-	        var e = _.transitionEndEvent
-	        _.transitionEndEvent = null
-	        el.__v_trans = { id: 'test' }
-	        vm.$mount(el)
-	        transition.apply(el, 1, op, vm, cb)
-	        expect(op).toHaveBeenCalled()
-	        expect(cb).toHaveBeenCalled()
-	        _.transitionEndEvent = e
-	      })
-
-	    })
-
-	    describe('CSS transitions', function () {
-
-	      var duration = '50ms'
-
-	      // insert a test css
-	      function insertCSS (text) {
-	        var cssEl = document.createElement('style')
-	        cssEl.textContent = text
-	        document.head.appendChild(cssEl)
-	      }
-
-	      insertCSS(
-	        '.test {\
-	          transition: opacity ' + duration + ' ease;\
-	          -webkit-transition: opacity ' + duration + ' ease;}'
-	      )
-	      insertCSS('.test-enter, .test-leave { opacity: 0; }')
-	      insertCSS(
-	        '.test-anim-enter {\
-	          animation: test-enter ' + duration + ';\
-	          -webkit-animation: test-enter ' + duration + ';}\
-	        .test-anim-leave {\
-	          animation: test-leave ' + duration + ';\
-	          -webkit-animation: test-leave ' + duration + ';}\
-	        @keyframes test-enter {\
-	          from { opacity: 0 }\
-	          to { opacity: 1 }}\
-	        @-webkit-keyframes test-enter {\
-	          from { opacity: 0 }\
-	          to { opacity: 1 }}\
-	        @keyframes test-leave {\
-	          from { opacity: 1 }\
-	          to { opacity: 0 }}\
-	        @-webkit-keyframes test-leave {\
-	          from { opacity: 1 }\
-	          to { opacity: 0 }}'
-	      )
-
-	      var vm, el, op, cb
-	      beforeEach(function (done) {
-	        el = document.createElement('div')
-	        el.__v_trans = {}
-	        vm = new Vue({ el: el })
-	        op = jasmine.createSpy('css op')
-	        cb = jasmine.createSpy('css cb')
-	        document.body.appendChild(el)
-	        // !IMPORTANT!
-	        // this ensures we force a layout for every test.
-	        _.nextTick(done)
-	        spyOn(window, 'getComputedStyle').and.callThrough()
-	      })
-
-	      afterEach(function () {
-	        document.body.removeChild(el)
-	      })
-
-	      it('skip on 0s duration (execute right at next frame)', function (done) {
-	        el.__v_trans.id = 'test'
-	        el.style.transition =
-	        el.style.WebkitTransition = 'opacity 0s ease'
-	        transition.apply(el, 1, op, vm, cb)
-	        _.nextTick(function () {
-	          expect(op).toHaveBeenCalled()
-	          expect(cb).toHaveBeenCalled()
-	          expect(el.classList.contains('test-enter')).toBe(false)
-	          transition.apply(el, -1, op, vm, cb)
-	          _.nextTick(function () {
-	            expect(op.calls.count()).toBe(2)
-	            expect(cb.calls.count()).toBe(2)
-	            expect(el.classList.contains('test-leave')).toBe(false)
-	            done()
-	          })
-	        })
-	      })
-
-	      it('skip when no transition available', function (done) {
-	        el.__v_trans.id = 'test-no-trans'
-	        transition.apply(el, 1, op, vm, cb)
-	        _.nextTick(function () {
-	          expect(op).toHaveBeenCalled()
-	          expect(cb).toHaveBeenCalled()
-	          expect(el.classList.contains('test-no-trans-enter')).toBe(false)
-	          transition.apply(el, -1, op, vm, cb)
-	          _.nextTick(function () {
-	            expect(op.calls.count()).toBe(2)
-	            expect(cb.calls.count()).toBe(2)
-	            expect(el.classList.contains('test-no-trans-leave')).toBe(false)
-	            done()
-	          })
-	        })
-	      })
-
-	      it('transition enter', function (done) {
-	        document.body.removeChild(el)
-	        el.__v_trans.id = 'test'
-	        // inline style
-	        el.style.transition =
-	        el.style.WebkitTransition = 'opacity ' + duration + ' ease'
-	        transition.apply(el, 1, function () {
-	          document.body.appendChild(el)
-	          op()
-	        }, vm, cb)
-	        expect(op).toHaveBeenCalled()
-	        expect(cb).not.toHaveBeenCalled()
-	        _.nextTick(function () {
-	          expect(el.classList.contains('test-enter')).toBe(false)
-	          _.on(el, _.transitionEndEvent, function () {
-	            expect(cb).toHaveBeenCalled()
-	            done()
-	          })
-	        })
-	      })
-
-	      it('transition leave', function (done) {
-	        el.__v_trans.id = 'test'
-	        // cascaded class style
-	        el.classList.add('test')
-	        // wait a tick before applying the transition
-	        // because doing so in the same frame won't trigger
-	        // transition
-	        _.nextTick(function () {
-	          transition.apply(el, -1, op, vm, cb)
-	          _.nextTick(function () {
-	            expect(op).not.toHaveBeenCalled()
-	            expect(cb).not.toHaveBeenCalled()
-	            expect(el.classList.contains('test-leave')).toBe(true)
-	            _.on(el, _.transitionEndEvent, function () {
-	              expect(op).toHaveBeenCalled()
-	              expect(cb).toHaveBeenCalled()
-	              expect(el.classList.contains('test-leave')).toBe(false)
-	              done()
-	            })
-	          })
-	        })
-	      })
-
-	      it('animation enter', function (done) {
-	        document.body.removeChild(el)
-	        el.__v_trans.id = 'test-anim'
-	        transition.apply(el, 1, function () {
-	          document.body.appendChild(el)
-	          op()
-	        }, vm, cb)
-	        _.nextTick(function () {
-	          expect(op).toHaveBeenCalled()
-	          expect(cb).not.toHaveBeenCalled()
-	          expect(el.classList.contains('test-anim-enter')).toBe(true)
-	          _.on(el, _.animationEndEvent, function () {
-	            expect(el.classList.contains('test-anim-enter')).toBe(false)
-	            expect(cb).toHaveBeenCalled()
-	            done()
-	          })
-	        })
-	      })
-
-	      it('animation leave', function (done) {
-	        el.__v_trans.id = 'test-anim'
-	        transition.apply(el, -1, op, vm, cb)
-	        _.nextTick(function () {
-	          expect(op).not.toHaveBeenCalled()
-	          expect(cb).not.toHaveBeenCalled()
-	          expect(el.classList.contains('test-anim-leave')).toBe(true)
-	          _.on(el, _.animationEndEvent, function () {
-	            expect(op).toHaveBeenCalled()
-	            expect(cb).toHaveBeenCalled()
-	            expect(el.classList.contains('test-anim-leave')).toBe(false)
-	            done()
-	          })
-	        })
-	      })
-
-	      it('clean up unfinished callback', function (done) {
-	        el.__v_trans.id = 'test'
-	        el.classList.add('test')
-	        transition.apply(el, -1, function () {
-	          document.body.removeChild(el)
-	        }, vm, cb)
-	        // cancel early
-	        _.nextTick(function () {
-	          expect(el.__v_trans.callback).toBeTruthy()
-	          expect(el.classList.contains('test-leave')).toBe(true)
-	          transition.apply(el, 1, function () {
-	            document.body.appendChild(el)
-	          }, vm)
-	          expect(cb).not.toHaveBeenCalled()
-	          expect(el.classList.contains('test-leave')).toBe(false)
-	          expect(el.__v_trans.callback).toBeNull()
-	          // IMPORTANT
-	          // Let the queue flush finish before enter the next
-	          // test. Don't remove the nextTick.
-	          _.nextTick(done)
-	        })
-	      })
-
-	      it('cache transition sniff results', function (done) {
-	        el.__v_trans.id = 'test'
-	        el.classList.add('test')
-	        transition.apply(el, 1, op, vm)
-	        _.nextTick(function () {
-	          expect(window.getComputedStyle.calls.count()).toBe(1)
-	          transition.apply(el, 1, op, vm)
-	          _.nextTick(function () {
-	            expect(window.getComputedStyle.calls.count()).toBe(1)
-	            done()
-	          })
-	        })
-	      })
-
-	    })
-
-	    describe('JavaScript transitions', function () {
-
-	      var el, vm, op, cb, def, emitter
-	      beforeEach(function () {
-	        emitter = {}
-	        el = document.createElement('div')
-	        el.__v_trans = { id: 'test' }
-	        document.body.appendChild(el)
-	        op = jasmine.createSpy('js transition op')
-	        cb = jasmine.createSpy('js transition cb')
-	        def = {}
-	        vm = new Vue({
-	          el: el,
-	          transitions: {
-	            test: def
-	          }
-	        })
-	      })
-
-	      afterEach(function () {
-	        document.body.removeChild(el)
-	      })
-
-	      it('beforeEnter', function () {
-	        var spy = jasmine.createSpy('js transition beforeEnter')
-	        def.beforeEnter = function (el) {
-	          spy(this, el)
-	        }
-	        transition.apply(el, 1, op, vm, cb)
-	        expect(spy).toHaveBeenCalledWith(vm, el)
-	      })
-
-	      it('enter', function () {
-	        var spy = jasmine.createSpy('js enter')
-	        def.enter = function (e, done) {
-	          expect(e).toBe(el)
-	          expect(op).toHaveBeenCalled()
-	          done()
-	          expect(cb).toHaveBeenCalled()
-	          spy(this)
-	        }
-	        transition.apply(el, 1, op, vm, cb)
-	        expect(spy).toHaveBeenCalledWith(vm)
-	      })
-
-	      it('leave', function () {
-	        var spy = jasmine.createSpy('js leave')
-	        def.leave = function (e, done) {
-	          expect(e).toBe(el)
-	          done()
-	          expect(op).toHaveBeenCalled()
-	          expect(cb).toHaveBeenCalled()
-	          spy(this)
-	        }
-	        transition.apply(el, -1, op, vm, cb)
-	        expect(spy).toHaveBeenCalledWith(vm)
-	      })
-
-	      it('no def', function () {
-	        transition.apply(el, 1, op, vm, cb)
-	        expect(op).toHaveBeenCalled()
-	        expect(cb).toHaveBeenCalled()
-	        transition.apply(el, -1, op, vm, cb)
-	        expect(op.calls.count()).toBe(2)
-	        expect(cb.calls.count()).toBe(2)
-	      })
-
-	      it('optional cleanup callback', function (done) {
-	        var cleanupSpy = jasmine.createSpy('js cleanup')
-	        var leaveSpy = jasmine.createSpy('js leave')
-	        def.enter = function (el, done) {
-	          var to = setTimeout(done, 30)
-	          return function () {
-	            clearTimeout(to)
-	            cleanupSpy()
-	          }
-	        }
-	        def.leave = function (el, done) {
-	          expect(cleanupSpy).toHaveBeenCalled()
-	          leaveSpy()
-	          done()
-	        }
-	        transition.apply(el, 1, op, vm, cb)
-	        setTimeout(function () {
-	          transition.apply(el, -1, op, vm)
-	          expect(leaveSpy).toHaveBeenCalled()
-	          setTimeout(function () {
-	            expect(cb).not.toHaveBeenCalled()
-	            done()
-	          }, 30)
-	        }, 15)
-	      })
-
-	    })
-
-	  })
-	}
-
-/***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Vue = __webpack_require__(51)
+	var Vue = __webpack_require__(50)
 	var nextTick = Vue.nextTick
-	var Watcher = __webpack_require__(54)
+	var Watcher = __webpack_require__(52)
 	var _ = Vue.util
 	var config = Vue.config
 
@@ -1527,15 +705,20 @@
 
 	  it('deep watch', function (done) {
 	    var watcher = new Watcher(vm, 'b', spy, null, false, true)
-	    vm.b.c = 3
+	    vm.b.c = { d: 4 }
 	    nextTick(function () {
 	      expect(spy).toHaveBeenCalledWith(vm.b, vm.b)
 	      var oldB = vm.b
-	      vm.b = { c: 4 }
+	      vm.b = { c: [{a:1}] }
 	      nextTick(function () {
 	        expect(spy).toHaveBeenCalledWith(vm.b, oldB)
 	        expect(spy.calls.count()).toBe(2)
-	        done()
+	        vm.b.c[0].a = 2
+	        nextTick(function () {
+	          expect(spy).toHaveBeenCalledWith(vm.b, vm.b)
+	          expect(spy.calls.count()).toBe(3)
+	          done()
+	        })
 	      })
 	    })
 	  })
@@ -1612,13 +795,18 @@
 	    expect(watcher.cbs.length).toBe(2)
 	  })
 
+	  it('warn getter errors', function () {
+	    var watcher = new Watcher(vm, 'd.e + c', spy)
+	    expect(_.warn).toHaveBeenCalled()
+	  })
+
 	})
 
 /***/ },
-/* 9 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(51)
+	var Vue = __webpack_require__(50)
 
 	describe('Child API', function () {
 
@@ -1698,10 +886,10 @@
 	})
 
 /***/ },
-/* 10 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(51)
+	var Vue = __webpack_require__(50)
 	var _ = __webpack_require__(56)
 	var nextTick = _.nextTick
 
@@ -1878,7 +1066,7 @@
 	}
 
 /***/ },
-/* 11 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -1886,7 +1074,7 @@
 	 * those are tested in transition_spec.js.
 	 */
 
-	var Vue = __webpack_require__(51)
+	var Vue = __webpack_require__(50)
 	var _ = __webpack_require__(56)
 
 	if (_.inBrowser) {
@@ -2058,10 +1246,10 @@
 	}
 
 /***/ },
-/* 12 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(51)
+	var Vue = __webpack_require__(50)
 
 	describe('Events API', function () {
 
@@ -2197,10 +1385,10 @@
 	})
 
 /***/ },
-/* 13 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(51)
+	var Vue = __webpack_require__(50)
 	var _ = __webpack_require__(56)
 	var config = __webpack_require__(53)
 
@@ -2300,12 +1488,12 @@
 	})
 
 /***/ },
-/* 14 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(51)
+	var Vue = __webpack_require__(50)
 	var _ = __webpack_require__(56)
-	var compile = __webpack_require__(60)
+	var compile = __webpack_require__(57)
 
 	if (_.inBrowser) {
 	  describe('Lifecycle API', function () {
@@ -2473,7 +1661,6 @@
 	        expect(vm.$parent).toBeNull()
 	        expect(vm.$root).toBeNull()
 	        expect(vm._children).toBeNull()
-	        expect(vm._bindings).toBeNull()
 	        expect(vm._directives).toBeNull()
 	        expect(Object.keys(vm._events).length).toBe(0)
 	      })
@@ -2595,14 +1782,14 @@
 	}
 
 /***/ },
-/* 15 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(51)
+	var Vue = __webpack_require__(50)
 	var _ = __webpack_require__(56)
-	var dirParser = __webpack_require__(62)
-	var merge = __webpack_require__(55)
-	var compile = __webpack_require__(60)
+	var dirParser = __webpack_require__(59)
+	var merge = __webpack_require__(54)
+	var compile = __webpack_require__(57)
 
 	if (_.inBrowser) {
 	  describe('Compile', function () {
@@ -2616,8 +1803,9 @@
 	      directiveTeardown = jasmine.createSpy()
 	      vm = {
 	        _directives: [],
-	        _bindDir: function () {
+	        _bindDir: function (name) {
 	          this._directives.push({
+	            name: name,
 	            _teardown: directiveTeardown
 	          })
 	        },
@@ -2796,14 +1984,30 @@
 	      expect(vm._directives.length).toBe(0)
 	    })
 
+	    it('skip script tags', function () {
+	      el.innerHTML = '<script type="x/template">{{test}}</script>'
+	      var linker = compile(el, Vue.options)
+	      linker(vm, el)
+	      expect(vm._bindDir.calls.count()).toBe(0)
+	    })
+
+	    it('component parent scope compilation should skip v-ref, v-with & v-component', function () {
+	      el.innerHTML = '<div v-component v-ref="test" v-with="test"></div>'
+	      el = el.firstChild
+	      var linker = compile(el, Vue.options, true, true)
+	      linker(vm, el)
+	      expect(vm._directives.length).toBe(0)
+	      expect(el.attributes.length).toBe(3)
+	    })
+
 	  })
 	}
 
 /***/ },
-/* 16 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var transclude = __webpack_require__(61)
+	var transclude = __webpack_require__(58)
 	var _ = __webpack_require__(56)
 
 	if (_.inBrowser) {
@@ -2918,11 +2122,11 @@
 	}
 
 /***/ },
-/* 17 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var def = __webpack_require__(67)
+	var def = __webpack_require__(64)
 
 	if (_.inBrowser) {
 	  describe('v-attr', function () {
@@ -2971,11 +2175,11 @@
 	}
 
 /***/ },
-/* 18 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var def = __webpack_require__(68)
+	var def = __webpack_require__(65)
 
 	if (_.inBrowser) {
 	  describe('v-class', function () {
@@ -3016,12 +2220,12 @@
 	}
 
 /***/ },
-/* 19 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var compile = __webpack_require__(60)
-	var Vue = __webpack_require__(51)
+	var compile = __webpack_require__(57)
+	var Vue = __webpack_require__(50)
 
 	if (_.inBrowser) {
 	  describe('v-cloak', function () {
@@ -3046,11 +2250,11 @@
 	}
 
 /***/ },
-/* 20 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(51)
+	var Vue = __webpack_require__(50)
 
 	if (_.inBrowser) {
 	  describe('v-component', function () {
@@ -3137,7 +2341,11 @@
 	      vm.view = 'b'
 	      _.nextTick(function () {
 	        expect(el.innerHTML).toBe('<div view="b">BBB</div><!--v-component-->')
-	        done()
+	        vm.view = ''
+	        _.nextTick(function () {
+	          expect(el.innerHTML).toBe('<!--v-component-->')
+	          done()
+	        })
 	      })
 	    })
 
@@ -3185,36 +2393,215 @@
 	      })
 	    })
 
-	    it('should compile parent template directives in parent scope', function (done) {
+	    it('should compile parent template directives & content in parent scope', function (done) {
 	      var vm = new Vue({
 	        el: el,
-	        data: { ok: false },
-	        template: '<div v-component="test" v-show="ok"></div>',
+	        data: {
+	          ok: false,
+	          message: 'hello'
+	        },
+	        template: '<div v-component="test" v-show="ok">{{message}}</div>',
 	        components: {
-	          test: {}
+	          test: {
+	            template: '<content></content> {{message}}',
+	            data: function () {
+	              return {
+	                message: 'world'
+	              }
+	            }
+	          }
 	        }
 	      })
 	      expect(el.firstChild.style.display).toBe('none')
+	      expect(el.firstChild.textContent).toBe('hello world')
 	      vm.ok = true
+	      vm.message = 'bye'
 	      _.nextTick(function () {
 	        expect(el.firstChild.style.display).toBe('')
+	        expect(el.firstChild.textContent).toBe('bye world')
 	        done()
 	      })
 	    })
 
-	    it('teardown', function () {
+	    it('parent content + v-if', function (done) {
 	      var vm = new Vue({
 	        el: el,
-	        data: { ok: true },
-	        template: '<div v-component="test" v-if="ok"></div>',
+	        data: {
+	          ok: false,
+	          message: 'hello'
+	        },
+	        template: '<div v-component="test" v-if="ok">{{message}}</div>',
 	        components: {
-	          test: {}
+	          test: {
+	            template: '<content></content> {{message}}',
+	            data: function () {
+	              return {
+	                message: 'world'
+	              }
+	            }
+	          }
 	        }
 	      })
-	      var child = vm._children[0]
-	      vm._directives[0].unbind()
-	      expect(vm._children.length).toBe(0)
-	      expect(child._isDestroyed).toBe(true)
+	      expect(el.textContent).toBe('')
+	      expect(vm._children).toBeNull()
+	      expect(vm._directives.length).toBe(1) // v-if
+	      vm.ok = true
+	      _.nextTick(function () {
+	        expect(vm._children.length).toBe(1)
+	        expect(vm._directives.length).toBe(3) // v-if, v-component, v-text
+	        expect(el.textContent).toBe('hello world')
+	        done()
+	      })
+	    })
+
+	    it('wait-for', function (done) {
+	      var vm = new Vue({
+	        el: el,
+	        data: {
+	          view: 'a'
+	        },
+	        template: '<div v-component="{{view}}" wait-for="ok"></div>',
+	        components: {
+	          a: {
+	            template: 'AAA'
+	          },
+	          b: {
+	            template: 'BBB'
+	          }
+	        }
+	      })
+	      vm._children[0].$emit('ok')
+	      vm.view = 'b'
+	      _.nextTick(function () {
+	        expect(el.textContent).toBe('AAA')
+	        // old vm is already removed, this is the new vm
+	        vm._children[0].$emit('ok')
+	        expect(el.textContent).toBe('BBB')
+	        done()
+	      })
+	    })
+
+	    it('transition-mode: in-out', function (done) {
+	      var spy1 = jasmine.createSpy('enter')
+	      var spy2 = jasmine.createSpy('leave')
+	      var next
+	      // === IMPORTANT ===
+	      // PhantomJS always returns false when calling
+	      // Element.contains() on a comment node. This causes
+	      // transitions to be skipped. Monkey patching here
+	      // isn't ideal but does the job...
+	      var inDoc = _.inDoc
+	      _.inDoc = function () {
+	        return true
+	      }
+	      var vm = new Vue({
+	        el: el,
+	        data: {
+	          view: 'a'
+	        },
+	        template: '<div v-component="{{view}}" v-transition="test" transition-mode="in-out"></div>',
+	        components: {
+	          a: { template: 'AAA' },
+	          b: { template: 'BBB' }
+	        },
+	        transitions: {
+	          test: {
+	            enter: function (el, done) {
+	              spy1()
+	              next = done
+	            },
+	            leave: function (el, done) {
+	              spy2()
+	              done()
+	            }
+	          }
+	        }
+	      })
+	      expect(el.textContent).toBe('AAA')
+	      vm.view = 'b'
+	      _.nextTick(function () {
+	        expect(spy1).toHaveBeenCalled()
+	        expect(spy2).not.toHaveBeenCalled()
+	        expect(el.textContent).toBe('AAABBB')
+	        next()
+	        expect(spy2).toHaveBeenCalled()
+	        expect(el.textContent).toBe('BBB')
+	        // clean up
+	        _.inDoc = inDoc
+	        done()
+	      })
+	    })
+
+	    it('transition-mode: out-in', function (done) {
+	      var spy1 = jasmine.createSpy('enter')
+	      var spy2 = jasmine.createSpy('leave')
+	      var next
+	      var inDoc = _.inDoc
+	      _.inDoc = function () {
+	        return true
+	      }
+	      var vm = new Vue({
+	        el: el,
+	        data: {
+	          view: 'a'
+	        },
+	        template: '<div v-component="{{view}}" v-transition="test" transition-mode="out-in"></div>',
+	        components: {
+	          a: { template: 'AAA' },
+	          b: { template: 'BBB' }
+	        },
+	        transitions: {
+	          test: {
+	            enter: function (el, done) {
+	              spy2()
+	              done()
+	            },
+	            leave: function (el, done) {
+	              spy1()
+	              next = done
+	            }
+	          }
+	        }
+	      })
+	      expect(el.textContent).toBe('AAA')
+	      vm.view = 'b'
+	      _.nextTick(function () {
+	        expect(spy1).toHaveBeenCalled()
+	        expect(spy2).not.toHaveBeenCalled()
+	        expect(el.textContent).toBe('AAA')
+	        next()
+	        expect(spy2).toHaveBeenCalled()
+	        expect(el.textContent).toBe('BBB')
+	        // clean up
+	        _.inDoc = inDoc
+	        done()
+	      })
+	    })
+
+	    it('teardown', function (done) {
+	      var vm = new Vue({
+	        el: el,
+	        template: '<div v-component="{{view}}" keep-alive></div>',
+	        data: {
+	          view: 'test'
+	        },
+	        components: {
+	          test: {},
+	          test2: {}
+	        }
+	      })
+	      vm.view = 'test2'
+	      _.nextTick(function () {
+	        expect(vm._children.length).toBe(2)
+	        var child = vm._children[0]
+	        var child2 = vm._children[1]
+	        vm._directives[0].unbind()
+	        expect(vm._directives[0].cache).toBeNull()
+	        expect(vm._children.length).toBe(0)
+	        expect(child._isDestroyed).toBe(true)
+	        expect(child2._isDestroyed).toBe(true)
+	        done()
+	      })
 	    })
 
 	    it('already mounted warn', function () {
@@ -3229,11 +2616,11 @@
 	}
 
 /***/ },
-/* 21 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(51)
+	var Vue = __webpack_require__(50)
 
 	if (_.inBrowser) {
 	  describe('v-el', function () {
@@ -3276,11 +2663,11 @@
 	}
 
 /***/ },
-/* 22 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var def = __webpack_require__(69)
+	var def = __webpack_require__(66)
 
 	if (_.inBrowser) {
 	  describe('v-html', function () {
@@ -3324,11 +2711,11 @@
 	}
 
 /***/ },
-/* 23 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(51)
+	var Vue = __webpack_require__(50)
 
 	if (_.inBrowser) {
 	  describe('v-if', function () {
@@ -3399,6 +2786,9 @@
 	    })
 
 	    it('v-if + v-component', function (done) {
+	      var attachSpy = jasmine.createSpy()
+	      var detachSpy = jasmine.createSpy()
+	      var readySpy = jasmine.createSpy()
 	      var vm = new Vue({
 	        el: el,
 	        data: { ok: false },
@@ -3408,20 +2798,28 @@
 	            data: function () {
 	              return { a: 123 }
 	            },
-	            template: '{{a}}'
+	            template: '{{a}}',
+	            ready: readySpy,
+	            attached: attachSpy,
+	            detached: detachSpy
 	          }
 	        }
 	      })
+	      vm.$appendTo(document.body)
 	      expect(el.innerHTML).toBe(wrap(''))
 	      expect(vm._children).toBeNull()
 	      vm.ok = true
 	      _.nextTick(function () {
 	        expect(el.innerHTML).toBe(wrap('<div>123</div><!--v-component-->'))
 	        expect(vm._children.length).toBe(1)
+	        expect(attachSpy).toHaveBeenCalled()
+	        expect(readySpy).toHaveBeenCalled()
 	        vm.ok = false
 	        _.nextTick(function () {
+	          expect(detachSpy).toHaveBeenCalled()
 	          expect(el.innerHTML).toBe(wrap(''))
 	          expect(vm._children.length).toBe(0)
+	          vm.$remove()
 	          done()
 	        })
 	      })
@@ -3502,11 +2900,11 @@
 	}
 
 /***/ },
-/* 24 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(51)
+	var Vue = __webpack_require__(50)
 
 	/**
 	 * Mock event helper
@@ -3993,11 +3391,11 @@
 	}
 
 /***/ },
-/* 25 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(51)
+	var Vue = __webpack_require__(50)
 
 	function trigger (target, event, process) {
 	  var e = document.createEvent('HTMLEvents')
@@ -4132,11 +3530,11 @@
 	}
 
 /***/ },
-/* 26 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(51)
+	var Vue = __webpack_require__(50)
 
 	if (_.inBrowser) {
 	  describe('v-partial', function () {
@@ -4252,11 +3650,11 @@
 	}
 
 /***/ },
-/* 27 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(51)
+	var Vue = __webpack_require__(50)
 
 	if (_.inBrowser) {
 	  describe('v-pre', function () {
@@ -4276,11 +3674,11 @@
 	}
 
 /***/ },
-/* 28 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(51)
+	var Vue = __webpack_require__(50)
 
 	if (_.inBrowser) {
 	  describe('v-ref', function () {
@@ -4331,8 +3729,12 @@
 	    it('nested v-repeat', function () {
 	      var vm = new Vue({
 	        el: el,
-	        template: '<div v-component="c1" v-ref="c1"><div v-repeat="2" v-ref="c2"></div></div>',
-	        components: { c1: {} }
+	        template: '<div v-component="c1" v-ref="c1"></div>',
+	        components: {
+	          c1: {
+	            template: '<div v-repeat="2" v-ref="c2"></div>'
+	          }
+	        }
 	      })
 	      expect(vm.$.c1 instanceof Vue).toBe(true)
 	      expect(vm.$.c2).toBeUndefined()
@@ -4352,11 +3754,11 @@
 	}
 
 /***/ },
-/* 29 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(51)
+	var Vue = __webpack_require__(50)
 
 	if (_.inBrowser) {
 	  describe('v-repeat', function () {
@@ -4644,10 +4046,10 @@
 	      }
 	    })
 
-	    it('trackby id', function (done) {
+	    it('track by id', function (done) {
 
-	      assertTrackBy('<div v-repeat="list" trackby="id">{{msg}}</div>', function () {
-	        assertTrackBy('<div v-repeat="item:list" trackby="id">{{item.msg}}</div>', done)
+	      assertTrackBy('<div v-repeat="list" track-by="id">{{msg}}</div>', function () {
+	        assertTrackBy('<div v-repeat="item:list" track-by="id">{{item.msg}}</div>', done)
 	      })
 	      
 	      function assertTrackBy (template, next) {
@@ -5029,13 +4431,13 @@
 	}
 
 /***/ },
-/* 30 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(51)
-	var transition = __webpack_require__(59)
-	var def = __webpack_require__(70)
+	var Vue = __webpack_require__(50)
+	var transition = __webpack_require__(71)
+	var def = __webpack_require__(67)
 
 	if (_.inBrowser) {
 	  describe('v-show', function () {
@@ -5063,11 +4465,12 @@
 	}
 
 /***/ },
-/* 31 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var def = __webpack_require__(71)
+	var def = __webpack_require__(68)
+	var Vue = __webpack_require__(50)
 
 	if (_.inBrowser) {
 	  describe('v-style', function () {
@@ -5111,15 +4514,47 @@
 	      expect(spy).toHaveBeenCalledWith('-webkit-transform', val, '')
 	    })
 
+	    it('update with object', function () {
+	      dir.bind()
+	      dir.update({color: 'red', 'margin-right': '30px'})
+	      expect(el.style.getPropertyValue('color')).toBe('red')
+	      expect(el.style.getPropertyValue('margin-right')).toBe('30px')
+	    })
+
+	    it('update with object and auto prefix', function () {
+	      var spy = el.style.setProperty = jasmine.createSpy()
+	      dir.bind()
+	      var scale = 'scale(0.5)';
+	      dir.update({'$transform': scale})
+	      expect(spy).toHaveBeenCalledWith('transform', scale, '')
+	      expect(spy).toHaveBeenCalledWith('-ms-transform', scale, '')
+	      expect(spy).toHaveBeenCalledWith('-moz-transform', scale, '')
+	      expect(spy).toHaveBeenCalledWith('-webkit-transform', scale, '')
+	    })
+
+	    it('updates object deep', function (done) {
+	      el.setAttribute('v-style', 'divStyling')
+	      var vm = new Vue({
+	        el: el,
+	        data: {divStyling: { display: 'none'}}
+	      })
+	      expect(el.style.display).toBe('none')
+	      vm.divStyling.display = 'block'
+	      _.nextTick(function () {
+	        expect(el.style.display).toBe('block')
+	        done()
+	      })
+	    })
+
 	  })
 	}
 
 /***/ },
-/* 32 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var def = __webpack_require__(72)
+	var def = __webpack_require__(69)
 
 	if (_.inBrowser) {
 	  describe('v-text', function () {
@@ -5152,11 +4587,11 @@
 	}
 
 /***/ },
-/* 33 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var def = __webpack_require__(73)
+	var def = __webpack_require__(70)
 
 	if (_.inBrowser) {
 	  describe('v-transition', function () {
@@ -5175,11 +4610,11 @@
 	}
 
 /***/ },
-/* 34 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(51)
+	var Vue = __webpack_require__(50)
 
 	if (_.inBrowser) {
 	  describe('v-with', function () {
@@ -5308,10 +4743,206 @@
 	}
 
 /***/ },
-/* 35 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(51)
+	var Vue = __webpack_require__(50)
+	var filters = __webpack_require__(72)
+
+	describe('Filters', function () {
+
+	  it('json read', function () {
+	    var filter = filters.json.read
+	    var obj = {a:{b:2}}
+	    expect(filter(obj)).toBe(JSON.stringify(obj, null, 2))
+	    expect(filter(obj, 4)).toBe(JSON.stringify(obj, null, 4))
+	    // plain string
+	    expect(filter('1234')).toBe('1234')
+	  })
+
+	  it('json write', function () {
+	    var filter = filters.json.write
+	    var obj = '{"a":{"b":2}}'
+	    expect(JSON.stringify(filter(obj))).toBe(obj)
+	    // error condition
+	    var invalidJSON = '{"a":}'
+	    expect(filter(invalidJSON)).toBe(invalidJSON)
+	  })
+	  
+	  it('capitalize', function () {
+	    var filter = filters.capitalize
+	    var res = filter('fsefsfsef')
+	    expect(res.charAt(0)).toBe('F')
+	    expect(res.slice(1)).toBe('sefsfsef')
+	    assertNumberAndFalsy(filter)
+	  })
+
+	  it('uppercase', function () {
+	    var filter = filters.uppercase
+	    expect(filter('fsefef')).toBe('FSEFEF')
+	    assertNumberAndFalsy(filter)
+	  })
+
+	  it('lowercase', function () {
+	    var filter = filters.lowercase
+	    expect(filter('AWEsoME')).toBe('awesome')
+	    assertNumberAndFalsy(filter)
+	  })
+
+	  it('pluralize', function () {
+	    var filter = filters.pluralize
+	    // single arg
+	    var arg = 'item'
+	    expect(filter(0, arg)).toBe('items')
+	    expect(filter(1, arg)).toBe('item')
+	    expect(filter(2, arg)).toBe('items')
+	    // multi args
+	    expect(filter(0, 'st', 'nd', 'rd', 'th')).toBe('th')
+	    expect(filter(1, 'st', 'nd', 'rd', 'th')).toBe('st')
+	    expect(filter(2, 'st', 'nd', 'rd', 'th')).toBe('nd')
+	    expect(filter(3, 'st', 'nd', 'rd', 'th')).toBe('rd')
+	    expect(filter(4, 'st', 'nd', 'rd', 'th')).toBe('th')
+	  })
+
+	  it('currency', function () {
+	    var filter = filters.currency
+	    // default
+	    expect(filter(1234)).toBe('$1,234.00')
+	    expect(filter(1234.45)).toBe('$1,234.45')
+	    expect(filter(123443434.4343434)).toBe('$123,443,434.43')
+	    // sign arg
+	    expect(filter(2134, '@')).toBe('@2,134.00')
+	    // falsy and 0
+	    expect(filter(0)).toBe('$0.00')
+	    expect(filter(false)).toBe('')
+	    expect(filter(null)).toBe('')
+	    expect(filter(undefined)).toBe('')
+	    // negative numbers
+	    expect(filter(-50)).toBe('-$50.00')
+	    expect(filter(-150.43)).toBe('-$150.43')
+	    expect(filter(-1500.4343434)).toBe('-$1,500.43')
+	  })
+
+	  it('key', function () {
+	    var filter = filters.key
+	    expect(filter(null)).toBeUndefined()
+	    var spy = jasmine.createSpy('filter:key')
+	    var handler = filter(spy, 'enter')
+	    handler({ keyCode: 0 })
+	    expect(spy).not.toHaveBeenCalled()
+	    handler({ keyCode: 13 })
+	    expect(spy).toHaveBeenCalled()
+	    // direct keycode
+	    spy = jasmine.createSpy('filter:key')
+	    handler = filter(spy, 13)
+	    handler({ keyCode: 0 })
+	    expect(spy).not.toHaveBeenCalled()
+	    handler({ keyCode: 13 })
+	    expect(spy).toHaveBeenCalled()
+	  })
+
+	  it('filterBy', function () {
+	    var filter = filters.filterBy
+	    var arr = [
+	      { a: 1, b: { c: 'hello' }},
+	      { a: 2, b: 'hello'},
+	      { a: 3, b: 2 }
+	    ]
+	    var vm = new Vue({
+	      data: {
+	        search: {
+	          key: 'hello',
+	          datakey: 'b.c',
+	          n: 2
+	        }
+	      }
+	    })
+	    var res
+	    // normal
+	    res = filter.call(vm, arr, 'search.key')
+	    expect(res.length).toBe(2)
+	    expect(res[0]).toBe(arr[0])
+	    expect(res[1]).toBe(arr[1])
+	    // data key
+	    res = filter.call(vm, arr, 'search.key', 'search.datakey')
+	    expect(res.length).toBe(1)
+	    expect(res[0]).toBe(arr[0])
+	    // quotes
+	    res = filter.call(vm, arr, "'hello'", "'b.c'")
+	    expect(res.length).toBe(1)
+	    expect(res[0]).toBe(arr[0])
+	    // delimiter
+	    res = filter.call(vm, arr, 'search.key', 'in', 'search.datakey')
+	    expect(res.length).toBe(1)
+	    expect(res[0]).toBe(arr[0])
+	    // no search key
+	    res = filter.call(vm, arr, 'abc')
+	    expect(res).toBe(arr)
+	    // number search key
+	    res = filter.call(vm, arr, 'search.n')
+	    expect(res[0]).toBe(arr[1])
+	  })
+
+	  it('orderBy', function () {
+	    var filter = filters.orderBy
+	    var arr = [
+	      { a: { b: 0 }, c: 'b'},
+	      { a: { b: 2 }, c: 'c'},
+	      { a: { b: 1 }, c: 'a'}
+	    ]
+	    var res
+	    // sort key
+	    res = filter.call(new Vue({
+	      data: {
+	        sortby: 'a.b',
+	      }
+	    }), arr, 'sortby')
+	    expect(res.length).toBe(3)
+	    expect(res[0].a.b).toBe(0)
+	    expect(res[1].a.b).toBe(1)
+	    expect(res[2].a.b).toBe(2)
+	    // reverse key
+	    res = filter.call(new Vue({
+	      data: { sortby: 'a.b', reverse: true }
+	    }), arr, 'sortby', 'reverse')
+	    expect(res.length).toBe(3)
+	    expect(res[0].a.b).toBe(2)
+	    expect(res[1].a.b).toBe(1)
+	    expect(res[2].a.b).toBe(0)
+	    // literal args
+	    res = filter.call(new Vue(), arr, "'c'", '-1')
+	    expect(res.length).toBe(3)
+	    expect(res[0].c).toBe('c')
+	    expect(res[1].c).toBe('b')
+	    expect(res[2].c).toBe('a')
+	    // negate reverse
+	    res = filter.call(new Vue({
+	      data: { reverse: true }
+	    }), arr, "'c'", '!reverse')
+	    expect(res.length).toBe(3)
+	    expect(res[0].c).toBe('a')
+	    expect(res[1].c).toBe('b')
+	    expect(res[2].c).toBe('c')
+	    // no sort key
+	    res = filter.call(new Vue(), arr, 'abc')
+	    expect(res).toBe(arr)
+	  })
+	})
+
+	function assertNumberAndFalsy (filter) {
+	  // should stringify numbers
+	  expect(filter(12345)).toBe('12345')
+	  expect(filter(0)).toBe('0')
+	  expect(filter(undefined)).toBe('')
+	  expect(filter(null)).toBe('')
+	  expect(filter(false)).toBe('')
+	}
+
+/***/ },
+/* 32 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Vue = __webpack_require__(50)
 	var _ = __webpack_require__(56)
 
 	describe('Instance Events', function () {
@@ -5589,10 +5220,10 @@
 	})
 
 /***/ },
-/* 36 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var init = __webpack_require__(74)._init
+	var init = __webpack_require__(73)._init
 
 	describe('Instance Init', function () {
 
@@ -5647,10 +5278,10 @@
 	})
 
 /***/ },
-/* 37 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(51)
+	var Vue = __webpack_require__(50)
 
 	describe('Instance Scope', function () {
 
@@ -5807,10 +5438,257 @@
 	})
 
 /***/ },
-/* 38 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var parse = __webpack_require__(62).parse
+	var Dep = __webpack_require__(55)
+
+	describe('Dep', function () {
+
+	  var d
+	  beforeEach(function () {
+	    d = new Dep()
+	  })
+
+	  it('addSub', function () {
+	    var sub = {}
+	    d.addSub(sub)
+	    expect(d.subs.length).toBe(1)
+	    expect(d.subs.indexOf(sub)).toBe(0)
+	  })
+
+	  it('removeSub', function () {
+	    var sub = {}
+	    d.addSub(sub)
+	    d.removeSub(sub)
+	    expect(d.subs.length).toBe(0)
+	    expect(d.subs.indexOf(sub)).toBe(-1)
+	  })
+
+	  it('notify', function () {
+	    var sub = {
+	      update: jasmine.createSpy('sub')
+	    }
+	    d.addSub(sub)
+	    d.notify()
+	    expect(sub.update).toHaveBeenCalled()
+	  })
+
+	})
+
+/***/ },
+/* 36 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Observer = __webpack_require__(74)
+	var config = __webpack_require__(53)
+	var Dep = __webpack_require__(55)
+	var _ = __webpack_require__(56)
+
+	describe('Observer', function () {
+
+	  var spy
+	  beforeEach(function () {
+	    spy = jasmine.createSpy('observer')
+	  })
+
+	  it('create on non-observables', function () {
+	    // skip primitive value
+	    var ob = Observer.create(1)
+	    expect(ob).toBeUndefined()
+	    // avoid vue instance
+	    ob = Observer.create(new _.Vue())
+	    expect(ob).toBeUndefined()
+	  })
+
+	  it('create on object', function () {
+	    // on object
+	    var obj = {
+	      a: {},
+	      b: {}
+	    }
+	    var ob = Observer.create(obj)
+	    expect(ob instanceof Observer).toBe(true)
+	    expect(ob.active).toBe(true)
+	    expect(ob.value).toBe(obj)
+	    expect(obj.__ob__).toBe(ob)
+	    // should've walked children
+	    expect(obj.a.__ob__ instanceof Observer).toBe(true)
+	    expect(obj.b.__ob__ instanceof Observer).toBe(true)
+	    // should return existing ob on already observed objects
+	    var ob2 = Observer.create(obj)
+	    expect(ob2).toBe(ob)
+	  })
+
+	  it('create on array', function () {
+	    // on object
+	    var arr = [{}, {}]
+	    var ob = Observer.create(arr)
+	    expect(ob instanceof Observer).toBe(true)
+	    expect(ob.active).toBe(true)
+	    expect(ob.value).toBe(arr)
+	    expect(arr.__ob__).toBe(ob)
+	    // should've walked children
+	    expect(arr[0].__ob__ instanceof Observer).toBe(true)
+	    expect(arr[1].__ob__ instanceof Observer).toBe(true)
+	  })
+
+	  it('observing object prop change', function () {
+	    var obj = { a: { b: 2 } }
+	    Observer.create(obj)
+	    // mock a watcher!
+	    var watcher = {
+	      deps: [],
+	      addDep: function (dep) {
+	        this.deps.push(dep)
+	        dep.addSub(this)
+	      },
+	      update: jasmine.createSpy()
+	    }
+	    var dump
+	    // collect dep
+	    Observer.target = watcher
+	    dump = obj.a.b
+	    Observer.target = null
+	    expect(watcher.deps.length).toBe(2)
+	    dump = obj.a.b = 3
+	    expect(watcher.update.calls.count()).toBe(1)
+	    // swap object
+	    var oldA = obj.a
+	    obj.a = { b: 4 }
+	    expect(watcher.update.calls.count()).toBe(2)
+	    expect(oldA.__ob__.deps.length).toBe(0)
+	    expect(obj.a.__ob__.deps.length).toBe(1)
+	    // recollect dep
+	    var oldDeps = watcher.deps
+	    watcher.deps = []
+	    Observer.target = watcher
+	    dump = obj.a.b
+	    Observer.target = null
+	    expect(watcher.deps.length).toBe(2)
+	    // set on the swapped object
+	    obj.a.b = 5
+	    expect(watcher.update.calls.count()).toBe(3)
+	  })
+
+	  it('observing $add/$delete', function () {
+	    var obj = { a: 1 }
+	    var ob = Observer.create(obj)
+	    var dep = new Dep()
+	    ob.deps.push(dep)
+	    spyOn(dep, 'notify')
+	    obj.$add('b', 2)
+	    expect(obj.b).toBe(2)
+	    expect(dep.notify.calls.count()).toBe(1)
+	    obj.$delete('a')
+	    expect(obj.hasOwnProperty('a')).toBe(false)
+	    expect(dep.notify.calls.count()).toBe(2)
+	    // should ignore adding an existing key
+	    obj.$add('b', 3)
+	    expect(obj.b).toBe(2)
+	    expect(dep.notify.calls.count()).toBe(2)
+	    // should ignore deleting non-existing key
+	    obj.$delete('a')
+	    expect(dep.notify.calls.count()).toBe(2)
+	    // should work on non-observed objects
+	    var obj2 = { a: 1 }
+	    obj2.$delete('a')
+	    expect(obj2.hasOwnProperty('a')).toBe(false)
+	  })
+
+	  it('observing array mutation', function () {
+	    var arr = []
+	    var ob = Observer.create(arr)
+	    var dep = new Dep()
+	    ob.deps.push(dep)
+	    spyOn(dep, 'notify')
+	    var objs = [{}, {}, {}]
+	    arr.push(objs[0])
+	    arr.pop()
+	    arr.unshift(objs[1])
+	    arr.shift()
+	    arr.splice(0, 0, objs[2])
+	    arr.sort()
+	    arr.reverse()
+	    expect(dep.notify.calls.count()).toBe(7)
+	    // inserted elements should be observed
+	    objs.forEach(function (obj) {
+	      expect(obj.__ob__ instanceof Observer).toBe(true)
+	    })
+	  })
+
+	  it('array $set', function () {
+	    var arr = [1]
+	    var ob = Observer.create(arr)
+	    var dep = new Dep()
+	    ob.deps.push(dep)
+	    spyOn(dep, 'notify')
+	    arr.$set(0, 2)
+	    expect(arr[0]).toBe(2)
+	    expect(dep.notify.calls.count()).toBe(1)
+	    // setting out of bound index
+	    arr.$set(2, 3)
+	    expect(arr[2]).toBe(3)
+	    expect(dep.notify.calls.count()).toBe(2)
+	  })
+
+	  it('array $remove', function () {
+	    var arr = [{}, {}]
+	    var obj1 = arr[0]
+	    var obj2 = arr[1]
+	    var ob = Observer.create(arr)
+	    var dep = new Dep()
+	    ob.deps.push(dep)
+	    spyOn(dep, 'notify')
+	    // remove by index
+	    arr.$remove(0)
+	    expect(arr.length).toBe(1)
+	    expect(arr[0]).toBe(obj2)
+	    expect(dep.notify.calls.count()).toBe(1)
+	    // remove by identity, not in array
+	    arr.$remove(obj1)
+	    expect(arr.length).toBe(1)
+	    expect(arr[0]).toBe(obj2)
+	    expect(dep.notify.calls.count()).toBe(1)
+	    // remove by identity, in array
+	    arr.$remove(obj2)
+	    expect(arr.length).toBe(0)
+	    expect(dep.notify.calls.count()).toBe(2)
+	  })
+
+	  it('no proto', function () {
+	    config.proto = false
+	    // object
+	    var obj = {a:1}
+	    var ob = Observer.create(obj)
+	    expect(obj.$add).toBeTruthy()
+	    expect(obj.$delete).toBeTruthy()
+	    var dep = new Dep()
+	    ob.deps.push(dep)
+	    spyOn(dep, 'notify')
+	    obj.$add('b', 2)
+	    expect(dep.notify).toHaveBeenCalled()
+	    // array
+	    var arr = [1, 2, 3]
+	    var ob2 = Observer.create(arr)
+	    expect(arr.$set).toBeTruthy()
+	    expect(arr.$remove).toBeTruthy()
+	    expect(arr.push).not.toBe([].push)
+	    var dep2 = new Dep()
+	    ob2.deps.push(dep2)
+	    spyOn(dep2, 'notify')
+	    arr.push(1)
+	    expect(dep2.notify).toHaveBeenCalled()
+	    config.proto = true
+	  })
+
+	})
+
+/***/ },
+/* 37 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var parse = __webpack_require__(59).parse
 
 	describe('Directive Parser', function () {
 
@@ -5940,10 +5818,10 @@
 	})
 
 /***/ },
-/* 39 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var expParser = __webpack_require__(63)
+	var expParser = __webpack_require__(60)
 	var _ = __webpack_require__(56)
 
 	var testCases = [
@@ -6196,10 +6074,10 @@
 	}
 
 /***/ },
-/* 40 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Path = __webpack_require__(64)
+	var Path = __webpack_require__(61)
 
 	function assertPath (str, expected) {
 	  var path = Path.parse(str)
@@ -6322,11 +6200,11 @@
 	})
 
 /***/ },
-/* 41 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var templateParser = __webpack_require__(65)
+	var templateParser = __webpack_require__(62)
 	var parse = templateParser.parse
 	var testString = '<div>hello</div><p class="test">world</p>'
 
@@ -6443,16 +6321,30 @@
 	      expect(res1).toBe(res2)
 	      document.head.removeChild(node)
 	    })
+
+	    it('should deal with Safari template clone bug', function () {
+	      var a = document.createElement('div')
+	      a.innerHTML = '<template>1</template>'
+	      var c = templateParser.clone(a)
+	      expect(a.firstChild.innerHTML).toBe('1')
+	    })
+
+	    it('should deal with IE textarea clone bug', function () {
+	      var t = document.createElement('textarea')
+	      t.placeholder = 't'
+	      var c = templateParser.clone(t)
+	      expect(c.value).toBe('')
+	    })
 	  })
 	}
 
 /***/ },
-/* 42 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var textParser = __webpack_require__(66)
+	var textParser = __webpack_require__(63)
 	var config = __webpack_require__(53)
-	var Vue = __webpack_require__(51)
+	var Vue = __webpack_require__(50)
 
 	var testCases = [
 	  {
@@ -6575,6 +6467,413 @@
 	  })
 
 	})
+
+/***/ },
+/* 42 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Vue = __webpack_require__(50)
+	var _ = __webpack_require__(56)
+	var transition = __webpack_require__(71)
+
+	if (_.inBrowser && !_.isIE9) {
+	  describe('Transition', function () {
+
+	    describe('Wrapper methods', function () {
+	      
+	      var spy, el, target, parent, vm
+	      beforeEach(function () {
+	        el = document.createElement('div')
+	        target = document.createElement('div')
+	        parent = document.createElement('div')
+	        parent.appendChild(target)
+	        spy = jasmine.createSpy('transition skip')
+	        vm = new Vue()
+	        spyOn(transition, 'apply')
+	      })
+
+	      it('append', function () {
+	        transition.append(el, parent, vm, spy)
+	        expect(parent.lastChild).toBe(el)
+	        expect(spy).toHaveBeenCalled()
+	      })
+
+	      it('before', function () {
+	        transition.before(el, target, vm, spy)
+	        expect(parent.firstChild).toBe(el)
+	        expect(el.nextSibling).toBe(target)
+	        expect(spy).toHaveBeenCalled()
+	      })
+
+	      it('remove', function () {
+	        transition.remove(target, vm, spy)
+	        expect(parent.childNodes.length).toBe(0)
+	        expect(spy).toHaveBeenCalled()
+	      })
+
+	      it('removeThenAppend', function () {
+	        transition.removeThenAppend(target, el, vm, spy)
+	        expect(parent.childNodes.length).toBe(0)
+	        expect(el.firstChild).toBe(target)
+	        expect(spy).toHaveBeenCalled()
+	      })
+
+	    })
+
+	    describe('Skipping', function () {
+
+	      var el, vm, op, cb
+	      beforeEach(function () {
+	        el = document.createElement('div')
+	        op = jasmine.createSpy('transition skip op')
+	        cb = jasmine.createSpy('transition skip cb')
+	        vm = new Vue()
+	      })
+	      
+	      it('skip el with no transition data', function () {
+	        transition.apply(el, 1, op, vm, cb)
+	        expect(op).toHaveBeenCalled()
+	        expect(cb).toHaveBeenCalled()
+	      })
+
+	      it('skip vm still being compiled', function () {
+	        el.__v_trans = { id: 'test' }
+	        transition.apply(el, 1, op, vm, cb)
+	        expect(op).toHaveBeenCalled()
+	        expect(cb).toHaveBeenCalled()
+	      })
+
+	      it('skip vm with parent still being compiled', function () {
+	        el.__v_trans = { id: 'test' }
+	        var child = vm.$addChild({
+	          el: el
+	        })
+	        expect(child._isCompiled).toBe(true)
+	        transition.apply(el, 1, op, child, cb)
+	        expect(op).toHaveBeenCalled()
+	        expect(cb).toHaveBeenCalled()
+	      })
+
+	      it('skip when no transition available', function () {
+	        var e = _.transitionEndEvent
+	        _.transitionEndEvent = null
+	        el.__v_trans = { id: 'test' }
+	        vm.$mount(el)
+	        transition.apply(el, 1, op, vm, cb)
+	        expect(op).toHaveBeenCalled()
+	        expect(cb).toHaveBeenCalled()
+	        _.transitionEndEvent = e
+	      })
+
+	    })
+
+	    describe('CSS transitions', function () {
+
+	      var duration = '50ms'
+
+	      // insert a test css
+	      function insertCSS (text) {
+	        var cssEl = document.createElement('style')
+	        cssEl.textContent = text
+	        document.head.appendChild(cssEl)
+	      }
+
+	      insertCSS(
+	        '.test {\
+	          transition: opacity ' + duration + ' ease;\
+	          -webkit-transition: opacity ' + duration + ' ease;}'
+	      )
+	      insertCSS('.test-enter, .test-leave { opacity: 0; }')
+	      insertCSS(
+	        '.test-anim-enter {\
+	          animation: test-enter ' + duration + ';\
+	          -webkit-animation: test-enter ' + duration + ';}\
+	        .test-anim-leave {\
+	          animation: test-leave ' + duration + ';\
+	          -webkit-animation: test-leave ' + duration + ';}\
+	        @keyframes test-enter {\
+	          from { opacity: 0 }\
+	          to { opacity: 1 }}\
+	        @-webkit-keyframes test-enter {\
+	          from { opacity: 0 }\
+	          to { opacity: 1 }}\
+	        @keyframes test-leave {\
+	          from { opacity: 1 }\
+	          to { opacity: 0 }}\
+	        @-webkit-keyframes test-leave {\
+	          from { opacity: 1 }\
+	          to { opacity: 0 }}'
+	      )
+
+	      var vm, el, op, cb
+	      beforeEach(function (done) {
+	        el = document.createElement('div')
+	        el.__v_trans = {}
+	        vm = new Vue({ el: el })
+	        op = jasmine.createSpy('css op')
+	        cb = jasmine.createSpy('css cb')
+	        document.body.appendChild(el)
+	        // !IMPORTANT!
+	        // this ensures we force a layout for every test.
+	        _.nextTick(done)
+	        spyOn(window, 'getComputedStyle').and.callThrough()
+	      })
+
+	      afterEach(function () {
+	        document.body.removeChild(el)
+	      })
+
+	      it('skip on 0s duration (execute right at next frame)', function (done) {
+	        el.__v_trans.id = 'test'
+	        el.style.transition =
+	        el.style.WebkitTransition = 'opacity 0s ease'
+	        transition.apply(el, 1, op, vm, cb)
+	        _.nextTick(function () {
+	          expect(op).toHaveBeenCalled()
+	          expect(cb).toHaveBeenCalled()
+	          expect(el.classList.contains('test-enter')).toBe(false)
+	          transition.apply(el, -1, op, vm, cb)
+	          _.nextTick(function () {
+	            expect(op.calls.count()).toBe(2)
+	            expect(cb.calls.count()).toBe(2)
+	            expect(el.classList.contains('test-leave')).toBe(false)
+	            done()
+	          })
+	        })
+	      })
+
+	      it('skip when no transition available', function (done) {
+	        el.__v_trans.id = 'test-no-trans'
+	        transition.apply(el, 1, op, vm, cb)
+	        _.nextTick(function () {
+	          expect(op).toHaveBeenCalled()
+	          expect(cb).toHaveBeenCalled()
+	          expect(el.classList.contains('test-no-trans-enter')).toBe(false)
+	          transition.apply(el, -1, op, vm, cb)
+	          _.nextTick(function () {
+	            expect(op.calls.count()).toBe(2)
+	            expect(cb.calls.count()).toBe(2)
+	            expect(el.classList.contains('test-no-trans-leave')).toBe(false)
+	            done()
+	          })
+	        })
+	      })
+
+	      it('transition enter', function (done) {
+	        document.body.removeChild(el)
+	        el.__v_trans.id = 'test'
+	        // inline style
+	        el.style.transition =
+	        el.style.WebkitTransition = 'opacity ' + duration + ' ease'
+	        transition.apply(el, 1, function () {
+	          document.body.appendChild(el)
+	          op()
+	        }, vm, cb)
+	        expect(op).toHaveBeenCalled()
+	        expect(cb).not.toHaveBeenCalled()
+	        _.nextTick(function () {
+	          expect(el.classList.contains('test-enter')).toBe(false)
+	          _.on(el, _.transitionEndEvent, function () {
+	            expect(cb).toHaveBeenCalled()
+	            done()
+	          })
+	        })
+	      })
+
+	      it('transition leave', function (done) {
+	        el.__v_trans.id = 'test'
+	        // cascaded class style
+	        el.classList.add('test')
+	        // wait a tick before applying the transition
+	        // because doing so in the same frame won't trigger
+	        // transition
+	        _.nextTick(function () {
+	          transition.apply(el, -1, op, vm, cb)
+	          _.nextTick(function () {
+	            expect(op).not.toHaveBeenCalled()
+	            expect(cb).not.toHaveBeenCalled()
+	            expect(el.classList.contains('test-leave')).toBe(true)
+	            _.on(el, _.transitionEndEvent, function () {
+	              expect(op).toHaveBeenCalled()
+	              expect(cb).toHaveBeenCalled()
+	              expect(el.classList.contains('test-leave')).toBe(false)
+	              done()
+	            })
+	          })
+	        })
+	      })
+
+	      it('animation enter', function (done) {
+	        document.body.removeChild(el)
+	        el.__v_trans.id = 'test-anim'
+	        transition.apply(el, 1, function () {
+	          document.body.appendChild(el)
+	          op()
+	        }, vm, cb)
+	        _.nextTick(function () {
+	          expect(op).toHaveBeenCalled()
+	          expect(cb).not.toHaveBeenCalled()
+	          expect(el.classList.contains('test-anim-enter')).toBe(true)
+	          _.on(el, _.animationEndEvent, function () {
+	            expect(el.classList.contains('test-anim-enter')).toBe(false)
+	            expect(cb).toHaveBeenCalled()
+	            done()
+	          })
+	        })
+	      })
+
+	      it('animation leave', function (done) {
+	        el.__v_trans.id = 'test-anim'
+	        transition.apply(el, -1, op, vm, cb)
+	        _.nextTick(function () {
+	          expect(op).not.toHaveBeenCalled()
+	          expect(cb).not.toHaveBeenCalled()
+	          expect(el.classList.contains('test-anim-leave')).toBe(true)
+	          _.on(el, _.animationEndEvent, function () {
+	            expect(op).toHaveBeenCalled()
+	            expect(cb).toHaveBeenCalled()
+	            expect(el.classList.contains('test-anim-leave')).toBe(false)
+	            done()
+	          })
+	        })
+	      })
+
+	      it('clean up unfinished callback', function (done) {
+	        el.__v_trans.id = 'test'
+	        el.classList.add('test')
+	        transition.apply(el, -1, function () {
+	          document.body.removeChild(el)
+	        }, vm, cb)
+	        // cancel early
+	        _.nextTick(function () {
+	          expect(el.__v_trans.callback).toBeTruthy()
+	          expect(el.classList.contains('test-leave')).toBe(true)
+	          transition.apply(el, 1, function () {
+	            document.body.appendChild(el)
+	          }, vm)
+	          expect(cb).not.toHaveBeenCalled()
+	          expect(el.classList.contains('test-leave')).toBe(false)
+	          expect(el.__v_trans.callback).toBeNull()
+	          // IMPORTANT
+	          // Let the queue flush finish before enter the next
+	          // test. Don't remove the nextTick.
+	          _.nextTick(done)
+	        })
+	      })
+
+	      it('cache transition sniff results', function (done) {
+	        el.__v_trans.id = 'test'
+	        el.classList.add('test')
+	        transition.apply(el, 1, op, vm)
+	        _.nextTick(function () {
+	          expect(window.getComputedStyle.calls.count()).toBe(1)
+	          transition.apply(el, 1, op, vm)
+	          _.nextTick(function () {
+	            expect(window.getComputedStyle.calls.count()).toBe(1)
+	            done()
+	          })
+	        })
+	      })
+
+	    })
+
+	    describe('JavaScript transitions', function () {
+
+	      var el, vm, op, cb, def, emitter
+	      beforeEach(function () {
+	        emitter = {}
+	        el = document.createElement('div')
+	        el.__v_trans = { id: 'test' }
+	        document.body.appendChild(el)
+	        op = jasmine.createSpy('js transition op')
+	        cb = jasmine.createSpy('js transition cb')
+	        def = {}
+	        vm = new Vue({
+	          el: el,
+	          transitions: {
+	            test: def
+	          }
+	        })
+	      })
+
+	      afterEach(function () {
+	        document.body.removeChild(el)
+	      })
+
+	      it('beforeEnter', function () {
+	        var spy = jasmine.createSpy('js transition beforeEnter')
+	        def.beforeEnter = function (el) {
+	          spy(this, el)
+	        }
+	        transition.apply(el, 1, op, vm, cb)
+	        expect(spy).toHaveBeenCalledWith(vm, el)
+	      })
+
+	      it('enter', function () {
+	        var spy = jasmine.createSpy('js enter')
+	        def.enter = function (e, done) {
+	          expect(e).toBe(el)
+	          expect(op).toHaveBeenCalled()
+	          done()
+	          expect(cb).toHaveBeenCalled()
+	          spy(this)
+	        }
+	        transition.apply(el, 1, op, vm, cb)
+	        expect(spy).toHaveBeenCalledWith(vm)
+	      })
+
+	      it('leave', function () {
+	        var spy = jasmine.createSpy('js leave')
+	        def.leave = function (e, done) {
+	          expect(e).toBe(el)
+	          done()
+	          expect(op).toHaveBeenCalled()
+	          expect(cb).toHaveBeenCalled()
+	          spy(this)
+	        }
+	        transition.apply(el, -1, op, vm, cb)
+	        expect(spy).toHaveBeenCalledWith(vm)
+	      })
+
+	      it('no def', function () {
+	        transition.apply(el, 1, op, vm, cb)
+	        expect(op).toHaveBeenCalled()
+	        expect(cb).toHaveBeenCalled()
+	        transition.apply(el, -1, op, vm, cb)
+	        expect(op.calls.count()).toBe(2)
+	        expect(cb.calls.count()).toBe(2)
+	      })
+
+	      it('optional cleanup callback', function (done) {
+	        var cleanupSpy = jasmine.createSpy('js cleanup')
+	        var leaveSpy = jasmine.createSpy('js leave')
+	        def.enter = function (el, done) {
+	          var to = setTimeout(done, 30)
+	          return function () {
+	            clearTimeout(to)
+	            cleanupSpy()
+	          }
+	        }
+	        def.leave = function (el, done) {
+	          expect(cleanupSpy).toHaveBeenCalled()
+	          leaveSpy()
+	          done()
+	        }
+	        transition.apply(el, 1, op, vm, cb)
+	        setTimeout(function () {
+	          transition.apply(el, -1, op, vm)
+	          expect(leaveSpy).toHaveBeenCalled()
+	          setTimeout(function () {
+	            expect(cb).not.toHaveBeenCalled()
+	            done()
+	          }, 30)
+	        }, 15)
+	      })
+
+	    })
+
+	  })
+	}
 
 /***/ },
 /* 43 */
@@ -6911,9 +7210,10 @@
 	  it('extend', function () {
 	    var from = {a:1,b:2}
 	    var to = {}
-	    _.extend(to, from)
+	    var res = _.extend(to, from)
 	    expect(to.a).toBe(from.a)
 	    expect(to.b).toBe(from.b)
+	    expect(res).toBe(to)
 	  })
 
 	  it('isObject', function () {
@@ -6968,8 +7268,8 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(51)
-	var merge = __webpack_require__(55)
+	var Vue = __webpack_require__(50)
+	var merge = __webpack_require__(54)
 
 	describe('Util - Option merging', function () {
 	  
@@ -7120,12 +7420,34 @@
 	    expect(res.data).toBeUndefined()
 	  })
 
-	  it('class data/el merge', function () {
+	  it('class el merge', function () {
 	    function fn1 () {}
 	    function fn2 () {}
-	    var res = merge({data:fn1, el:fn1}, {data:fn2})
-	    expect(res.data).toBe(fn2)
-	    expect(res.el).toBe(fn1)
+	    var res = merge({el:fn1}, {el:fn2})
+	    expect(res.el).toBe(fn2)
+	  })
+
+	  it('class data merge', function () {
+	    function fn1 () {
+	      return { a: 1, c: 4, d: { e: 1 } }
+	    }
+	    function fn2 () {
+	      return { a: 2, b: 3, d: { f: 2 } }
+	    }
+	    // both present
+	    var res = merge({data:fn1}, {data:fn2}).data()
+	    expect(res.a).toBe(2)
+	    expect(res.b).toBe(3)
+	    expect(res.c).toBe(4)
+	    expect(res.d.e).toBe(1)
+	    expect(res.d.f).toBe(2)
+	    // only parent
+	    res = merge({data:fn1}, {}).data()
+	    expect(res.a).toBe(1)
+	    expect(res.b).toBeUndefined()
+	    expect(res.c).toBe(4)
+	    expect(res.d.e).toBe(1)
+	    expect(res.d.f).toBeUndefined()
 	  })
 
 	  it('instanace el merge', function () {
@@ -7182,7 +7504,7 @@
 	  })
 
 	  it('already observed instance data merge with default data', function () {
-	    var Observer = __webpack_require__(58)
+	    var Observer = __webpack_require__(74)
 	    var instanceData = { a: 123 }
 	    // observe it
 	    Observer.create(instanceData)
@@ -7290,61 +7612,6 @@
 
 /***/ },
 /* 49 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var uid = 0
-
-	/**
-	 * A binding is an observable that can have multiple
-	 * directives subscribing to it.
-	 *
-	 * @constructor
-	 */
-
-	function Binding () {
-	  this.id = ++uid
-	  this.subs = []
-	}
-
-	var p = Binding.prototype
-
-	/**
-	 * Add a directive subscriber.
-	 *
-	 * @param {Directive} sub
-	 */
-
-	p.addSub = function (sub) {
-	  this.subs.push(sub)
-	}
-
-	/**
-	 * Remove a directive subscriber.
-	 *
-	 * @param {Directive} sub
-	 */
-
-	p.removeSub = function (sub) {
-	  if (this.subs.length) {
-	    var i = this.subs.indexOf(sub)
-	    if (i > -1) this.subs.splice(i, 1)
-	  }
-	}
-
-	/**
-	 * Notify all subscribers of a new value.
-	 */
-
-	p.notify = function () {
-	  for (var i = 0, l = this.subs.length; i < l; i++) {
-	    this.subs[i].update()
-	  }
-	}
-
-	module.exports = Binding
-
-/***/ },
-/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -7461,7 +7728,7 @@
 	module.exports = Cache
 
 /***/ },
-/* 51 */
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
@@ -7502,7 +7769,7 @@
 
 	Vue.options = {
 	  directives  : __webpack_require__(94),
-	  filters     : __webpack_require__(57),
+	  filters     : __webpack_require__(72),
 	  partials    : {},
 	  transitions : {},
 	  components  : {}
@@ -7532,7 +7799,7 @@
 	 * Mixin internal instance methods
 	 */
 
-	extend(p, __webpack_require__(74))
+	extend(p, __webpack_require__(73))
 	extend(p, __webpack_require__(75))
 	extend(p, __webpack_require__(76))
 	extend(p, __webpack_require__(77))
@@ -7550,14 +7817,14 @@
 	module.exports = _.Vue = Vue
 
 /***/ },
-/* 52 */
+/* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
 	var config = __webpack_require__(53)
-	var Watcher = __webpack_require__(54)
-	var textParser = __webpack_require__(66)
-	var expParser = __webpack_require__(63)
+	var Watcher = __webpack_require__(52)
+	var textParser = __webpack_require__(63)
+	var expParser = __webpack_require__(60)
 
 	/**
 	 * A directive links a DOM element with a piece of data,
@@ -7640,7 +7907,8 @@
 	        this._watcherExp,
 	        update, // callback
 	        this.filters,
-	        this.twoWay // need setter
+	        this.twoWay, // need setter,
+	        this.deep
 	      )
 	    } else {
 	      watcher.addCb(update)
@@ -7709,6 +7977,21 @@
 	}
 
 	/**
+	 * Check for an attribute directive param, e.g. lazy
+	 *
+	 * @param {String} name
+	 * @return {String}
+	 */
+
+	p._checkParam = function (name) {
+	  var param = this.el.getAttribute(name)
+	  if (param !== null) {
+	    this.el.removeAttribute(name)
+	  }
+	  return param
+	}
+
+	/**
 	 * Teardown the watcher and call unbind.
 	 */
 
@@ -7757,97 +8040,13 @@
 	module.exports = Directive
 
 /***/ },
-/* 53 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-
-	  /**
-	   * The prefix to look for when parsing directives.
-	   *
-	   * @type {String}
-	   */
-
-	  prefix: 'v-',
-
-	  /**
-	   * Whether to print debug messages.
-	   * Also enables stack trace for warnings.
-	   *
-	   * @type {Boolean}
-	   */
-
-	  debug: false,
-
-	  /**
-	   * Whether to suppress warnings.
-	   *
-	   * @type {Boolean}
-	   */
-
-	  silent: false,
-
-	  /**
-	   * Whether allow observer to alter data objects'
-	   * __proto__.
-	   *
-	   * @type {Boolean}
-	   */
-
-	  proto: true,
-
-	  /**
-	   * Whether to parse mustache tags in templates.
-	   *
-	   * @type {Boolean}
-	   */
-
-	  interpolate: true,
-
-	  /**
-	   * Whether to use async rendering.
-	   */
-
-	  async: true,
-
-	  /**
-	   * Internal flag to indicate the delimiters have been
-	   * changed.
-	   *
-	   * @type {Boolean}
-	   */
-
-	  _delimitersChanged: true
-
-	}
-
-	/**
-	 * Interpolation delimiters.
-	 * We need to mark the changed flag so that the text parser
-	 * knows it needs to recompile the regex.
-	 *
-	 * @type {Array<String>}
-	 */
-
-	var delimiters = ['{{', '}}']
-	Object.defineProperty(module.exports, 'delimiters', {
-	  get: function () {
-	    return delimiters
-	  },
-	  set: function (val) {
-	    delimiters = val
-	    this._delimitersChanged = true
-	  }
-	})
-
-/***/ },
-/* 54 */
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
 	var config = __webpack_require__(53)
-	var Observer = __webpack_require__(58)
-	var expParser = __webpack_require__(63)
+	var Observer = __webpack_require__(74)
+	var expParser = __webpack_require__(60)
 	var Batcher = __webpack_require__(48)
 
 	var batcher = new Batcher()
@@ -7892,18 +8091,18 @@
 	var p = Watcher.prototype
 
 	/**
-	 * Add a binding dependency to this directive.
+	 * Add a dependency to this directive.
 	 *
-	 * @param {Binding} binding
+	 * @param {Dep} dep
 	 */
 
-	p.addDep = function (binding) {
-	  var id = binding.id
+	p.addDep = function (dep) {
+	  var id = dep.id
 	  if (!this.newDeps[id]) {
-	    this.newDeps[id] = binding
+	    this.newDeps[id] = dep
 	    if (!this.deps[id]) {
-	      this.deps[id] = binding
-	      binding.addSub(this)
+	      this.deps[id] = dep
+	      dep.addSub(this)
 	    }
 	  }
 	}
@@ -7918,11 +8117,14 @@
 	  var value
 	  try {
 	    value = this.getter.call(vm, vm)
-	  } catch (e) {}
-	  // use JSON.stringify to "touch" every property
-	  // so they are all tracked as dependencies for
-	  // deep watching
-	  if (this.deep) JSON.stringify(value)
+	  } catch (e) {
+	    _.warn(e)
+	  }
+	  // "touch" every property so they are all tracked as
+	  // dependencies for deep watching
+	  if (this.deep) {
+	    traverse(value)
+	  }
 	  value = _.applyFilters(value, this.readFilters, vm)
 	  this.afterGet()
 	  return value
@@ -8058,10 +8260,116 @@
 	  }
 	}
 
+
+	/**
+	 * Recrusively traverse an object to evoke all converted
+	 * getters, so that every nested property inside the object
+	 * is collected as a "deep" dependency.
+	 *
+	 * @param {Object} obj
+	 */
+
+	function traverse (obj) {
+	  var key, val, i
+	  for (key in obj) {
+	    val = obj[key]
+	    if (_.isArray(val)) {
+	      i = val.length
+	      while (i--) traverse(val[i])
+	    } else if (_.isObject(val)) {
+	      traverse(val)
+	    }
+	  }
+	}
+
 	module.exports = Watcher
 
 /***/ },
-/* 55 */
+/* 53 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+
+	  /**
+	   * The prefix to look for when parsing directives.
+	   *
+	   * @type {String}
+	   */
+
+	  prefix: 'v-',
+
+	  /**
+	   * Whether to print debug messages.
+	   * Also enables stack trace for warnings.
+	   *
+	   * @type {Boolean}
+	   */
+
+	  debug: false,
+
+	  /**
+	   * Whether to suppress warnings.
+	   *
+	   * @type {Boolean}
+	   */
+
+	  silent: false,
+
+	  /**
+	   * Whether allow observer to alter data objects'
+	   * __proto__.
+	   *
+	   * @type {Boolean}
+	   */
+
+	  proto: true,
+
+	  /**
+	   * Whether to parse mustache tags in templates.
+	   *
+	   * @type {Boolean}
+	   */
+
+	  interpolate: true,
+
+	  /**
+	   * Whether to use async rendering.
+	   */
+
+	  async: true,
+
+	  /**
+	   * Internal flag to indicate the delimiters have been
+	   * changed.
+	   *
+	   * @type {Boolean}
+	   */
+
+	  _delimitersChanged: true
+
+	}
+
+	/**
+	 * Interpolation delimiters.
+	 * We need to mark the changed flag so that the text parser
+	 * knows it needs to recompile the regex.
+	 *
+	 * @type {Array<String>}
+	 */
+
+	var delimiters = ['{{', '}}']
+	Object.defineProperty(module.exports, 'delimiters', {
+	  get: function () {
+	    return delimiters
+	  },
+	  set: function (val) {
+	    delimiters = val
+	    this._delimitersChanged = true
+	  }
+	})
+
+/***/ },
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
@@ -8082,39 +8390,68 @@
 	var strats = Object.create(null)
 
 	/**
+	 * Helper that recursively merges two data objects together.
+	 */
+
+	function mergeData (to, from) {
+	  var key, toVal, fromVal
+	  for (key in from) {
+	    toVal = to[key]
+	    fromVal = from[key]
+	    if (!to.hasOwnProperty(key)) {
+	      to.$add(key, fromVal)
+	    } else if (_.isObject(toVal) && _.isObject(fromVal)) {
+	      mergeData(toVal, fromVal)
+	    }
+	  }
+	  return to
+	}
+
+	/**
 	 * Data
 	 */
 
 	strats.data = function (parentVal, childVal, vm) {
-	  // in a class merge, both should be functions
-	  // so we just return child if it exists
 	  if (!vm) {
-	    if (childVal && typeof childVal !== 'function') {
+	    // in a Vue.extend merge, both should be functions
+	    if (!childVal) {
+	      return parentVal
+	    }
+	    if (typeof childVal !== 'function') {
 	      _.warn(
 	        'The "data" option should be a function ' +
 	        'that returns a per-instance value in component ' +
 	        'definitions.'
 	      )
-	      return
+	      return parentVal
 	    }
-	    return childVal || parentVal
-	  }
-	  var instanceData = typeof childVal === 'function'
-	    ? childVal.call(vm)
-	    : childVal
-	  var defaultData = typeof parentVal === 'function'
-	    ? parentVal.call(vm)
-	    : undefined
-	  if (instanceData) {
-	    // mix default data into instance data
-	    for (var key in defaultData) {
-	      if (!instanceData.hasOwnProperty(key)) {
-	        instanceData.$add(key, defaultData[key])
-	      }
+	    if (!parentVal) {
+	      return childVal
 	    }
-	    return instanceData
+	    // when parentVal & childVal are both present,
+	    // we need to return a function that returns the
+	    // merged result of both functions... no need to
+	    // check if parentVal is a function here because
+	    // it has to be a function to pass previous merges.
+	    return function mergedDataFn () {
+	      return mergeData(
+	        childVal.call(this),
+	        parentVal.call(this)
+	      )
+	    }
 	  } else {
-	    return defaultData
+	    // instance merge, return raw object
+	    var instanceData = typeof childVal === 'function'
+	      ? childVal.call(vm)
+	      : childVal
+	    var defaultData = typeof parentVal === 'function'
+	      ? parentVal.call(vm)
+	      : undefined
+	    if (instanceData) {
+	      return mergeData(instanceData, defaultData)
+	    } else {
+	      return defaultData
+	    }
 	  }
 	}
 
@@ -8295,6 +8632,61 @@
 	}
 
 /***/ },
+/* 55 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var uid = 0
+
+	/**
+	 * A dep is an observable that can have multiple
+	 * directives subscribing to it.
+	 *
+	 * @constructor
+	 */
+
+	function Dep () {
+	  this.id = ++uid
+	  this.subs = []
+	}
+
+	var p = Dep.prototype
+
+	/**
+	 * Add a directive subscriber.
+	 *
+	 * @param {Directive} sub
+	 */
+
+	p.addSub = function (sub) {
+	  this.subs.push(sub)
+	}
+
+	/**
+	 * Remove a directive subscriber.
+	 *
+	 * @param {Directive} sub
+	 */
+
+	p.removeSub = function (sub) {
+	  if (this.subs.length) {
+	    var i = this.subs.indexOf(sub)
+	    if (i > -1) this.subs.splice(i, 1)
+	  }
+	}
+
+	/**
+	 * Notify all subscribers of a new value.
+	 */
+
+	p.notify = function () {
+	  for (var i = 0, l = this.subs.length; i < l; i++) {
+	    this.subs[i].update()
+	  }
+	}
+
+	module.exports = Dep
+
+/***/ },
 /* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -8312,536 +8704,10 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-
-	/**
-	 * Stringify value.
-	 *
-	 * @param {Number} indent
-	 */
-
-	exports.json = function (value, indent) {
-	  return JSON.stringify(value, null, Number(indent) || 2)
-	}
-
-	/**
-	 * 'abc' => 'Abc'
-	 */
-
-	exports.capitalize = function (value) {
-	  if (!value && value !== 0) return ''
-	  value = value.toString()
-	  return value.charAt(0).toUpperCase() + value.slice(1)
-	}
-
-	/**
-	 * 'abc' => 'ABC'
-	 */
-
-	exports.uppercase = function (value) {
-	  return (value || value === 0)
-	    ? value.toString().toUpperCase()
-	    : ''
-	}
-
-	/**
-	 * 'AbC' => 'abc'
-	 */
-
-	exports.lowercase = function (value) {
-	  return (value || value === 0)
-	    ? value.toString().toLowerCase()
-	    : ''
-	}
-
-	/**
-	 * 12345 => $12,345.00
-	 *
-	 * @param {String} sign
-	 */
-
-	var digitsRE = /(\d{3})(?=\d)/g
-
-	exports.currency = function (value, sign) {
-	  value = parseFloat(value)
-	  if (!value && value !== 0) return ''
-	  sign = sign || '$'
-	  var s = Math.floor(Math.abs(value)).toString(),
-	    i = s.length % 3,
-	    h = i > 0
-	      ? (s.slice(0, i) + (s.length > 3 ? ',' : ''))
-	      : '',
-	    f = '.' + value.toFixed(2).slice(-2)
-	  return (value < 0 ? '-' : '') +
-	    sign + h + s.slice(i).replace(digitsRE, '$1,') + f
-	}
-
-	/**
-	 * 'item' => 'items'
-	 *
-	 * @params
-	 *  an array of strings corresponding to
-	 *  the single, double, triple ... forms of the word to
-	 *  be pluralized. When the number to be pluralized
-	 *  exceeds the length of the args, it will use the last
-	 *  entry in the array.
-	 *
-	 *  e.g. ['single', 'double', 'triple', 'multiple']
-	 */
-
-	exports.pluralize = function (value) {
-	  var args = _.toArray(arguments, 1)
-	  return args.length > 1
-	    ? (args[value % 10 - 1] || args[args.length - 1])
-	    : (args[0] + (value === 1 ? '' : 's'))
-	}
-
-	/**
-	 * A special filter that takes a handler function,
-	 * wraps it so it only gets triggered on specific
-	 * keypresses. v-on only.
-	 *
-	 * @param {String} key
-	 */
-
-	var keyCodes = {
-	  enter    : 13,
-	  tab      : 9,
-	  'delete' : 46,
-	  up       : 38,
-	  left     : 37,
-	  right    : 39,
-	  down     : 40,
-	  esc      : 27
-	}
-
-	exports.key = function (handler, key) {
-	  if (!handler) return
-	  var code = keyCodes[key]
-	  if (!code) {
-	    code = parseInt(key, 10)
-	  }
-	  return function (e) {
-	    if (e.keyCode === code) {
-	      return handler.call(this, e)
-	    }
-	  }
-	}
-
-	// expose keycode hash
-	exports.key.keyCodes = keyCodes
-
-	/**
-	 * Install special array filters
-	 */
-
-	_.extend(exports, __webpack_require__(83))
-
-/***/ },
-/* 58 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var _ = __webpack_require__(56)
 	var config = __webpack_require__(53)
-	var Binding = __webpack_require__(49)
-	var arrayMethods = __webpack_require__(84)
-	var arrayKeys = Object.getOwnPropertyNames(arrayMethods)
-	__webpack_require__(85)
-
-	var uid = 0
-
-	/**
-	 * Type enums
-	 */
-
-	var ARRAY  = 0
-	var OBJECT = 1
-
-	/**
-	 * Augment an target Object or Array by intercepting
-	 * the prototype chain using __proto__
-	 *
-	 * @param {Object|Array} target
-	 * @param {Object} proto
-	 */
-
-	function protoAugment (target, src) {
-	  target.__proto__ = src
-	}
-
-	/**
-	 * Augment an target Object or Array by defining
-	 * hidden properties.
-	 *
-	 * @param {Object|Array} target
-	 * @param {Object} proto
-	 */
-
-	function copyAugment (target, src, keys) {
-	  var i = keys.length
-	  var key
-	  while (i--) {
-	    key = keys[i]
-	    _.define(target, key, src[key])
-	  }
-	}
-
-	/**
-	 * Observer class that are attached to each observed
-	 * object. Once attached, the observer converts target
-	 * object's property keys into getter/setters that
-	 * collect dependencies and dispatches updates.
-	 *
-	 * @param {Array|Object} value
-	 * @param {Number} type
-	 * @constructor
-	 */
-
-	function Observer (value, type) {
-	  this.id = ++uid
-	  this.value = value
-	  this.active = true
-	  this.bindings = []
-	  _.define(value, '__ob__', this)
-	  if (type === ARRAY) {
-	    var augment = config.proto && _.hasProto
-	      ? protoAugment
-	      : copyAugment
-	    augment(value, arrayMethods, arrayKeys)
-	    this.observeArray(value)
-	  } else if (type === OBJECT) {
-	    this.walk(value)
-	  }
-	}
-
-	Observer.target = null
-
-	var p = Observer.prototype
-
-	/**
-	 * Attempt to create an observer instance for a value,
-	 * returns the new observer if successfully observed,
-	 * or the existing observer if the value already has one.
-	 *
-	 * @param {*} value
-	 * @return {Observer|undefined}
-	 * @static
-	 */
-
-	Observer.create = function (value) {
-	  if (
-	    value &&
-	    value.hasOwnProperty('__ob__') &&
-	    value.__ob__ instanceof Observer
-	  ) {
-	    return value.__ob__
-	  } else if (_.isArray(value)) {
-	    return new Observer(value, ARRAY)
-	  } else if (
-	    _.isPlainObject(value) &&
-	    !value._isVue // avoid Vue instance
-	  ) {
-	    return new Observer(value, OBJECT)
-	  }
-	}
-
-	/**
-	 * Walk through each property and convert them into
-	 * getter/setters. This method should only be called when
-	 * value type is Object. Properties prefixed with `$` or `_`
-	 * and accessor properties are ignored.
-	 *
-	 * @param {Object} obj
-	 */
-
-	p.walk = function (obj) {
-	  var keys = Object.keys(obj)
-	  var i = keys.length
-	  var key, prefix
-	  while (i--) {
-	    key = keys[i]
-	    prefix = key.charCodeAt(0)
-	    if (prefix !== 0x24 && prefix !== 0x5F) { // skip $ or _
-	      this.convert(key, obj[key])
-	    }
-	  }
-	}
-
-	/**
-	 * Try to carete an observer for a child value,
-	 * and if value is array, link binding to the array.
-	 *
-	 * @param {*} val
-	 * @return {Binding|undefined}
-	 */
-
-	p.observe = function (val) {
-	  return Observer.create(val)
-	}
-
-	/**
-	 * Observe a list of Array items.
-	 *
-	 * @param {Array} items
-	 */
-
-	p.observeArray = function (items) {
-	  var i = items.length
-	  while (i--) {
-	    this.observe(items[i])
-	  }
-	}
-
-	/**
-	 * Convert a property into getter/setter so we can emit
-	 * the events when the property is accessed/changed.
-	 *
-	 * @param {String} key
-	 * @param {*} val
-	 */
-
-	p.convert = function (key, val) {
-	  var ob = this
-	  var childOb = ob.observe(val)
-	  var binding = new Binding()
-	  if (childOb) {
-	    childOb.bindings.push(binding)
-	  }
-	  Object.defineProperty(ob.value, key, {
-	    enumerable: true,
-	    configurable: true,
-	    get: function () {
-	      // Observer.target is a watcher whose getter is
-	      // currently being evaluated.
-	      if (ob.active && Observer.target) {
-	        Observer.target.addDep(binding)
-	      }
-	      return val
-	    },
-	    set: function (newVal) {
-	      if (newVal === val) return
-	      // remove binding from old value
-	      var oldChildOb = val && val.__ob__
-	      if (oldChildOb) {
-	        var oldBindings = oldChildOb.bindings
-	        oldBindings.splice(oldBindings.indexOf(binding), 1)
-	      }
-	      val = newVal
-	      // add binding to new value
-	      var newChildOb = ob.observe(newVal)
-	      if (newChildOb) {
-	        newChildOb.bindings.push(binding)
-	      }
-	      binding.notify()
-	    }
-	  })
-	}
-
-	/**
-	 * Notify change on all self bindings on an observer.
-	 * This is called when a mutable value mutates. e.g.
-	 * when an Array's mutating methods are called, or an
-	 * Object's $add/$delete are called.
-	 */
-
-	p.notify = function () {
-	  var bindings = this.bindings
-	  for (var i = 0, l = bindings.length; i < l; i++) {
-	    bindings[i].notify()
-	  }
-	}
-
-	/**
-	 * Add an owner vm, so that when $add/$delete mutations
-	 * happen we can notify owner vms to proxy the keys and
-	 * digest the watchers. This is only called when the object
-	 * is observed as an instance's root $data.
-	 *
-	 * @param {Vue} vm
-	 */
-
-	p.addVm = function (vm) {
-	  (this.vms = this.vms || []).push(vm)
-	}
-
-	/**
-	 * Remove an owner vm. This is called when the object is
-	 * swapped out as an instance's $data object.
-	 *
-	 * @param {Vue} vm
-	 */
-
-	p.removeVm = function (vm) {
-	  this.vms.splice(this.vms.indexOf(vm), 1)
-	}
-
-	module.exports = Observer
-
-
-/***/ },
-/* 59 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var _ = __webpack_require__(56)
-	var applyCSSTransition = __webpack_require__(86)
-	var applyJSTransition = __webpack_require__(87)
-
-	/**
-	 * Append with transition.
-	 *
-	 * @oaram {Element} el
-	 * @param {Element} target
-	 * @param {Vue} vm
-	 * @param {Function} [cb]
-	 */
-
-	exports.append = function (el, target, vm, cb) {
-	  apply(el, 1, function () {
-	    target.appendChild(el)
-	  }, vm, cb)
-	}
-
-	/**
-	 * InsertBefore with transition.
-	 *
-	 * @oaram {Element} el
-	 * @param {Element} target
-	 * @param {Vue} vm
-	 * @param {Function} [cb]
-	 */
-
-	exports.before = function (el, target, vm, cb) {
-	  apply(el, 1, function () {
-	    _.before(el, target)
-	  }, vm, cb)
-	}
-
-	/**
-	 * Remove with transition.
-	 *
-	 * @oaram {Element} el
-	 * @param {Vue} vm
-	 * @param {Function} [cb]
-	 */
-
-	exports.remove = function (el, vm, cb) {
-	  apply(el, -1, function () {
-	    _.remove(el)
-	  }, vm, cb)
-	}
-
-	/**
-	 * Remove by appending to another parent with transition.
-	 * This is only used in block operations.
-	 *
-	 * @oaram {Element} el
-	 * @param {Element} target
-	 * @param {Vue} vm
-	 * @param {Function} [cb]
-	 */
-
-	exports.removeThenAppend = function (el, target, vm, cb) {
-	  apply(el, -1, function () {
-	    target.appendChild(el)
-	  }, vm, cb)
-	}
-
-	/**
-	 * Append the childNodes of a fragment to target.
-	 *
-	 * @param {DocumentFragment} block
-	 * @param {Node} target
-	 * @param {Vue} vm
-	 */
-
-	exports.blockAppend = function (block, target, vm) {
-	  var nodes = _.toArray(block.childNodes)
-	  for (var i = 0, l = nodes.length; i < l; i++) {
-	    exports.before(nodes[i], target, vm)
-	  }
-	}
-
-	/**
-	 * Remove a block of nodes between two edge nodes.
-	 *
-	 * @param {Node} start
-	 * @param {Node} end
-	 * @param {Vue} vm
-	 */
-
-	exports.blockRemove = function (start, end, vm) {
-	  var node = start.nextSibling
-	  var next
-	  while (node !== end) {
-	    next = node.nextSibling
-	    exports.remove(node, vm)
-	    node = next
-	  }
-	}
-
-	/**
-	 * Apply transitions with an operation callback.
-	 *
-	 * @oaram {Element} el
-	 * @param {Number} direction
-	 *                  1: enter
-	 *                 -1: leave
-	 * @param {Function} op - the actual DOM operation
-	 * @param {Vue} vm
-	 * @param {Function} [cb]
-	 */
-
-	var apply = exports.apply = function (el, direction, op, vm, cb) {
-	  var transData = el.__v_trans
-	  if (
-	    !transData ||
-	    !vm._isCompiled ||
-	    // if the vm is being manipulated by a parent directive
-	    // during the parent's compilation phase, skip the
-	    // animation.
-	    (vm.$parent && !vm.$parent._isCompiled)
-	  ) {
-	    op()
-	    if (cb) cb()
-	    return
-	  }
-	  // determine the transition type on the element
-	  var jsTransition = vm.$options.transitions[transData.id]
-	  if (jsTransition) {
-	    // js
-	    applyJSTransition(
-	      el,
-	      direction,
-	      op,
-	      transData,
-	      jsTransition,
-	      vm,
-	      cb
-	    )
-	  } else if (_.transitionEndEvent) {
-	    // css
-	    applyCSSTransition(
-	      el,
-	      direction,
-	      op,
-	      transData,
-	      cb
-	    )
-	  } else {
-	    // not applicable
-	    op()
-	    if (cb) cb()
-	  }
-	}
-
-/***/ },
-/* 60 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var _ = __webpack_require__(56)
-	var config = __webpack_require__(53)
-	var textParser = __webpack_require__(66)
-	var dirParser = __webpack_require__(62)
-	var templateParser = __webpack_require__(65)
+	var textParser = __webpack_require__(63)
+	var dirParser = __webpack_require__(59)
+	var templateParser = __webpack_require__(62)
 
 	/**
 	 * Compile a template and return a reusable composite link
@@ -8849,22 +8715,30 @@
 	 * inside. This top level compile function should only be
 	 * called on instance root nodes.
 	 *
+	 * When the `asParent` flag is true, this means we are doing
+	 * a partial compile for a component's parent scope markup
+	 * (See #502). This could **only** be triggered during
+	 * compilation of `v-component`, and we need to skip v-with,
+	 * v-ref & v-component in this situation.
+	 *
 	 * @param {Element|DocumentFragment} el
 	 * @param {Object} options
 	 * @param {Boolean} partial
+	 * @param {Boolean} asParent
 	 * @return {Function}
 	 */
 
-	module.exports = function compile (el, options, partial) {
+	module.exports = function compile (el, options, partial, asParent) {
 	  var params = !partial && options.paramAttributes
 	  var paramsLinkFn = params
 	    ? compileParamAttributes(el, params, options)
 	    : null
 	  var nodeLinkFn = el instanceof DocumentFragment
 	    ? null
-	    : compileNode(el, options)
+	    : compileNode(el, options, asParent)
 	  var childLinkFn =
-	    (!nodeLinkFn || !nodeLinkFn.terminal) &&
+	    !(nodeLinkFn && nodeLinkFn.terminal) &&
+	    el.tagName !== 'SCRIPT' &&
 	    el.hasChildNodes()
 	      ? compileNodeList(el.childNodes, options)
 	      : null
@@ -8912,13 +8786,14 @@
 	 *
 	 * @param {Node} node
 	 * @param {Object} options
+	 * @param {Boolean} asParent
 	 * @return {Function|undefined}
 	 */
 
-	function compileNode (node, options) {
+	function compileNode (node, options, asParent) {
 	  var type = node.nodeType
 	  if (type === 1 && node.tagName !== 'SCRIPT') {
-	    return compileElement(node, options)
+	    return compileElement(node, options, asParent)
 	  } else if (type === 3 && config.interpolate) {
 	    return compileTextNode(node, options)
 	  }
@@ -8929,13 +8804,14 @@
 	 *
 	 * @param {Element} el
 	 * @param {Object} options
+	 * @param {Boolean} asParent
 	 * @return {Function|null}
 	 */
 
-	function compileElement (el, options) {
+	function compileElement (el, options, asParent) {
 	  var linkFn, tag, component
 	  // check custom element component, but only on non-root
-	  if (!el.__vue__) {
+	  if (!asParent && !el.__vue__) {
 	    tag = el.tagName.toLowerCase()
 	    component =
 	      tag.indexOf('-') > 0 &&
@@ -8946,12 +8822,14 @@
 	  }
 	  if (component || el.hasAttributes()) {
 	    // check terminal direcitves
-	    linkFn = checkTerminalDirectives(el, options)
+	    if (!asParent) {
+	      linkFn = checkTerminalDirectives(el, options)
+	    }
 	    // if not terminal, build normal link function
 	    if (!linkFn) {
-	      var directives = collectDirectives(el, options)
-	      linkFn = directives.length
-	        ? makeDirectivesLinkFn(directives)
+	      var dirs = collectDirectives(el, options, asParent)
+	      linkFn = dirs.length
+	        ? makeDirectivesLinkFn(dirs)
 	        : null
 	    }
 	  }
@@ -9105,7 +8983,8 @@
 	    node = nodeList[i]
 	    nodeLinkFn = compileNode(node, options)
 	    childLinkFn =
-	      (!nodeLinkFn || !nodeLinkFn.terminal) &&
+	      !(nodeLinkFn && nodeLinkFn.terminal) &&
+	      node.tagName !== 'SCRIPT' &&
 	      node.hasChildNodes()
 	        ? compileNodeList(node.childNodes, options)
 	        : null
@@ -9269,16 +9148,6 @@
 	function makeTeriminalLinkFn (el, dirName, value, options) {
 	  var descriptor = dirParser.parse(value)[0]
 	  var def = options.directives[dirName]
-	  // special case: we need to collect directives found
-	  // on a component root node, but defined in the parent
-	  // template. These directives need to be compiled in
-	  // the parent scope.
-	  if (dirName === 'component') {
-	    var dirs = collectDirectives(el, options, true)
-	    el._parentLinker = dirs.length
-	      ? makeDirectivesLinkFn(dirs)
-	      : null
-	  }
 	  var terminalLinkFn = function (vm, el) {
 	    vm._bindDir(dirName, el, descriptor, def)
 	  }
@@ -9305,10 +9174,10 @@
 	    attrName = attr.name
 	    if (attrName.indexOf(config.prefix) === 0) {
 	      dirName = attrName.slice(config.prefix.length)
-	      if (
-	        asParent &&
-	        (dirName === 'with' || dirName === 'ref')
-	      ) {
+	      if (asParent &&
+	          (dirName === 'with' ||
+	           dirName === 'ref' ||
+	           dirName === 'component')) {
 	        continue
 	      }
 	      dirDef = options.directives[dirName]
@@ -9385,11 +9254,11 @@
 	}
 
 /***/ },
-/* 61 */
+/* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var templateParser = __webpack_require__(65)
+	var templateParser = __webpack_require__(62)
 
 	/**
 	 * Process an element or a DocumentFragment based on a
@@ -9553,11 +9422,11 @@
 	}
 
 /***/ },
-/* 62 */
+/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Cache = __webpack_require__(50)
+	var Cache = __webpack_require__(49)
 	var cache = new Cache(1000)
 	var argRE = /^[^\{\?]+$|^'[^']*'$|^"[^"]*"$/
 	var filterTokenRE = /[^\s'"]+|'[^']+'|"[^"]+"/g
@@ -9717,12 +9586,12 @@
 	}
 
 /***/ },
-/* 63 */
+/* 60 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Path = __webpack_require__(64)
-	var Cache = __webpack_require__(50)
+	var Path = __webpack_require__(61)
+	var Cache = __webpack_require__(49)
 	var expressionCache = new Cache(1000)
 
 	var keywords =
@@ -9948,11 +9817,11 @@
 	exports.pathTestRE = pathTestRE
 
 /***/ },
-/* 64 */
+/* 61 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Cache = __webpack_require__(50)
+	var Cache = __webpack_require__(49)
 	var pathCache = new Cache(1000)
 	var identRE = /^[$_a-zA-Z]+[\w$]*$/
 
@@ -10164,9 +10033,9 @@
 	  if (identRE.test(key)) { // identifier
 	    return '.' + key
 	  } else if (+key === key >>> 0) { // bracket index
-	    return '[' + key + ']';
+	    return '[' + key + ']'
 	  } else { // bracket string
-	    return '["' + key.replace(/"/g, '\\"') + '"]';
+	    return '["' + key.replace(/"/g, '\\"') + '"]'
 	  }
 	}
 
@@ -10253,25 +10122,12 @@
 	}
 
 /***/ },
-/* 65 */
+/* 62 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Cache = __webpack_require__(50)
+	var Cache = __webpack_require__(49)
 	var templateCache = new Cache(100)
-
-	/**
-	 * Test for the presence of the Safari template cloning bug
-	 * https://bugs.webkit.org/show_bug.cgi?id=137755
-	 */
-
-	var hasBrokenTemplate = _.inBrowser
-	  ? (function () {
-	      var a = document.createElement('div')
-	      a.innerHTML = '<template>1</template>'
-	      return !a.cloneNode(true).firstChild.innerHTML
-	    })()
-	  : false
 
 	var map = {
 	  _default : [0, '', ''],
@@ -10399,9 +10255,30 @@
 	    : stringToFragment(node.innerHTML)
 	}
 
+	// Test for the presence of the Safari template cloning bug
+	// https://bugs.webkit.org/show_bug.cgi?id=137755
+	var hasBrokenTemplate = _.inBrowser
+	  ? (function () {
+	      var a = document.createElement('div')
+	      a.innerHTML = '<template>1</template>'
+	      return !a.cloneNode(true).firstChild.innerHTML
+	    })()
+	  : false
+
+	// Test for IE10/11 textarea placeholder clone bug
+	var hasTextareaCloneBug = _.inBrowser
+	  ? (function () {
+	      var t = document.createElement('textarea')
+	      t.placeholder = 't'
+	      return t.cloneNode(true).value === 't'
+	    })()
+	  : false
+
 	/**
-	 * Deal with Safari cloning nested <template> bug by
-	 * manually cloning all template instances.
+	 * 1. Deal with Safari cloning nested <template> bug by
+	 *    manually cloning all template instances.
+	 * 2. Deal with IE10/11 textarea placeholder bug by setting
+	 *    the correct value after cloning.
 	 *
 	 * @param {Element|DocumentFragment} node
 	 * @return {Element|DocumentFragment}
@@ -10409,17 +10286,33 @@
 
 	exports.clone = function (node) {
 	  var res = node.cloneNode(true)
+	  var i, original, cloned
 	  /* istanbul ignore if */
 	  if (hasBrokenTemplate) {
-	    var templates = node.querySelectorAll('template')
-	    if (templates.length) {
-	      var cloned = res.querySelectorAll('template')
-	      var i = cloned.length
+	    original = node.querySelectorAll('template')
+	    if (original.length) {
+	      cloned = res.querySelectorAll('template')
+	      i = cloned.length
 	      while (i--) {
 	        cloned[i].parentNode.replaceChild(
-	          templates[i].cloneNode(true),
+	          original[i].cloneNode(true),
 	          cloned[i]
 	        )
+	      }
+	    }
+	  }
+	  /* istanbul ignore if */
+	  if (hasTextareaCloneBug) {
+	    if (node.tagName === 'TEXTAREA') {
+	      res.value = node.value
+	    } else {
+	      original = node.querySelectorAll('textarea')
+	      if (original.length) {
+	        cloned = res.querySelectorAll('textarea')
+	        i = cloned.length
+	        while (i--) {
+	          cloned[i].value = original[i].value
+	        }
 	      }
 	    }
 	  }
@@ -10480,12 +10373,12 @@
 	}
 
 /***/ },
-/* 66 */
+/* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Cache = __webpack_require__(50)
+	var Cache = __webpack_require__(49)
 	var config = __webpack_require__(53)
-	var dirParser = __webpack_require__(62)
+	var dirParser = __webpack_require__(59)
 	var regexEscapeRE = /[-.*+?^${}()|[\]\/\\]/g
 	var cache, tagRE, htmlRE, firstChar, lastChar
 
@@ -10663,7 +10556,7 @@
 	}
 
 /***/ },
-/* 67 */
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// xlink
@@ -10700,7 +10593,7 @@
 	}
 
 /***/ },
-/* 68 */
+/* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
@@ -10723,11 +10616,11 @@
 	}
 
 /***/ },
-/* 69 */
+/* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var templateParser = __webpack_require__(65)
+	var templateParser = __webpack_require__(62)
 
 	module.exports = {
 
@@ -10765,10 +10658,10 @@
 	}
 
 /***/ },
-/* 70 */
+/* 67 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var transition = __webpack_require__(59)
+	var transition = __webpack_require__(71)
 
 	module.exports = function (value) {
 	  var el = this.el
@@ -10778,7 +10671,7 @@
 	}
 
 /***/ },
-/* 71 */
+/* 68 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var prefixes = ['-webkit-', '-moz-', '-ms-']
@@ -10786,50 +10679,62 @@
 
 	module.exports = {
 
+	  deep: true,
+
 	  bind: function () {
 	    var prop = this.arg
 	    if (!prop) return
-	    if (prop.charAt(0) === '$') {
-	      // properties that start with $ will be auto-prefixed
-	      prop = prop.slice(1)
-	      this.prefixed = true
-	    }
 	    this.prop = prop
 	  },
 
 	  update: function (value) {
-	    var prop = this.prop
+	    if (this.prop) {
+	      this.setCssProperty(this.prop, value)
+	    } else {
+	      if (typeof value === 'object') {
+	        for (var prop in value) {
+	          this.setCssProperty(prop, value[prop])
+	        }
+	      } else {
+	        this.el.style.cssText = value
+	      }
+	    }
+	  },
+
+	  setCssProperty: function (prop, value) {
+	    var prefixed = false
+	    if (prop.charAt(0) === '$') {
+	      // properties that start with $ will be auto-prefixed
+	      prop = prop.slice(1)
+	      prefixed = true
+	    }
 	    // cast possible numbers/booleans into strings
 	    if (value != null) {
 	      value += ''
 	    }
-	    if (prop) {
-	      var isImportant = importantRE.test(value)
-	        ? 'important'
-	        : ''
-	      if (isImportant) {
-	        value = value.replace(importantRE, '').trim()
+	    var isImportant = importantRE.test(value)
+	      ? 'important'
+	      : ''
+	    if (isImportant) {
+	      value = value.replace(importantRE, '').trim()
+	    }
+	    this.el.style.setProperty(prop, value, isImportant)
+	    if (prefixed) {
+	      var i = prefixes.length
+	      while (i--) {
+	        this.el.style.setProperty(
+	          prefixes[i] + prop,
+	          value,
+	          isImportant
+	        )
 	      }
-	      this.el.style.setProperty(prop, value, isImportant)
-	      if (this.prefixed) {
-	        var i = prefixes.length
-	        while (i--) {
-	          this.el.style.setProperty(
-	            prefixes[i] + prop,
-	            value,
-	            isImportant
-	          )
-	        }
-	      }
-	    } else {
-	      this.el.style.cssText = value
 	    }
 	  }
 
 	}
 
 /***/ },
-/* 72 */
+/* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
@@ -10849,7 +10754,7 @@
 	}
 
 /***/ },
-/* 73 */
+/* 70 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
@@ -10866,10 +10771,306 @@
 	}
 
 /***/ },
-/* 74 */
+/* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var mergeOptions = __webpack_require__(55)
+	var _ = __webpack_require__(56)
+	var applyCSSTransition = __webpack_require__(83)
+	var applyJSTransition = __webpack_require__(84)
+
+	/**
+	 * Append with transition.
+	 *
+	 * @oaram {Element} el
+	 * @param {Element} target
+	 * @param {Vue} vm
+	 * @param {Function} [cb]
+	 */
+
+	exports.append = function (el, target, vm, cb) {
+	  apply(el, 1, function () {
+	    target.appendChild(el)
+	  }, vm, cb)
+	}
+
+	/**
+	 * InsertBefore with transition.
+	 *
+	 * @oaram {Element} el
+	 * @param {Element} target
+	 * @param {Vue} vm
+	 * @param {Function} [cb]
+	 */
+
+	exports.before = function (el, target, vm, cb) {
+	  apply(el, 1, function () {
+	    _.before(el, target)
+	  }, vm, cb)
+	}
+
+	/**
+	 * Remove with transition.
+	 *
+	 * @oaram {Element} el
+	 * @param {Vue} vm
+	 * @param {Function} [cb]
+	 */
+
+	exports.remove = function (el, vm, cb) {
+	  apply(el, -1, function () {
+	    _.remove(el)
+	  }, vm, cb)
+	}
+
+	/**
+	 * Remove by appending to another parent with transition.
+	 * This is only used in block operations.
+	 *
+	 * @oaram {Element} el
+	 * @param {Element} target
+	 * @param {Vue} vm
+	 * @param {Function} [cb]
+	 */
+
+	exports.removeThenAppend = function (el, target, vm, cb) {
+	  apply(el, -1, function () {
+	    target.appendChild(el)
+	  }, vm, cb)
+	}
+
+	/**
+	 * Append the childNodes of a fragment to target.
+	 *
+	 * @param {DocumentFragment} block
+	 * @param {Node} target
+	 * @param {Vue} vm
+	 */
+
+	exports.blockAppend = function (block, target, vm) {
+	  var nodes = _.toArray(block.childNodes)
+	  for (var i = 0, l = nodes.length; i < l; i++) {
+	    exports.before(nodes[i], target, vm)
+	  }
+	}
+
+	/**
+	 * Remove a block of nodes between two edge nodes.
+	 *
+	 * @param {Node} start
+	 * @param {Node} end
+	 * @param {Vue} vm
+	 */
+
+	exports.blockRemove = function (start, end, vm) {
+	  var node = start.nextSibling
+	  var next
+	  while (node !== end) {
+	    next = node.nextSibling
+	    exports.remove(node, vm)
+	    node = next
+	  }
+	}
+
+	/**
+	 * Apply transitions with an operation callback.
+	 *
+	 * @oaram {Element} el
+	 * @param {Number} direction
+	 *                  1: enter
+	 *                 -1: leave
+	 * @param {Function} op - the actual DOM operation
+	 * @param {Vue} vm
+	 * @param {Function} [cb]
+	 */
+
+	var apply = exports.apply = function (el, direction, op, vm, cb) {
+	  var transData = el.__v_trans
+	  if (
+	    !transData ||
+	    !vm._isCompiled ||
+	    // if the vm is being manipulated by a parent directive
+	    // during the parent's compilation phase, skip the
+	    // animation.
+	    (vm.$parent && !vm.$parent._isCompiled)
+	  ) {
+	    op()
+	    if (cb) cb()
+	    return
+	  }
+	  // determine the transition type on the element
+	  var jsTransition = vm.$options.transitions[transData.id]
+	  if (jsTransition) {
+	    // js
+	    applyJSTransition(
+	      el,
+	      direction,
+	      op,
+	      transData,
+	      jsTransition,
+	      vm,
+	      cb
+	    )
+	  } else if (_.transitionEndEvent) {
+	    // css
+	    applyCSSTransition(
+	      el,
+	      direction,
+	      op,
+	      transData,
+	      cb
+	    )
+	  } else {
+	    // not applicable
+	    op()
+	    if (cb) cb()
+	  }
+	}
+
+/***/ },
+/* 72 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(56)
+
+	/**
+	 * Stringify value.
+	 *
+	 * @param {Number} indent
+	 */
+
+	exports.json = {
+	  read: function (value, indent) {
+	    return typeof value === 'string'
+	      ? value
+	      : JSON.stringify(value, null, Number(indent) || 2)
+	  },
+	  write: function (value) {
+	    try {
+	      return JSON.parse(value)
+	    } catch (e) {
+	      return value
+	    }
+	  }
+	}
+
+	/**
+	 * 'abc' => 'Abc'
+	 */
+
+	exports.capitalize = function (value) {
+	  if (!value && value !== 0) return ''
+	  value = value.toString()
+	  return value.charAt(0).toUpperCase() + value.slice(1)
+	}
+
+	/**
+	 * 'abc' => 'ABC'
+	 */
+
+	exports.uppercase = function (value) {
+	  return (value || value === 0)
+	    ? value.toString().toUpperCase()
+	    : ''
+	}
+
+	/**
+	 * 'AbC' => 'abc'
+	 */
+
+	exports.lowercase = function (value) {
+	  return (value || value === 0)
+	    ? value.toString().toLowerCase()
+	    : ''
+	}
+
+	/**
+	 * 12345 => $12,345.00
+	 *
+	 * @param {String} sign
+	 */
+
+	var digitsRE = /(\d{3})(?=\d)/g
+
+	exports.currency = function (value, sign) {
+	  value = parseFloat(value)
+	  if (!value && value !== 0) return ''
+	  sign = sign || '$'
+	  var s = Math.floor(Math.abs(value)).toString(),
+	    i = s.length % 3,
+	    h = i > 0
+	      ? (s.slice(0, i) + (s.length > 3 ? ',' : ''))
+	      : '',
+	    f = '.' + value.toFixed(2).slice(-2)
+	  return (value < 0 ? '-' : '') +
+	    sign + h + s.slice(i).replace(digitsRE, '$1,') + f
+	}
+
+	/**
+	 * 'item' => 'items'
+	 *
+	 * @params
+	 *  an array of strings corresponding to
+	 *  the single, double, triple ... forms of the word to
+	 *  be pluralized. When the number to be pluralized
+	 *  exceeds the length of the args, it will use the last
+	 *  entry in the array.
+	 *
+	 *  e.g. ['single', 'double', 'triple', 'multiple']
+	 */
+
+	exports.pluralize = function (value) {
+	  var args = _.toArray(arguments, 1)
+	  return args.length > 1
+	    ? (args[value % 10 - 1] || args[args.length - 1])
+	    : (args[0] + (value === 1 ? '' : 's'))
+	}
+
+	/**
+	 * A special filter that takes a handler function,
+	 * wraps it so it only gets triggered on specific
+	 * keypresses. v-on only.
+	 *
+	 * @param {String} key
+	 */
+
+	var keyCodes = {
+	  enter    : 13,
+	  tab      : 9,
+	  'delete' : 46,
+	  up       : 38,
+	  left     : 37,
+	  right    : 39,
+	  down     : 40,
+	  esc      : 27
+	}
+
+	exports.key = function (handler, key) {
+	  if (!handler) return
+	  var code = keyCodes[key]
+	  if (!code) {
+	    code = parseInt(key, 10)
+	  }
+	  return function (e) {
+	    if (e.keyCode === code) {
+	      return handler.call(this, e)
+	    }
+	  }
+	}
+
+	// expose keycode hash
+	exports.key.keyCodes = keyCodes
+
+	/**
+	 * Install special array filters
+	 */
+
+	_.extend(exports, __webpack_require__(85))
+
+/***/ },
+/* 73 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var mergeOptions = __webpack_require__(54)
 
 	/**
 	 * The main init sequence. This is called for every
@@ -10945,6 +11146,247 @@
 	    this.$mount(options.el)
 	  }
 	}
+
+/***/ },
+/* 74 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(56)
+	var config = __webpack_require__(53)
+	var Dep = __webpack_require__(55)
+	var arrayMethods = __webpack_require__(86)
+	var arrayKeys = Object.getOwnPropertyNames(arrayMethods)
+	__webpack_require__(87)
+
+	var uid = 0
+
+	/**
+	 * Type enums
+	 */
+
+	var ARRAY  = 0
+	var OBJECT = 1
+
+	/**
+	 * Augment an target Object or Array by intercepting
+	 * the prototype chain using __proto__
+	 *
+	 * @param {Object|Array} target
+	 * @param {Object} proto
+	 */
+
+	function protoAugment (target, src) {
+	  target.__proto__ = src
+	}
+
+	/**
+	 * Augment an target Object or Array by defining
+	 * hidden properties.
+	 *
+	 * @param {Object|Array} target
+	 * @param {Object} proto
+	 */
+
+	function copyAugment (target, src, keys) {
+	  var i = keys.length
+	  var key
+	  while (i--) {
+	    key = keys[i]
+	    _.define(target, key, src[key])
+	  }
+	}
+
+	/**
+	 * Observer class that are attached to each observed
+	 * object. Once attached, the observer converts target
+	 * object's property keys into getter/setters that
+	 * collect dependencies and dispatches updates.
+	 *
+	 * @param {Array|Object} value
+	 * @param {Number} type
+	 * @constructor
+	 */
+
+	function Observer (value, type) {
+	  this.id = ++uid
+	  this.value = value
+	  this.active = true
+	  this.deps = []
+	  _.define(value, '__ob__', this)
+	  if (type === ARRAY) {
+	    var augment = config.proto && _.hasProto
+	      ? protoAugment
+	      : copyAugment
+	    augment(value, arrayMethods, arrayKeys)
+	    this.observeArray(value)
+	  } else if (type === OBJECT) {
+	    this.walk(value)
+	  }
+	}
+
+	Observer.target = null
+
+	var p = Observer.prototype
+
+	/**
+	 * Attempt to create an observer instance for a value,
+	 * returns the new observer if successfully observed,
+	 * or the existing observer if the value already has one.
+	 *
+	 * @param {*} value
+	 * @return {Observer|undefined}
+	 * @static
+	 */
+
+	Observer.create = function (value) {
+	  if (
+	    value &&
+	    value.hasOwnProperty('__ob__') &&
+	    value.__ob__ instanceof Observer
+	  ) {
+	    return value.__ob__
+	  } else if (_.isArray(value)) {
+	    return new Observer(value, ARRAY)
+	  } else if (
+	    _.isPlainObject(value) &&
+	    !value._isVue // avoid Vue instance
+	  ) {
+	    return new Observer(value, OBJECT)
+	  }
+	}
+
+	/**
+	 * Walk through each property and convert them into
+	 * getter/setters. This method should only be called when
+	 * value type is Object. Properties prefixed with `$` or `_`
+	 * and accessor properties are ignored.
+	 *
+	 * @param {Object} obj
+	 */
+
+	p.walk = function (obj) {
+	  var keys = Object.keys(obj)
+	  var i = keys.length
+	  var key, prefix
+	  while (i--) {
+	    key = keys[i]
+	    prefix = key.charCodeAt(0)
+	    if (prefix !== 0x24 && prefix !== 0x5F) { // skip $ or _
+	      this.convert(key, obj[key])
+	    }
+	  }
+	}
+
+	/**
+	 * Try to carete an observer for a child value,
+	 * and if value is array, link dep to the array.
+	 *
+	 * @param {*} val
+	 * @return {Dep|undefined}
+	 */
+
+	p.observe = function (val) {
+	  return Observer.create(val)
+	}
+
+	/**
+	 * Observe a list of Array items.
+	 *
+	 * @param {Array} items
+	 */
+
+	p.observeArray = function (items) {
+	  var i = items.length
+	  while (i--) {
+	    this.observe(items[i])
+	  }
+	}
+
+	/**
+	 * Convert a property into getter/setter so we can emit
+	 * the events when the property is accessed/changed.
+	 *
+	 * @param {String} key
+	 * @param {*} val
+	 */
+
+	p.convert = function (key, val) {
+	  var ob = this
+	  var childOb = ob.observe(val)
+	  var dep = new Dep()
+	  if (childOb) {
+	    childOb.deps.push(dep)
+	  }
+	  Object.defineProperty(ob.value, key, {
+	    enumerable: true,
+	    configurable: true,
+	    get: function () {
+	      // Observer.target is a watcher whose getter is
+	      // currently being evaluated.
+	      if (ob.active && Observer.target) {
+	        Observer.target.addDep(dep)
+	      }
+	      return val
+	    },
+	    set: function (newVal) {
+	      if (newVal === val) return
+	      // remove dep from old value
+	      var oldChildOb = val && val.__ob__
+	      if (oldChildOb) {
+	        var oldDeps = oldChildOb.deps
+	        oldDeps.splice(oldDeps.indexOf(dep), 1)
+	      }
+	      val = newVal
+	      // add dep to new value
+	      var newChildOb = ob.observe(newVal)
+	      if (newChildOb) {
+	        newChildOb.deps.push(dep)
+	      }
+	      dep.notify()
+	    }
+	  })
+	}
+
+	/**
+	 * Notify change on all self deps on an observer.
+	 * This is called when a mutable value mutates. e.g.
+	 * when an Array's mutating methods are called, or an
+	 * Object's $add/$delete are called.
+	 */
+
+	p.notify = function () {
+	  var deps = this.deps
+	  for (var i = 0, l = deps.length; i < l; i++) {
+	    deps[i].notify()
+	  }
+	}
+
+	/**
+	 * Add an owner vm, so that when $add/$delete mutations
+	 * happen we can notify owner vms to proxy the keys and
+	 * digest the watchers. This is only called when the object
+	 * is observed as an instance's root $data.
+	 *
+	 * @param {Vue} vm
+	 */
+
+	p.addVm = function (vm) {
+	  (this.vms = this.vms || []).push(vm)
+	}
+
+	/**
+	 * Remove an owner vm. This is called when the object is
+	 * swapped out as an instance's $data object.
+	 *
+	 * @param {Vue} vm
+	 */
+
+	p.removeVm = function (vm) {
+	  this.vms.splice(this.vms.indexOf(vm), 1)
+	}
+
+	module.exports = Observer
+
 
 /***/ },
 /* 75 */
@@ -11078,8 +11520,8 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Observer = __webpack_require__(58)
-	var Binding = __webpack_require__(49)
+	var Observer = __webpack_require__(74)
+	var Dep = __webpack_require__(55)
 
 	/**
 	 * Setup the scope of an instance, which contains:
@@ -11276,20 +11718,20 @@
 	 */
 
 	exports._defineMeta = function (key, value) {
-	  var binding = new Binding()
+	  var dep = new Dep()
 	  Object.defineProperty(this, key, {
 	    enumerable: true,
 	    configurable: true,
 	    get: function metaGetter () {
 	      if (Observer.target) {
-	        Observer.target.addDep(binding)
+	        Observer.target.addDep(dep)
 	      }
 	      return value
 	    },
 	    set: function metaSetter (val) {
 	      if (val !== value) {
 	        value = val
-	        binding.notify()
+	        dep.notify()
 	      }
 	    }
 	  })
@@ -11300,9 +11742,9 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Directive = __webpack_require__(52)
-	var compile = __webpack_require__(60)
-	var transclude = __webpack_require__(61)
+	var Directive = __webpack_require__(51)
+	var compile = __webpack_require__(57)
+	var transclude = __webpack_require__(58)
 
 	/**
 	 * Transclude, compile and link element.
@@ -11446,7 +11888,7 @@
 	exports.camelize = function (str, cap) {
 	  var RE = cap ? capitalCamelRE : camelRE
 	  return str.replace(RE, function (_, c) {
-	    return c ? c.toUpperCase () : '';
+	    return c ? c.toUpperCase () : ''
 	  })
 	}
 
@@ -11493,6 +11935,7 @@
 	  for (var key in from) {
 	    to[key] = from[key]
 	  }
+	  return to
 	}
 
 	/**
@@ -11947,273 +12390,6 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Path = __webpack_require__(64)
-
-	/**
-	 * Filter filter for v-repeat
-	 *
-	 * @param {String} searchKey
-	 * @param {String} [delimiter]
-	 * @param {String} dataKey
-	 */
-
-	exports.filterBy = function (arr, searchKey, delimiter, dataKey) {
-	  // allow optional `in` delimiter
-	  // because why not
-	  if (delimiter && delimiter !== 'in') {
-	    dataKey = delimiter
-	  }
-	  // get the search string
-	  var search =
-	    _.stripQuotes(searchKey) ||
-	    this.$get(searchKey)
-	  if (!search) {
-	    return arr
-	  }
-	  search = search.toLowerCase()
-	  // get the optional dataKey
-	  dataKey =
-	    dataKey &&
-	    (_.stripQuotes(dataKey) || this.$get(dataKey))
-	  return arr.filter(function (item) {
-	    return dataKey
-	      ? contains(Path.get(item, dataKey), search)
-	      : contains(item, search)
-	  })
-	}
-
-	/**
-	 * Filter filter for v-repeat
-	 *
-	 * @param {String} sortKey
-	 * @param {String} reverseKey
-	 */
-
-	exports.orderBy = function (arr, sortKey, reverseKey) {
-	  var key =
-	    _.stripQuotes(sortKey) ||
-	    this.$get(sortKey)
-	  if (!key) {
-	    return arr
-	  }
-	  var order = 1
-	  if (reverseKey) {
-	    if (reverseKey === '-1') {
-	      order = -1
-	    } else if (reverseKey.charCodeAt(0) === 0x21) { // !
-	      reverseKey = reverseKey.slice(1)
-	      order = this.$get(reverseKey) ? 1 : -1
-	    } else {
-	      order = this.$get(reverseKey) ? -1 : 1
-	    }
-	  }
-	  // sort on a copy to avoid mutating original array
-	  return arr.slice().sort(function (a, b) {
-	    a = Path.get(a, key)
-	    b = Path.get(b, key)
-	    return a === b ? 0 : a > b ? order : -order
-	  })
-	}
-
-	/**
-	 * String contain helper
-	 *
-	 * @param {*} val
-	 * @param {String} search
-	 */
-
-	function contains (val, search) {
-	  if (_.isObject(val)) {
-	    for (var key in val) {
-	      if (contains(val[key], search)) {
-	        return true
-	      }
-	    }
-	  } else if (val != null) {
-	    return val.toString().toLowerCase().indexOf(search) > -1
-	  }
-	}
-
-/***/ },
-/* 84 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var _ = __webpack_require__(56)
-	var arrayProto = Array.prototype
-	var arrayMethods = Object.create(arrayProto)
-
-	/**
-	 * Intercept mutating methods and emit events
-	 */
-
-	;[
-	  'push',
-	  'pop',
-	  'shift',
-	  'unshift',
-	  'splice',
-	  'sort',
-	  'reverse'
-	]
-	.forEach(function (method) {
-	  // cache original method
-	  var original = arrayProto[method]
-	  _.define(arrayMethods, method, function mutator () {
-	    // avoid leaking arguments:
-	    // http://jsperf.com/closure-with-arguments
-	    var i = arguments.length
-	    var args = new Array(i)
-	    while (i--) {
-	      args[i] = arguments[i]
-	    }
-	    var result = original.apply(this, args)
-	    var ob = this.__ob__
-	    var inserted
-	    switch (method) {
-	      case 'push':
-	        inserted = args
-	        break
-	      case 'unshift':
-	        inserted = args
-	        break
-	      case 'splice':
-	        inserted = args.slice(2)
-	        break
-	    }
-	    if (inserted) ob.observeArray(inserted)
-	    // notify change
-	    ob.notify()
-	    return result
-	  })
-	})
-
-	/**
-	 * Swap the element at the given index with a new value
-	 * and emits corresponding event.
-	 *
-	 * @param {Number} index
-	 * @param {*} val
-	 * @return {*} - replaced element
-	 */
-
-	_.define(
-	  arrayProto,
-	  '$set',
-	  function $set (index, val) {
-	    if (index >= this.length) {
-	      this.length = index + 1
-	    }
-	    return this.splice(index, 1, val)[0]
-	  }
-	)
-
-	/**
-	 * Convenience method to remove the element at given index.
-	 *
-	 * @param {Number} index
-	 * @param {*} val
-	 */
-
-	_.define(
-	  arrayProto,
-	  '$remove',
-	  function $remove (index) {
-	    if (typeof index !== 'number') {
-	      index = this.indexOf(index)
-	    }
-	    if (index > -1) {
-	      return this.splice(index, 1)[0]
-	    }
-	  }
-	)
-
-	module.exports = arrayMethods
-
-/***/ },
-/* 85 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var _ = __webpack_require__(56)
-	var objProto = Object.prototype
-
-	/**
-	 * Add a new property to an observed object
-	 * and emits corresponding event
-	 *
-	 * @param {String} key
-	 * @param {*} val
-	 * @public
-	 */
-
-	_.define(
-	  objProto,
-	  '$add',
-	  function $add (key, val) {
-	    var ob = this.__ob__
-	    if (!ob) {
-	      this[key] = val
-	      return
-	    }
-	    if (_.isReserved(key)) {
-	      _.warn('Refused to $add reserved key: ' + key)
-	      return
-	    }
-	    if (this.hasOwnProperty(key)) return
-	    ob.convert(key, val)
-	    if (ob.vms) {
-	      var i = ob.vms.length
-	      while (i--) {
-	        var vm = ob.vms[i]
-	        vm._proxy(key)
-	        vm._digest()
-	      }
-	    } else {
-	      ob.notify()
-	    }
-	  }
-	)
-
-	/**
-	 * Deletes a property from an observed object
-	 * and emits corresponding event
-	 *
-	 * @param {String} key
-	 * @public
-	 */
-
-	_.define(
-	  objProto,
-	  '$delete',
-	  function $delete (key) {
-	    var ob = this.__ob__
-	    if (!ob) {
-	      delete this[key]
-	      return
-	    }
-	    if (_.isReserved(key)) {
-	      _.warn('Refused to $add reserved key: ' + key)
-	      return
-	    }
-	    if (!this.hasOwnProperty(key)) return
-	    delete this[key]
-	    if (ob.vms) {
-	      var i = ob.vms.length
-	      while (i--) {
-	        var vm = ob.vms[i]
-	        vm._unproxy(key)
-	        vm._digest()
-	      }
-	    } else {
-	      ob.notify()
-	    }
-	  }
-	)
-
-/***/ },
-/* 86 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var _ = __webpack_require__(56)
 	var addClass = _.addClass
 	var removeClass = _.removeClass
 	var transDurationProp = _.transitionProp + 'Duration'
@@ -12404,7 +12580,7 @@
 	}
 
 /***/ },
-/* 87 */
+/* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -12452,19 +12628,299 @@
 	}
 
 /***/ },
+/* 85 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(56)
+	var Path = __webpack_require__(61)
+
+	/**
+	 * Filter filter for v-repeat
+	 *
+	 * @param {String} searchKey
+	 * @param {String} [delimiter]
+	 * @param {String} dataKey
+	 */
+
+	exports.filterBy = function (arr, searchKey, delimiter, dataKey) {
+	  // allow optional `in` delimiter
+	  // because why not
+	  if (delimiter && delimiter !== 'in') {
+	    dataKey = delimiter
+	  }
+	  // get the search string
+	  var search =
+	    _.stripQuotes(searchKey) ||
+	    this.$get(searchKey)
+	  if (!search) {
+	    return arr
+	  }
+	  search = ('' + search).toLowerCase()
+	  // get the optional dataKey
+	  dataKey =
+	    dataKey &&
+	    (_.stripQuotes(dataKey) || this.$get(dataKey))
+	  return arr.filter(function (item) {
+	    return dataKey
+	      ? contains(Path.get(item, dataKey), search)
+	      : contains(item, search)
+	  })
+	}
+
+	/**
+	 * Filter filter for v-repeat
+	 *
+	 * @param {String} sortKey
+	 * @param {String} reverseKey
+	 */
+
+	exports.orderBy = function (arr, sortKey, reverseKey) {
+	  var key =
+	    _.stripQuotes(sortKey) ||
+	    this.$get(sortKey)
+	  if (!key) {
+	    return arr
+	  }
+	  var order = 1
+	  if (reverseKey) {
+	    if (reverseKey === '-1') {
+	      order = -1
+	    } else if (reverseKey.charCodeAt(0) === 0x21) { // !
+	      reverseKey = reverseKey.slice(1)
+	      order = this.$get(reverseKey) ? 1 : -1
+	    } else {
+	      order = this.$get(reverseKey) ? -1 : 1
+	    }
+	  }
+	  // sort on a copy to avoid mutating original array
+	  return arr.slice().sort(function (a, b) {
+	    a = Path.get(a, key)
+	    b = Path.get(b, key)
+	    return a === b ? 0 : a > b ? order : -order
+	  })
+	}
+
+	/**
+	 * String contain helper
+	 *
+	 * @param {*} val
+	 * @param {String} search
+	 */
+
+	function contains (val, search) {
+	  if (_.isObject(val)) {
+	    for (var key in val) {
+	      if (contains(val[key], search)) {
+	        return true
+	      }
+	    }
+	  } else if (val != null) {
+	    return val.toString().toLowerCase().indexOf(search) > -1
+	  }
+	}
+
+/***/ },
+/* 86 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(56)
+	var arrayProto = Array.prototype
+	var arrayMethods = Object.create(arrayProto)
+
+	/**
+	 * Intercept mutating methods and emit events
+	 */
+
+	;[
+	  'push',
+	  'pop',
+	  'shift',
+	  'unshift',
+	  'splice',
+	  'sort',
+	  'reverse'
+	]
+	.forEach(function (method) {
+	  // cache original method
+	  var original = arrayProto[method]
+	  _.define(arrayMethods, method, function mutator () {
+	    // avoid leaking arguments:
+	    // http://jsperf.com/closure-with-arguments
+	    var i = arguments.length
+	    var args = new Array(i)
+	    while (i--) {
+	      args[i] = arguments[i]
+	    }
+	    var result = original.apply(this, args)
+	    var ob = this.__ob__
+	    var inserted
+	    switch (method) {
+	      case 'push':
+	        inserted = args
+	        break
+	      case 'unshift':
+	        inserted = args
+	        break
+	      case 'splice':
+	        inserted = args.slice(2)
+	        break
+	    }
+	    if (inserted) ob.observeArray(inserted)
+	    // notify change
+	    ob.notify()
+	    return result
+	  })
+	})
+
+	/**
+	 * Swap the element at the given index with a new value
+	 * and emits corresponding event.
+	 *
+	 * @param {Number} index
+	 * @param {*} val
+	 * @return {*} - replaced element
+	 */
+
+	_.define(
+	  arrayProto,
+	  '$set',
+	  function $set (index, val) {
+	    if (index >= this.length) {
+	      this.length = index + 1
+	    }
+	    return this.splice(index, 1, val)[0]
+	  }
+	)
+
+	/**
+	 * Convenience method to remove the element at given index.
+	 *
+	 * @param {Number} index
+	 * @param {*} val
+	 */
+
+	_.define(
+	  arrayProto,
+	  '$remove',
+	  function $remove (index) {
+	    if (typeof index !== 'number') {
+	      index = this.indexOf(index)
+	    }
+	    if (index > -1) {
+	      return this.splice(index, 1)[0]
+	    }
+	  }
+	)
+
+	module.exports = arrayMethods
+
+/***/ },
+/* 87 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(56)
+	var objProto = Object.prototype
+
+	/**
+	 * Add a new property to an observed object
+	 * and emits corresponding event
+	 *
+	 * @param {String} key
+	 * @param {*} val
+	 * @public
+	 */
+
+	_.define(
+	  objProto,
+	  '$add',
+	  function $add (key, val) {
+	    var ob = this.__ob__
+	    if (!ob) {
+	      this[key] = val
+	      return
+	    }
+	    if (_.isReserved(key)) {
+	      _.warn('Refused to $add reserved key: ' + key)
+	      return
+	    }
+	    if (this.hasOwnProperty(key)) return
+	    ob.convert(key, val)
+	    if (ob.vms) {
+	      var i = ob.vms.length
+	      while (i--) {
+	        var vm = ob.vms[i]
+	        vm._proxy(key)
+	        vm._digest()
+	      }
+	    } else {
+	      ob.notify()
+	    }
+	  }
+	)
+
+	/**
+	 * Deletes a property from an observed object
+	 * and emits corresponding event
+	 *
+	 * @param {String} key
+	 * @public
+	 */
+
+	_.define(
+	  objProto,
+	  '$delete',
+	  function $delete (key) {
+	    var ob = this.__ob__
+	    if (!ob) {
+	      delete this[key]
+	      return
+	    }
+	    if (_.isReserved(key)) {
+	      _.warn('Refused to $add reserved key: ' + key)
+	      return
+	    }
+	    if (!this.hasOwnProperty(key)) return
+	    delete this[key]
+	    if (ob.vms) {
+	      var i = ob.vms.length
+	      while (i--) {
+	        var vm = ob.vms[i]
+	        vm._unproxy(key)
+	        vm._digest()
+	      }
+	    } else {
+	      ob.notify()
+	    }
+	  }
+	)
+
+/***/ },
 /* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var mergeOptions = __webpack_require__(55)
+	var mergeOptions = __webpack_require__(54)
 
 	/**
 	 * Expose useful internals
 	 */
 
-	exports.util       = _
-	exports.nextTick   = _.nextTick
-	exports.config     = __webpack_require__(53)
+	exports.util = _
+	exports.nextTick = _.nextTick
+	exports.config = __webpack_require__(53)
+
+	exports.compiler = {
+	  compile: __webpack_require__(57),
+	  transclude: __webpack_require__(58)
+	}
+
+	exports.parsers = {
+	  path: __webpack_require__(61),
+	  text: __webpack_require__(63),
+	  template: __webpack_require__(62),
+	  directive: __webpack_require__(59),
+	  expression: __webpack_require__(60)
+	}
 
 	/**
 	 * Each instance constructor, including Vue, has a unique
@@ -12594,11 +13050,11 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Watcher = __webpack_require__(54)
-	var Path = __webpack_require__(64)
-	var textParser = __webpack_require__(66)
-	var dirParser = __webpack_require__(62)
-	var expParser = __webpack_require__(63)
+	var Watcher = __webpack_require__(52)
+	var Path = __webpack_require__(61)
+	var textParser = __webpack_require__(63)
+	var dirParser = __webpack_require__(59)
+	var expParser = __webpack_require__(60)
 	var filterRE = /[^|]\|[^|]/
 
 	/**
@@ -12747,9 +13203,12 @@
 
 	exports.$log = function (path) {
 	  var data = path
-	    ? Path.get(this, path)
+	    ? Path.get(this._data, path)
 	    : this._data
-	  console.log(JSON.parse(JSON.stringify(data)))
+	  if (data) {
+	    data = JSON.parse(JSON.stringify(data))
+	  }
+	  console.log(data)
 	}
 
 /***/ },
@@ -12757,7 +13216,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var transition = __webpack_require__(59)
+	var transition = __webpack_require__(71)
 
 	/**
 	 * Append instance to target
@@ -13212,7 +13671,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var compile = __webpack_require__(60)
+	var compile = __webpack_require__(57)
 
 	/**
 	 * Set instance target element and kick off the compilation
@@ -13268,10 +13727,12 @@
 	 * directives, turn off all the event listeners, etc.
 	 *
 	 * @param {Boolean} remove - whether to remove the DOM node.
+	 * @param {Boolean} deferCleanup - if true, defer cleanup to
+	 *                                 be called later
 	 * @public
 	 */
 
-	exports.$destroy = function (remove) {
+	exports.$destroy = function (remove, deferCleanup) {
 	  if (this._isBeingDestroyed) {
 	    return
 	  }
@@ -13310,10 +13771,10 @@
 	  var self = this
 	  if (remove && this.$el) {
 	    this.$remove(function () {
-	      cleanup(self)
+	      self._cleanup()
 	    })
-	  } else {
-	    cleanup(self)
+	  } else if (!deferCleanup) {
+	    this._cleanup()
 	  }
 	}
 
@@ -13321,28 +13782,25 @@
 	 * Clean up to ensure garbage collection.
 	 * This is called after the leave transition if there
 	 * is any.
-	 *
-	 * @param {Vue} vm
 	 */
 
-	function cleanup (vm) {
+	exports._cleanup = function () {
 	  // remove reference from data ob
-	  vm._data.__ob__.removeVm(vm)
-	  vm._data =
-	  vm._watchers =
-	  vm._userWatchers =
-	  vm._watcherList =
-	  vm.$el =
-	  vm.$parent =
-	  vm.$root =
-	  vm._children =
-	  vm._bindings =
-	  vm._directives = null
+	  this._data.__ob__.removeVm(this)
+	  this._data =
+	  this._watchers =
+	  this._userWatchers =
+	  this._watcherList =
+	  this.$el =
+	  this.$parent =
+	  this.$root =
+	  this._children =
+	  this._directives = null
 	  // call the last hook...
-	  vm._isDestroyed = true
-	  vm._callHook('destroyed')
+	  this._isDestroyed = true
+	  this._callHook('destroyed')
 	  // turn off all instance listeners.
-	  vm.$off()
+	  this.$off()
 	}
 
 	/**
@@ -13362,17 +13820,17 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	// manipulation directives
-	exports.text       = __webpack_require__(72)
-	exports.html       = __webpack_require__(69)
-	exports.attr       = __webpack_require__(67)
-	exports.show       = __webpack_require__(70)
-	exports['class']   = __webpack_require__(68)
+	exports.text       = __webpack_require__(69)
+	exports.html       = __webpack_require__(66)
+	exports.attr       = __webpack_require__(64)
+	exports.show       = __webpack_require__(67)
+	exports['class']   = __webpack_require__(65)
 	exports.el         = __webpack_require__(95)
 	exports.ref        = __webpack_require__(96)
 	exports.cloak      = __webpack_require__(97)
-	exports.style      = __webpack_require__(71)
+	exports.style      = __webpack_require__(68)
 	exports.partial    = __webpack_require__(98)
-	exports.transition = __webpack_require__(73)
+	exports.transition = __webpack_require__(70)
 
 	// event listener directives
 	exports.on         = __webpack_require__(99)
@@ -13453,12 +13911,16 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var templateParser = __webpack_require__(65)
-	var transition = __webpack_require__(59)
+	var templateParser = __webpack_require__(62)
+	var vIf = __webpack_require__(102)
 
 	module.exports = {
 
 	  isLiteral: true,
+
+	  // same logic reuse from v-if
+	  compile: vIf.compile,
+	  teardown: vIf.teardown,
 
 	  bind: function () {
 	    var el = this.el
@@ -13474,35 +13936,20 @@
 	    }
 	    _.before(this.start, this.end)
 	    if (!this._isDynamicLiteral) {
-	      this.compile(this.expression)
+	      this.insert(this.expression)
 	    }
 	  },
 
 	  update: function (id) {
 	    this.teardown()
-	    this.compile(id)
+	    this.insert(id)
 	  },
 
-	  compile: function (id) {
+	  insert: function (id) {
 	    var partial = this.vm.$options.partials[id]
 	    _.assertAsset(partial, 'partial', id)
-	    if (!partial) {
-	      return
-	    }
-	    var vm = this.vm
-	    var frag = templateParser.parse(partial, true)
-	    var decompile = vm.$compile(frag)
-	    this.decompile = function () {
-	      decompile()
-	      transition.blockRemove(this.start, this.end, vm)
-	    }
-	    transition.blockAppend(frag, this.end, vm)
-	  },
-
-	  teardown: function () {
-	    if (this.decompile) {
-	      this.decompile()
-	      this.decompile = null
+	    if (partial) {
+	      this.compile(templateParser.parse(partial))
 	    }
 	  }
 
@@ -13577,7 +14024,8 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var templateParser = __webpack_require__(65)
+	var compile = __webpack_require__(57)
+	var templateParser = __webpack_require__(62)
 
 	module.exports = {
 
@@ -13598,37 +14046,36 @@
 	      // create a ref anchor
 	      this.ref = document.createComment('v-component')
 	      _.replace(this.el, this.ref)
-	      // check keep-alive options
-	      this.checkKeepAlive()
-	      // check parent directives
-	      this.parentLinker = this.el._parentLinker
+	      // check keep-alive options.
+	      // If yes, instead of destroying the active vm when
+	      // hiding (v-if) or switching (dynamic literal) it,
+	      // we simply remove it from the DOM and save it in a
+	      // cache object, with its constructor id as the key.
+	      this.keepAlive = this._checkParam('keep-alive') != null
+	      if (this.keepAlive) {
+	        this.cache = {}
+	      }
+	      // compile parent scope content
+	      this.parentLinkFn = compile(
+	        this.el, this.vm.$options,
+	        true, // partial
+	        true  // asParent
+	      )
 	      // if static, build right now.
 	      if (!this._isDynamicLiteral) {
 	        this.resolveCtor(this.expression)
-	        this.build()
+	        this.childVM = this.build()
+	        this.childVM.$before(this.ref)
+	      } else {
+	        // check dynamic component params
+	        this.readyEvent = this._checkParam('wait-for')
+	        this.transMode = this._checkParam('transition-mode')
 	      }
 	    } else {
 	      _.warn(
 	        'v-component="' + this.expression + '" cannot be ' +
 	        'used on an already mounted instance.'
 	      )
-	    }
-	  },
-
-	  /**
-	   * Check if the "keep-alive" flag is present.
-	   * If yes, instead of destroying the active vm when
-	   * hiding (v-if) or switching (dynamic literal) it,
-	   * we simply remove it from the DOM and save it in a
-	   * cache object, with its constructor id as the key.
-	   */
-
-	  checkKeepAlive: function () {
-	    // check keep-alive flag
-	    this.keepAlive = this.el.hasAttribute('keep-alive')
-	    if (this.keepAlive) {
-	      this.el.removeAttribute('keep-alive')
-	      this.cache = {}
 	    }
 	  },
 
@@ -13647,64 +14094,72 @@
 	   * Instantiate/insert a new child vm.
 	   * If keep alive and has cached instance, insert that
 	   * instance; otherwise build a new one and cache it.
+	   *
+	   * @return {Vue} - the created instance
 	   */
 
 	  build: function () {
 	    if (this.keepAlive) {
 	      var cached = this.cache[this.ctorId]
 	      if (cached) {
-	        this.childVM = cached
-	        cached.$before(this.ref)
-	        return
+	        return cached
 	      }
 	    }
 	    var vm = this.vm
-	    if (this.Ctor && !this.childVM) {
-	      this.childVM = vm.$addChild({
-	        el: templateParser.clone(this.el)
+	    var el = templateParser.clone(this.el)
+	    if (this.Ctor) {
+	      var parentUnlinkFn
+	      if (this.parentLinkFn) {
+	        parentUnlinkFn = this.parentLinkFn(vm, el)
+	      }
+	      var child = vm.$addChild({
+	        el: el
 	      }, this.Ctor)
-	      if (this.parentLinker) {
-	        var dirCount = vm._directives.length
-	        var targetVM = this.childVM.$options.inherit
-	          ? this.childVM
-	          : vm
-	        this.parentLinker(targetVM, this.childVM.$el)
-	        this.parentDirs = vm._directives.slice(dirCount)
-	      }
+	      child._parentUnlinkFn = parentUnlinkFn
 	      if (this.keepAlive) {
-	        this.cache[this.ctorId] = this.childVM
+	        this.cache[this.ctorId] = child
 	      }
-	      this.childVM.$before(this.ref)
+	      return child
 	    }
 	  },
 
 	  /**
-	   * Teardown the active vm.
-	   * If keep alive, simply remove it; otherwise destroy it.
-	   *
-	   * @param {Boolean} remove
+	   * Teardown the current child, but defers cleanup so
+	   * that we can separate the destroy and removal steps.
 	   */
 
-	  unbuild: function (remove) {
+	  unbuild: function () {
 	    var child = this.childVM
-	    if (!child) {
+	    if (!child || this.keepAlive) {
 	      return
 	    }
-	    if (this.keepAlive) {
-	      if (remove) {
-	        child.$remove()
-	      }
-	    } else {
-	      child.$destroy(remove)
-	      var parentDirs = this.parentDirs
-	      if (parentDirs) {
-	        var i = parentDirs.length
-	        while (i--) {
-	          parentDirs[i]._teardown()
-	        }
-	      }
+	    if (child._parentUnlinkFn) {
+	      child._parentUnlinkFn()
 	    }
-	    this.childVM = null
+	    // the sole purpose of `deferCleanup` is so that we can
+	    // "deactivate" the vm right now and perform DOM removal
+	    // later.
+	    child.$destroy(false, true)
+	  },
+
+	  /**
+	   * Remove current destroyed child and manually do
+	   * the cleanup after removal.
+	   *
+	   * @param {Function} cb
+	   */
+
+	  removeCurrent: function (cb) {
+	    var child = this.childVM
+	    var keepAlive = this.keepAlive
+	    if (child) {
+	      child.$remove(function () {
+	        if (!keepAlive) child._cleanup()
+	        if (cb) cb()
+	      })
+	    } else if (cb) {
+	      cb()
+	    }
 	  },
 
 	  /**
@@ -13713,22 +14168,72 @@
 	   */
 
 	  update: function (value) {
-	    this.unbuild(true)
-	    if (value) {
+	    if (!value) {
+	      // just destroy and remove current
+	      this.unbuild()
+	      this.removeCurrent()
+	      this.childVM = null
+	    } else {
 	      this.resolveCtor(value)
-	      this.build()
+	      this.unbuild()
+	      var newComponent = this.build()
+	      var self = this
+	      if (this.readyEvent) {
+	        newComponent.$once(this.readyEvent, function () {
+	          self.swapTo(newComponent)
+	        })
+	      } else {
+	        this.swapTo(newComponent)
+	      }
+	    }
+	  },
+
+	  /**
+	   * Actually swap the components, depending on the
+	   * transition mode. Defaults to simultaneous.
+	   *
+	   * @param {Vue} target
+	   */
+
+	  swapTo: function (target) {
+	    var self = this
+	    switch (self.transMode) {
+	      case 'in-out':
+	        target.$before(self.ref, function () {
+	          self.removeCurrent()
+	          self.childVM = target
+	        })
+	        break
+	      case 'out-in':
+	        self.removeCurrent(function () {
+	          target.$before(self.ref)
+	          self.childVM = target
+	        })
+	        break
+	      default:
+	        self.removeCurrent()
+	        target.$before(self.ref)
+	        self.childVM = target
 	    }
 	  },
 
 	  /**
 	   * Unbind.
-	   * Make sure keepAlive is set to false so that the
-	   * instance is always destroyed.
 	   */
 
 	  unbind: function () {
-	    this.keepAlive = false
 	    this.unbuild()
+	    // destroy all keep-alive cached instances
+	    if (this.cache) {
+	      for (var key in this.cache) {
+	        var child = this.cache[key]
+	        if (child._parentUnlinkFn) {
+	          child._parentUnlinkFn()
+	        }
+	        child.$destroy()
+	      }
+	      this.cache = null
+	    }
 	  }
 
 	}
@@ -13739,12 +14244,12 @@
 
 	var _ = __webpack_require__(56)
 	var isObject = _.isObject
-	var textParser = __webpack_require__(66)
-	var expParser = __webpack_require__(63)
-	var templateParser = __webpack_require__(65)
-	var compile = __webpack_require__(60)
-	var transclude = __webpack_require__(61)
-	var mergeOptions = __webpack_require__(55)
+	var textParser = __webpack_require__(63)
+	var expParser = __webpack_require__(60)
+	var templateParser = __webpack_require__(62)
+	var compile = __webpack_require__(57)
+	var transclude = __webpack_require__(58)
+	var mergeOptions = __webpack_require__(54)
 	var uid = 0
 
 	module.exports = {
@@ -13779,8 +14284,11 @@
 	    // at v-repeat level
 	    this.checkIf()
 	    this.checkRef()
-	    this.checkTrackById()
 	    this.checkComponent()
+	    // check for trackby param
+	    this.idKey =
+	      this._checkParam('track-by') ||
+	      this._checkParam('trackby') // 0.11.0 compat
 	    // cache for primitive value instances
 	    this.cache = Object.create(null)
 	  },
@@ -13811,19 +14319,6 @@
 	    this.elId = elId
 	      ? this.vm.$interpolate(elId)
 	      : null
-	  },
-
-	  /**
-	   * Check for a track-by ID, which allows us to identify
-	   * a piece of data and its associated instance by its
-	   * unique id.
-	   */
-
-	  checkTrackById: function () {
-	    this.idKey = this.el.getAttribute('trackby')
-	    if (this.idKey !== null) {
-	      this.el.removeAttribute('trackby')
-	    }
 	  },
 
 	  /**
@@ -14250,9 +14745,9 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var compile = __webpack_require__(60)
-	var templateParser = __webpack_require__(65)
-	var transition = __webpack_require__(59)
+	var compile = __webpack_require__(57)
+	var templateParser = __webpack_require__(62)
+	var transition = __webpack_require__(71)
 
 	module.exports = {
 
@@ -14296,24 +14791,43 @@
 	  insert: function () {
 	    // avoid duplicate inserts, since update() can be
 	    // called with different truthy values
-	    if (this.decompile) {
-	      return
+	    if (!this.unlink) {
+	      this.compile(this.template) 
 	    }
+	  },
+
+	  compile: function (template) {
 	    var vm = this.vm
-	    var frag = templateParser.clone(this.template)
-	    var decompile = this.linker(vm, frag)
-	    this.decompile = function () {
-	      decompile()
-	      transition.blockRemove(this.start, this.end, vm)
-	    }
+	    var frag = templateParser.clone(template)
+	    var originalChildLength = vm._children
+	      ? vm._children.length
+	      : 0
+	    this.unlink = this.linker
+	      ? this.linker(vm, frag)
+	      : vm.$compile(frag)
 	    transition.blockAppend(frag, this.end, vm)
+	    this.children = vm._children
+	      ? vm._children.slice(originalChildLength)
+	      : null
+	    if (this.children && _.inDoc(vm.$el)) {
+	      this.children.forEach(function (child) {
+	        child._callHook('attached')
+	      })
+	    }
 	  },
 
 	  teardown: function () {
-	    if (this.decompile) {
-	      this.decompile()
-	      this.decompile = null
+	    if (!this.unlink) return
+	    transition.blockRemove(this.start, this.end, this.vm)
+	    if (this.children && _.inDoc(this.vm.$el)) {
+	      this.children.forEach(function (child) {
+	        if (!child._isDestroyed) {
+	          child._callHook('detached')
+	        }
+	      })
 	    }
+	    this.unlink()
+	    this.unlink = null
 	  }
 
 	}
@@ -14323,7 +14837,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Watcher = __webpack_require__(54)
+	var Watcher = __webpack_require__(52)
 
 	module.exports = {
 
@@ -14445,17 +14959,9 @@
 
 	    // check params
 	    // - lazy: update model on "change" instead of "input"
-	    var lazy = el.hasAttribute('lazy')
-	    if (lazy) {
-	      el.removeAttribute('lazy')
-	    }
+	    var lazy = this._checkParam('lazy') != null
 	    // - number: cast value into number when updating model.
-	    var number =
-	      el.hasAttribute('number') ||
-	      el.type === 'number'
-	    if (number) {
-	      el.removeAttribute('number')
-	    }
+	    var number = this._checkParam('number') != null
 
 	    // handle composition events.
 	    // http://blog.evanyou.me/2014/01/03/composition-event/
@@ -14484,30 +14990,44 @@
 	    // if the directive has filters, we need to
 	    // record cursor position and restore it after updating
 	    // the input with the filtered value.
-	    this.listener = function textInputListener () {
-	      if (cpLocked) return
-	      var charsOffset
-	      // some HTML5 input types throw error here
-	      try {
-	        // record how many chars from the end of input
-	        // the cursor was at
-	        charsOffset = el.value.length - el.selectionStart
-	      } catch (e) {}
-	      set()
-	      // force a value update, because in
-	      // certain cases the write filters output the same
-	      // result for different input values, and the Observer
-	      // set events won't be triggered.
-	      _.nextTick(function () {
-	        var newVal = self._watcher.value
-	        self.update(newVal)
-	        if (charsOffset != null) {
-	          var cursorPos =
-	            _.toString(newVal).length - charsOffset
-	          el.setSelectionRange(cursorPos, cursorPos)
+	    // also force update for type="range" inputs to enable
+	    // "lock in range" (see #506)
+	    this.listener = this.filters || el.type === 'range'
+	      ? function textInputListener () {
+	          if (cpLocked) return
+	          var charsOffset
+	          // some HTML5 input types throw error here
+	          try {
+	            // record how many chars from the end of input
+	            // the cursor was at
+	            charsOffset = el.value.length - el.selectionStart
+	          } catch (e) {}
+	          // Fix IE10/11 infinite update cycle
+	          // https://github.com/yyx990803/vue/issues/592
+	          /* istanbul ignore if */
+	          if (charsOffset < 0) {
+	            return
+	          }
+	          set()
+	          _.nextTick(function () {
+	            // force a value update, because in
+	            // certain cases the write filters output the
+	            // same result for different input values, and
+	            // the Observer set events won't be triggered.
+	            var newVal = self._watcher.value
+	            self.update(newVal)
+	            if (charsOffset != null) {
+	              var cursorPos =
+	                _.toString(newVal).length - charsOffset
+	              el.setSelectionRange(cursorPos, cursorPos)
+	            }
+	          })
 	        }
-	      })
-	    }
+	      : function textInputListener () {
+	          if (cpLocked) return
+	          set()
+	        }
+
 	    this.event = lazy ? 'change' : 'input'
 	    _.on(el, this.event, this.listener)
 
@@ -14589,7 +15109,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Watcher = __webpack_require__(54)
+	var Watcher = __webpack_require__(52)
 
 	module.exports = {
 
@@ -14597,9 +15117,8 @@
 	    var self = this
 	    var el = this.el
 	    // check options param
-	    var optionsParam = el.getAttribute('options')
+	    var optionsParam = this._checkParam('options')
 	    if (optionsParam) {
-	      el.removeAttribute('options')
 	      initOptions.call(this, optionsParam)
 	    }
 	    this.multiple = el.hasAttribute('multiple')

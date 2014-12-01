@@ -1,13 +1,24 @@
-var Vue = require('../../../src/vue')
-var filters = require('../../../src/filters')
+var Vue = require('../../../../src/vue')
+var filters = require('../../../../src/filters')
 
 describe('Filters', function () {
 
-  it('json', function () {
-    var filter = filters.json
+  it('json read', function () {
+    var filter = filters.json.read
     var obj = {a:{b:2}}
     expect(filter(obj)).toBe(JSON.stringify(obj, null, 2))
     expect(filter(obj, 4)).toBe(JSON.stringify(obj, null, 4))
+    // plain string
+    expect(filter('1234')).toBe('1234')
+  })
+
+  it('json write', function () {
+    var filter = filters.json.write
+    var obj = '{"a":{"b":2}}'
+    expect(JSON.stringify(filter(obj))).toBe(obj)
+    // error condition
+    var invalidJSON = '{"a":}'
+    expect(filter(invalidJSON)).toBe(invalidJSON)
   })
   
   it('capitalize', function () {
@@ -86,14 +97,15 @@ describe('Filters', function () {
     var filter = filters.filterBy
     var arr = [
       { a: 1, b: { c: 'hello' }},
-      { a: 1, b: 'hello'},
-      { a: 1, b: 2 }
+      { a: 2, b: 'hello'},
+      { a: 3, b: 2 }
     ]
     var vm = new Vue({
       data: {
         search: {
           key: 'hello',
-          datakey: 'b.c'
+          datakey: 'b.c',
+          n: 2
         }
       }
     })
@@ -118,6 +130,9 @@ describe('Filters', function () {
     // no search key
     res = filter.call(vm, arr, 'abc')
     expect(res).toBe(arr)
+    // number search key
+    res = filter.call(vm, arr, 'search.n')
+    expect(res[0]).toBe(arr[1])
   })
 
   it('orderBy', function () {

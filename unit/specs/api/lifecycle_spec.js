@@ -1,6 +1,6 @@
 var Vue = require('../../../../src/vue')
 var _ = require('../../../../src/util')
-var compile = require('../../../../src/compile/compile')
+var compile = require('../../../../src/compiler/compile')
 
 if (_.inBrowser) {
   describe('Lifecycle API', function () {
@@ -168,7 +168,6 @@ if (_.inBrowser) {
         expect(vm.$parent).toBeNull()
         expect(vm.$root).toBeNull()
         expect(vm._children).toBeNull()
-        expect(vm._bindings).toBeNull()
         expect(vm._directives).toBeNull()
         expect(Object.keys(vm._events).length).toBe(0)
       })

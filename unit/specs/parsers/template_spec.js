@@ -1,5 +1,5 @@
 var _ = require('../../../../src/util')
-var templateParser = require('../../../../src/parse/template')
+var templateParser = require('../../../../src/parsers/template')
 var parse = templateParser.parse
 var testString = '<div>hello</div><p class="test">world</p>'
 
@@ -115,6 +115,20 @@ if (_.inBrowser) {
       var res2 = parse('#template-test')
       expect(res1).toBe(res2)
       document.head.removeChild(node)
+    })
+
+    it('should deal with Safari template clone bug', function () {
+      var a = document.createElement('div')
+      a.innerHTML = '<template>1</template>'
+      var c = templateParser.clone(a)
+      expect(a.firstChild.innerHTML).toBe('1')
+    })
+
+    it('should deal with IE textarea clone bug', function () {
+      var t = document.createElement('textarea')
+      t.placeholder = 't'
+      var c = templateParser.clone(t)
+      expect(c.value).toBe('')
     })
   })
 }

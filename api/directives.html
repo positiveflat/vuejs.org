@@ -129,7 +129,18 @@
 <li>This directive accepts an optional argument.</li>
 </ul>
 <p>Apply inline CSS styles to the element.</p>
-<p>When there is no argument, Vue.js will use the value to set <code>el.style.cssText</code>.</p>
+<p>When there is no argument, the bound value can either be a String or an Object.</p>
+<ul>
+<li>If it’s a String, it will be set as the element’s <code>style.cssText</code>.</li>
+<li>If it’s an Object, each key/value pair will be set on the element’s <code>style</code> object.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">v-style</span>=<span class="value">"myStyles"</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span></div></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// myStyles can either be a String:</span></div><div class="line"><span class="string">"color:red; font-weight:bold;"</span></div><div class="line"><span class="comment">// or an Object:</span></div><div class="line">{</div><div class="line">  color: <span class="string">'red'</span>,</div><div class="line">  fontWeight: <span class="string">'bold'</span></div><div class="line">}</div></pre></td></tr></table></figure>
+
 <p>When there is an argument, it will be used as the CSS property to apply. Combined with multiple clauses you can set multiple properties together:</p>
 <p><strong>Example:</strong></p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">v-style</span>=<span class="value">"</span></span></div><div class="line">  top: top + 'px',</div><div class="line">  left: left + 'px',</div><div class="line">  background-color: 'rgb(0,0,' + bg + ')'</div><div class="line">"&gt;<span class="tag">&lt;/<span class="title">div</span>&gt;</span></div></pre></td></tr></table></figure>
@@ -202,7 +213,7 @@
 </blockquote>
 <h3 id="v-component">v-component</h3>
 <ul>
-<li>Directive params: <code>keep-alive</code></li>
+<li>Directive params: <code>keep-alive</code>, <code>wait-for</code>, <code>transition-mode</code></li>
 </ul>
 <p>Compile this element as a child ViewModel with a registered component constructor. This can be used with <code>v-with</code> to inehrit data from the parent. For more details see <a href="/guide/components.html">Component System</a>.</p>
 <h3 id="v-ref">v-ref</h3>
