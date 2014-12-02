@@ -157,7 +157,7 @@
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Cache = __webpack_require__(51)
+	var Cache = __webpack_require__(49)
 
 	/**
 	 * Debug function to assert cache state
@@ -216,8 +216,8 @@
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(49)
-	var Directive = __webpack_require__(50)
+	var Vue = __webpack_require__(50)
+	var Directive = __webpack_require__(52)
 	var nextTick = Vue.nextTick
 
 	describe('Directive', function () {
@@ -414,9 +414,9 @@
 /* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(49)
+	var Vue = __webpack_require__(50)
 	var nextTick = Vue.nextTick
-	var Watcher = __webpack_require__(52)
+	var Watcher = __webpack_require__(51)
 	var _ = Vue.util
 	var config = Vue.config
 
@@ -806,7 +806,7 @@
 /* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(49)
+	var Vue = __webpack_require__(50)
 
 	describe('Child API', function () {
 
@@ -889,7 +889,7 @@
 /* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(49)
+	var Vue = __webpack_require__(50)
 	var _ = __webpack_require__(56)
 	var nextTick = _.nextTick
 
@@ -1072,7 +1072,7 @@
 	 * those are tested in transition_spec.js.
 	 */
 
-	var Vue = __webpack_require__(49)
+	var Vue = __webpack_require__(50)
 	var _ = __webpack_require__(56)
 
 	if (_.inBrowser) {
@@ -1247,7 +1247,7 @@
 /* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(49)
+	var Vue = __webpack_require__(50)
 
 	describe('Events API', function () {
 
@@ -1386,7 +1386,7 @@
 /* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(49)
+	var Vue = __webpack_require__(50)
 	var _ = __webpack_require__(56)
 	var config = __webpack_require__(53)
 
@@ -1489,7 +1489,7 @@
 /* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(49)
+	var Vue = __webpack_require__(50)
 	var _ = __webpack_require__(56)
 	var compile = __webpack_require__(57)
 
@@ -1800,7 +1800,7 @@
 /* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(49)
+	var Vue = __webpack_require__(50)
 	var _ = __webpack_require__(56)
 	var dirParser = __webpack_require__(59)
 	var merge = __webpack_require__(54)
@@ -2240,7 +2240,7 @@
 
 	var _ = __webpack_require__(56)
 	var compile = __webpack_require__(57)
-	var Vue = __webpack_require__(49)
+	var Vue = __webpack_require__(50)
 
 	if (_.inBrowser) {
 	  describe('v-cloak', function () {
@@ -2269,7 +2269,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(49)
+	var Vue = __webpack_require__(50)
 
 	if (_.inBrowser) {
 	  describe('v-component', function () {
@@ -2653,7 +2653,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(49)
+	var Vue = __webpack_require__(50)
 
 	if (_.inBrowser) {
 	  describe('v-el', function () {
@@ -2748,7 +2748,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(49)
+	var Vue = __webpack_require__(50)
 
 	if (_.inBrowser) {
 	  describe('v-if', function () {
@@ -2937,7 +2937,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(49)
+	var Vue = __webpack_require__(50)
 
 	/**
 	 * Mock event helper
@@ -3428,7 +3428,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(49)
+	var Vue = __webpack_require__(50)
 
 	function trigger (target, event, process) {
 	  var e = document.createEvent('HTMLEvents')
@@ -3567,7 +3567,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(49)
+	var Vue = __webpack_require__(50)
 
 	if (_.inBrowser) {
 	  describe('v-partial', function () {
@@ -3687,7 +3687,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(49)
+	var Vue = __webpack_require__(50)
 
 	if (_.inBrowser) {
 	  describe('v-pre', function () {
@@ -3711,7 +3711,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(49)
+	var Vue = __webpack_require__(50)
 
 	if (_.inBrowser) {
 	  describe('v-ref', function () {
@@ -3791,7 +3791,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(49)
+	var Vue = __webpack_require__(50)
 
 	if (_.inBrowser) {
 	  describe('v-repeat', function () {
@@ -4498,7 +4498,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(49)
+	var Vue = __webpack_require__(50)
 	var transition = __webpack_require__(71)
 	var def = __webpack_require__(67)
 
@@ -4533,7 +4533,7 @@
 
 	var _ = __webpack_require__(56)
 	var def = __webpack_require__(68)
-	var Vue = __webpack_require__(49)
+	var Vue = __webpack_require__(50)
 
 	if (_.inBrowser) {
 	  describe('v-style', function () {
@@ -4677,7 +4677,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(49)
+	var Vue = __webpack_require__(50)
 
 	if (_.inBrowser) {
 	  describe('v-with', function () {
@@ -4809,7 +4809,7 @@
 /* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(49)
+	var Vue = __webpack_require__(50)
 	var filters = __webpack_require__(72)
 
 	describe('Filters', function () {
@@ -5005,7 +5005,7 @@
 /* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(49)
+	var Vue = __webpack_require__(50)
 	var _ = __webpack_require__(56)
 
 	describe('Instance Events', function () {
@@ -5344,7 +5344,7 @@
 /* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(49)
+	var Vue = __webpack_require__(50)
 
 	describe('Instance Scope', function () {
 
@@ -6413,7 +6413,7 @@
 
 	var textParser = __webpack_require__(63)
 	var config = __webpack_require__(53)
-	var Vue = __webpack_require__(49)
+	var Vue = __webpack_require__(50)
 
 	var testCases = [
 	  {
@@ -6541,7 +6541,7 @@
 /* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(49)
+	var Vue = __webpack_require__(50)
 	var _ = __webpack_require__(56)
 	var transition = __webpack_require__(71)
 
@@ -7337,7 +7337,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(49)
+	var Vue = __webpack_require__(50)
 	var merge = __webpack_require__(54)
 
 	describe('Util - Option merging', function () {
@@ -7691,319 +7691,6 @@
 /* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var extend = _.extend
-
-	/**
-	 * The exposed Vue constructor.
-	 *
-	 * API conventions:
-	 * - public API methods/properties are prefiexed with `$`
-	 * - internal methods/properties are prefixed with `_`
-	 * - non-prefixed properties are assumed to be proxied user
-	 *   data.
-	 *
-	 * @constructor
-	 * @param {Object} [options]
-	 * @public
-	 */
-
-	function Vue (options) {
-	  this._init(options)
-	}
-
-	/**
-	 * Mixin global API
-	 */
-
-	extend(Vue, __webpack_require__(88))
-
-	/**
-	 * Vue and every constructor that extends Vue has an
-	 * associated options object, which can be accessed during
-	 * compilation steps as `this.constructor.options`.
-	 *
-	 * These can be seen as the default options of every
-	 * Vue instance.
-	 */
-
-	Vue.options = {
-	  directives  : __webpack_require__(94),
-	  filters     : __webpack_require__(72),
-	  partials    : {},
-	  transitions : {},
-	  components  : {}
-	}
-
-	/**
-	 * Build up the prototype
-	 */
-
-	var p = Vue.prototype
-
-	/**
-	 * $data has a setter which does a bunch of
-	 * teardown/setup work
-	 */
-
-	Object.defineProperty(p, '$data', {
-	  get: function () {
-	    return this._data
-	  },
-	  set: function (newData) {
-	    this._setData(newData)
-	  }
-	})
-
-	/**
-	 * Mixin internal instance methods
-	 */
-
-	extend(p, __webpack_require__(73))
-	extend(p, __webpack_require__(75))
-	extend(p, __webpack_require__(76))
-	extend(p, __webpack_require__(77))
-
-	/**
-	 * Mixin public API methods
-	 */
-
-	extend(p, __webpack_require__(89))
-	extend(p, __webpack_require__(90))
-	extend(p, __webpack_require__(91))
-	extend(p, __webpack_require__(92))
-	extend(p, __webpack_require__(93))
-
-	module.exports = _.Vue = Vue
-
-/***/ },
-/* 50 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var _ = __webpack_require__(56)
-	var config = __webpack_require__(53)
-	var Watcher = __webpack_require__(52)
-	var textParser = __webpack_require__(63)
-	var expParser = __webpack_require__(60)
-
-	/**
-	 * A directive links a DOM element with a piece of data,
-	 * which is the result of evaluating an expression.
-	 * It registers a watcher with the expression and calls
-	 * the DOM update function when a change is triggered.
-	 *
-	 * @param {String} name
-	 * @param {Node} el
-	 * @param {Vue} vm
-	 * @param {Object} descriptor
-	 *                 - {String} expression
-	 *                 - {String} [arg]
-	 *                 - {Array<Object>} [filters]
-	 * @param {Object} def - directive definition object
-	 * @constructor
-	 */
-
-	function Directive (name, el, vm, descriptor, def) {
-	  // public
-	  this.name = name
-	  this.el = el
-	  this.vm = vm
-	  // copy descriptor props
-	  this.raw = descriptor.raw
-	  this.expression = descriptor.expression
-	  this.arg = descriptor.arg
-	  this.filters = _.resolveFilters(vm, descriptor.filters)
-	  // private
-	  this._locked = false
-	  this._bound = false
-	  // init
-	  this._bind(def)
-	}
-
-	var p = Directive.prototype
-
-	/**
-	 * Initialize the directive, mixin definition properties,
-	 * setup the watcher, call definition bind() and update()
-	 * if present.
-	 *
-	 * @param {Object} def
-	 */
-
-	p._bind = function (def) {
-	  if (this.name !== 'cloak' && this.el.removeAttribute) {
-	    this.el.removeAttribute(config.prefix + this.name)
-	  }
-	  if (typeof def === 'function') {
-	    this.update = def
-	  } else {
-	    _.extend(this, def)
-	  }
-	  this._watcherExp = this.expression
-	  this._checkDynamicLiteral()
-	  if (this.bind) {
-	    this.bind()
-	  }
-	  if (
-	    this.update && this._watcherExp &&
-	    (!this.isLiteral || this._isDynamicLiteral) &&
-	    !this._checkStatement()
-	  ) {
-	    // wrapped updater for context
-	    var dir = this
-	    var update = this._update = function (val, oldVal) {
-	      if (!dir._locked) {
-	        dir.update(val, oldVal)
-	      }
-	    }
-	    // use raw expression as identifier because filters
-	    // make them different watchers
-	    var watcher = this.vm._watchers[this.raw]
-	    // v-repeat always creates a new watcher because it has
-	    // a special filter that's bound to its directive
-	    // instance.
-	    if (!watcher || this.name === 'repeat') {
-	      watcher = this.vm._watchers[this.raw] = new Watcher(
-	        this.vm,
-	        this._watcherExp,
-	        update, // callback
-	        this.filters,
-	        this.twoWay, // need setter,
-	        this.deep
-	      )
-	    } else {
-	      watcher.addCb(update)
-	    }
-	    this._watcher = watcher
-	    if (this._initValue != null) {
-	      watcher.set(this._initValue)
-	    } else {
-	      this.update(watcher.value)
-	    }
-	  }
-	  this._bound = true
-	}
-
-	/**
-	 * check if this is a dynamic literal binding.
-	 *
-	 * e.g. v-component="{{currentView}}"
-	 */
-
-	p._checkDynamicLiteral = function () {
-	  var expression = this.expression
-	  if (expression && this.isLiteral) {
-	    var tokens = textParser.parse(expression)
-	    if (tokens) {
-	      var exp = textParser.tokensToExp(tokens)
-	      this.expression = this.vm.$get(exp)
-	      this._watcherExp = exp
-	      this._isDynamicLiteral = true
-	    }
-	  }
-	}
-
-	/**
-	 * Check if the directive is a function caller
-	 * and if the expression is a callable one. If both true,
-	 * we wrap up the expression and use it as the event
-	 * handler.
-	 *
-	 * e.g. v-on="click: a++"
-	 *
-	 * @return {Boolean}
-	 */
-
-	p._checkStatement = function () {
-	  var expression = this.expression
-	  if (
-	    expression && this.acceptStatement &&
-	    !expParser.pathTestRE.test(expression)
-	  ) {
-	    var fn = expParser.parse(expression).get
-	    var vm = this.vm
-	    var handler = function () {
-	      fn.call(vm, vm)
-	    }
-	    if (this.filters) {
-	      handler = _.applyFilters(
-	        handler,
-	        this.filters.read,
-	        vm
-	      )
-	    }
-	    this.update(handler)
-	    return true
-	  }
-	}
-
-	/**
-	 * Check for an attribute directive param, e.g. lazy
-	 *
-	 * @param {String} name
-	 * @return {String}
-	 */
-
-	p._checkParam = function (name) {
-	  var param = this.el.getAttribute(name)
-	  if (param !== null) {
-	    this.el.removeAttribute(name)
-	  }
-	  return param
-	}
-
-	/**
-	 * Teardown the watcher and call unbind.
-	 */
-
-	p._teardown = function () {
-	  if (this._bound) {
-	    if (this.unbind) {
-	      this.unbind()
-	    }
-	    var watcher = this._watcher
-	    if (watcher && watcher.active) {
-	      watcher.removeCb(this._update)
-	      if (!watcher.active) {
-	        this.vm._watchers[this.raw] = null
-	      }
-	    }
-	    this._bound = false
-	    this.vm = this.el = this._watcher = null
-	  }
-	}
-
-	/**
-	 * Set the corresponding value with the setter.
-	 * This should only be used in two-way directives
-	 * e.g. v-model.
-	 *
-	 * @param {*} value
-	 * @param {Boolean} lock - prevent wrtie triggering update.
-	 * @public
-	 */
-
-	p.set = function (value, lock) {
-	  if (this.twoWay) {
-	    if (lock) {
-	      this._locked = true
-	    }
-	    this._watcher.set(value)
-	    if (lock) {
-	      var self = this
-	      _.nextTick(function () {
-	        self._locked = false
-	      })
-	    }
-	  }
-	}
-
-	module.exports = Directive
-
-/***/ },
-/* 51 */
-/***/ function(module, exports, __webpack_require__) {
-
 	/**
 	 * A doubly linked list-based Least Recently Used (LRU)
 	 * cache. Will keep most recently used items while
@@ -8118,7 +7805,96 @@
 	module.exports = Cache
 
 /***/ },
-/* 52 */
+/* 50 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(56)
+	var extend = _.extend
+
+	/**
+	 * The exposed Vue constructor.
+	 *
+	 * API conventions:
+	 * - public API methods/properties are prefiexed with `$`
+	 * - internal methods/properties are prefixed with `_`
+	 * - non-prefixed properties are assumed to be proxied user
+	 *   data.
+	 *
+	 * @constructor
+	 * @param {Object} [options]
+	 * @public
+	 */
+
+	function Vue (options) {
+	  this._init(options)
+	}
+
+	/**
+	 * Mixin global API
+	 */
+
+	extend(Vue, __webpack_require__(88))
+
+	/**
+	 * Vue and every constructor that extends Vue has an
+	 * associated options object, which can be accessed during
+	 * compilation steps as `this.constructor.options`.
+	 *
+	 * These can be seen as the default options of every
+	 * Vue instance.
+	 */
+
+	Vue.options = {
+	  directives  : __webpack_require__(94),
+	  filters     : __webpack_require__(72),
+	  partials    : {},
+	  transitions : {},
+	  components  : {}
+	}
+
+	/**
+	 * Build up the prototype
+	 */
+
+	var p = Vue.prototype
+
+	/**
+	 * $data has a setter which does a bunch of
+	 * teardown/setup work
+	 */
+
+	Object.defineProperty(p, '$data', {
+	  get: function () {
+	    return this._data
+	  },
+	  set: function (newData) {
+	    this._setData(newData)
+	  }
+	})
+
+	/**
+	 * Mixin internal instance methods
+	 */
+
+	extend(p, __webpack_require__(73))
+	extend(p, __webpack_require__(75))
+	extend(p, __webpack_require__(76))
+	extend(p, __webpack_require__(77))
+
+	/**
+	 * Mixin public API methods
+	 */
+
+	extend(p, __webpack_require__(89))
+	extend(p, __webpack_require__(90))
+	extend(p, __webpack_require__(91))
+	extend(p, __webpack_require__(92))
+	extend(p, __webpack_require__(93))
+
+	module.exports = _.Vue = Vue
+
+/***/ },
+/* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
@@ -8361,6 +8137,230 @@
 	}
 
 	module.exports = Watcher
+
+/***/ },
+/* 52 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(56)
+	var config = __webpack_require__(53)
+	var Watcher = __webpack_require__(51)
+	var textParser = __webpack_require__(63)
+	var expParser = __webpack_require__(60)
+
+	/**
+	 * A directive links a DOM element with a piece of data,
+	 * which is the result of evaluating an expression.
+	 * It registers a watcher with the expression and calls
+	 * the DOM update function when a change is triggered.
+	 *
+	 * @param {String} name
+	 * @param {Node} el
+	 * @param {Vue} vm
+	 * @param {Object} descriptor
+	 *                 - {String} expression
+	 *                 - {String} [arg]
+	 *                 - {Array<Object>} [filters]
+	 * @param {Object} def - directive definition object
+	 * @constructor
+	 */
+
+	function Directive (name, el, vm, descriptor, def) {
+	  // public
+	  this.name = name
+	  this.el = el
+	  this.vm = vm
+	  // copy descriptor props
+	  this.raw = descriptor.raw
+	  this.expression = descriptor.expression
+	  this.arg = descriptor.arg
+	  this.filters = _.resolveFilters(vm, descriptor.filters)
+	  // private
+	  this._locked = false
+	  this._bound = false
+	  // init
+	  this._bind(def)
+	}
+
+	var p = Directive.prototype
+
+	/**
+	 * Initialize the directive, mixin definition properties,
+	 * setup the watcher, call definition bind() and update()
+	 * if present.
+	 *
+	 * @param {Object} def
+	 */
+
+	p._bind = function (def) {
+	  if (this.name !== 'cloak' && this.el.removeAttribute) {
+	    this.el.removeAttribute(config.prefix + this.name)
+	  }
+	  if (typeof def === 'function') {
+	    this.update = def
+	  } else {
+	    _.extend(this, def)
+	  }
+	  this._watcherExp = this.expression
+	  this._checkDynamicLiteral()
+	  if (this.bind) {
+	    this.bind()
+	  }
+	  if (
+	    this.update && this._watcherExp &&
+	    (!this.isLiteral || this._isDynamicLiteral) &&
+	    !this._checkStatement()
+	  ) {
+	    // wrapped updater for context
+	    var dir = this
+	    var update = this._update = function (val, oldVal) {
+	      if (!dir._locked) {
+	        dir.update(val, oldVal)
+	      }
+	    }
+	    // use raw expression as identifier because filters
+	    // make them different watchers
+	    var watcher = this.vm._watchers[this.raw]
+	    // v-repeat always creates a new watcher because it has
+	    // a special filter that's bound to its directive
+	    // instance.
+	    if (!watcher || this.name === 'repeat') {
+	      watcher = this.vm._watchers[this.raw] = new Watcher(
+	        this.vm,
+	        this._watcherExp,
+	        update, // callback
+	        this.filters,
+	        this.twoWay, // need setter,
+	        this.deep
+	      )
+	    } else {
+	      watcher.addCb(update)
+	    }
+	    this._watcher = watcher
+	    if (this._initValue != null) {
+	      watcher.set(this._initValue)
+	    } else {
+	      this.update(watcher.value)
+	    }
+	  }
+	  this._bound = true
+	}
+
+	/**
+	 * check if this is a dynamic literal binding.
+	 *
+	 * e.g. v-component="{{currentView}}"
+	 */
+
+	p._checkDynamicLiteral = function () {
+	  var expression = this.expression
+	  if (expression && this.isLiteral) {
+	    var tokens = textParser.parse(expression)
+	    if (tokens) {
+	      var exp = textParser.tokensToExp(tokens)
+	      this.expression = this.vm.$get(exp)
+	      this._watcherExp = exp
+	      this._isDynamicLiteral = true
+	    }
+	  }
+	}
+
+	/**
+	 * Check if the directive is a function caller
+	 * and if the expression is a callable one. If both true,
+	 * we wrap up the expression and use it as the event
+	 * handler.
+	 *
+	 * e.g. v-on="click: a++"
+	 *
+	 * @return {Boolean}
+	 */
+
+	p._checkStatement = function () {
+	  var expression = this.expression
+	  if (
+	    expression && this.acceptStatement &&
+	    !expParser.pathTestRE.test(expression)
+	  ) {
+	    var fn = expParser.parse(expression).get
+	    var vm = this.vm
+	    var handler = function () {
+	      fn.call(vm, vm)
+	    }
+	    if (this.filters) {
+	      handler = _.applyFilters(
+	        handler,
+	        this.filters.read,
+	        vm
+	      )
+	    }
+	    this.update(handler)
+	    return true
+	  }
+	}
+
+	/**
+	 * Check for an attribute directive param, e.g. lazy
+	 *
+	 * @param {String} name
+	 * @return {String}
+	 */
+
+	p._checkParam = function (name) {
+	  var param = this.el.getAttribute(name)
+	  if (param !== null) {
+	    this.el.removeAttribute(name)
+	  }
+	  return param
+	}
+
+	/**
+	 * Teardown the watcher and call unbind.
+	 */
+
+	p._teardown = function () {
+	  if (this._bound) {
+	    if (this.unbind) {
+	      this.unbind()
+	    }
+	    var watcher = this._watcher
+	    if (watcher && watcher.active) {
+	      watcher.removeCb(this._update)
+	      if (!watcher.active) {
+	        this.vm._watchers[this.raw] = null
+	      }
+	    }
+	    this._bound = false
+	    this.vm = this.el = this._watcher = null
+	  }
+	}
+
+	/**
+	 * Set the corresponding value with the setter.
+	 * This should only be used in two-way directives
+	 * e.g. v-model.
+	 *
+	 * @param {*} value
+	 * @param {Boolean} lock - prevent wrtie triggering update.
+	 * @public
+	 */
+
+	p.set = function (value, lock) {
+	  if (this.twoWay) {
+	    if (lock) {
+	      this._locked = true
+	    }
+	    this._watcher.set(value)
+	    if (lock) {
+	      var self = this
+	      _.nextTick(function () {
+	        self._locked = false
+	      })
+	    }
+	  }
+	}
+
+	module.exports = Directive
 
 /***/ },
 /* 53 */
@@ -9489,7 +9489,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Cache = __webpack_require__(51)
+	var Cache = __webpack_require__(49)
 	var cache = new Cache(1000)
 	var argRE = /^[^\{\?]+$|^'[^']*'$|^"[^"]*"$/
 	var filterTokenRE = /[^\s'"]+|'[^']+'|"[^"]+"/g
@@ -9654,7 +9654,7 @@
 
 	var _ = __webpack_require__(56)
 	var Path = __webpack_require__(61)
-	var Cache = __webpack_require__(51)
+	var Cache = __webpack_require__(49)
 	var expressionCache = new Cache(1000)
 
 	var keywords =
@@ -9884,7 +9884,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Cache = __webpack_require__(51)
+	var Cache = __webpack_require__(49)
 	var pathCache = new Cache(1000)
 	var identRE = /^[$_a-zA-Z]+[\w$]*$/
 
@@ -10189,7 +10189,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Cache = __webpack_require__(51)
+	var Cache = __webpack_require__(49)
 	var templateCache = new Cache(1000)
 	var idSelectorCache = new Cache(1000)
 
@@ -10441,7 +10441,7 @@
 /* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Cache = __webpack_require__(51)
+	var Cache = __webpack_require__(49)
 	var config = __webpack_require__(53)
 	var dirParser = __webpack_require__(59)
 	var regexEscapeRE = /[-.*+?^${}()|[\]\/\\]/g
@@ -11808,7 +11808,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Directive = __webpack_require__(50)
+	var Directive = __webpack_require__(52)
 	var compile = __webpack_require__(57)
 	var transclude = __webpack_require__(58)
 
@@ -13243,7 +13243,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Watcher = __webpack_require__(52)
+	var Watcher = __webpack_require__(51)
 	var Path = __webpack_require__(61)
 	var textParser = __webpack_require__(63)
 	var dirParser = __webpack_require__(59)
@@ -14946,7 +14946,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Watcher = __webpack_require__(52)
+	var Watcher = __webpack_require__(51)
 
 	module.exports = {
 
@@ -15218,7 +15218,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Watcher = __webpack_require__(52)
+	var Watcher = __webpack_require__(51)
 
 	module.exports = {
 
