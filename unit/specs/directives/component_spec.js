@@ -148,7 +148,8 @@ if (_.inBrowser) {
         template: '<div v-component="test" v-show="ok">{{message}}</div>',
         components: {
           test: {
-            template: '<content></content> {{message}}',
+            template: '<div><content></content> {{message}}</div>',
+            replace: true,
             data: function () {
               return {
                 message: 'world'
@@ -197,6 +198,23 @@ if (_.inBrowser) {
         expect(el.textContent).toBe('hello world')
         done()
       })
+    })
+
+    it('paramAttributes', function () {
+      var vm = new Vue({
+        el: el,
+        data: {
+          list: [{a:1}, {a:2}]
+        },
+        template: '<ul v-component="test" collection="{{list}}"></ul>',
+        components: {
+          test: {
+            template: '<li v-repeat="collection">{{a}}</li>',
+            paramAttributes: ['collection']
+          }
+        }
+      })
+      expect(el.innerHTML).toBe('<ul><li>1</li><li>2</li><!--v-repeat--></ul><!--v-component-->')
     })
 
     it('wait-for', function (done) {
