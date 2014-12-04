@@ -416,7 +416,7 @@
 
 	var Vue = __webpack_require__(50)
 	var nextTick = Vue.nextTick
-	var Watcher = __webpack_require__(54)
+	var Watcher = __webpack_require__(52)
 	var _ = Vue.util
 	var config = Vue.config
 
@@ -1388,7 +1388,7 @@
 
 	var Vue = __webpack_require__(50)
 	var _ = __webpack_require__(56)
-	var config = __webpack_require__(52)
+	var config = __webpack_require__(53)
 
 	describe('Global API', function () {
 
@@ -1803,7 +1803,7 @@
 	var Vue = __webpack_require__(50)
 	var _ = __webpack_require__(56)
 	var dirParser = __webpack_require__(59)
-	var merge = __webpack_require__(53)
+	var merge = __webpack_require__(54)
 	var compile = __webpack_require__(57)
 
 	if (_.inBrowser) {
@@ -2194,7 +2194,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var def = __webpack_require__(67)
+	var def = __webpack_require__(65)
 
 	if (_.inBrowser) {
 	  describe('v-class', function () {
@@ -2700,7 +2700,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var def = __webpack_require__(65)
+	var def = __webpack_require__(66)
 
 	if (_.inBrowser) {
 	  describe('v-html', function () {
@@ -4500,7 +4500,7 @@
 	var _ = __webpack_require__(56)
 	var Vue = __webpack_require__(50)
 	var transition = __webpack_require__(71)
-	var def = __webpack_require__(66)
+	var def = __webpack_require__(67)
 
 	if (_.inBrowser) {
 	  describe('v-show', function () {
@@ -5544,7 +5544,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var Observer = __webpack_require__(74)
-	var config = __webpack_require__(52)
+	var config = __webpack_require__(53)
 	var Dep = __webpack_require__(55)
 	var _ = __webpack_require__(56)
 
@@ -6412,7 +6412,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var textParser = __webpack_require__(63)
-	var config = __webpack_require__(52)
+	var config = __webpack_require__(53)
 	var Vue = __webpack_require__(50)
 
 	var testCases = [
@@ -6949,7 +6949,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var config = __webpack_require__(52)
+	var config = __webpack_require__(53)
 	var infoPrefix = '[Vue info]: '
 	var warnPrefix = '[Vue warn]: '
 	config.silent = true
@@ -7338,7 +7338,7 @@
 
 	var _ = __webpack_require__(56)
 	var Vue = __webpack_require__(50)
-	var merge = __webpack_require__(53)
+	var merge = __webpack_require__(54)
 
 	describe('Util - Option merging', function () {
 	  
@@ -7898,8 +7898,8 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var config = __webpack_require__(52)
-	var Watcher = __webpack_require__(54)
+	var config = __webpack_require__(53)
+	var Watcher = __webpack_require__(52)
 	var textParser = __webpack_require__(63)
 	var expParser = __webpack_require__(60)
 
@@ -8121,6 +8121,251 @@
 /* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var _ = __webpack_require__(56)
+	var config = __webpack_require__(53)
+	var Observer = __webpack_require__(74)
+	var expParser = __webpack_require__(60)
+	var Batcher = __webpack_require__(48)
+
+	var batcher = new Batcher()
+	var uid = 0
+
+	/**
+	 * A watcher parses an expression, collects dependencies,
+	 * and fires callback when the expression value changes.
+	 * This is used for both the $watch() api and directives.
+	 *
+	 * @param {Vue} vm
+	 * @param {String} expression
+	 * @param {Function} cb
+	 * @param {Array} [filters]
+	 * @param {Boolean} [needSet]
+	 * @param {Boolean} [deep]
+	 * @constructor
+	 */
+
+	function Watcher (vm, expression, cb, filters, needSet, deep) {
+	  this.vm = vm
+	  vm._watcherList.push(this)
+	  this.expression = expression
+	  this.cbs = [cb]
+	  this.id = ++uid // uid for batching
+	  this.active = true
+	  this.deep = deep
+	  this.deps = Object.create(null)
+	  // setup filters if any.
+	  // We delegate directive filters here to the watcher
+	  // because they need to be included in the dependency
+	  // collection process.
+	  this.readFilters = filters && filters.read
+	  this.writeFilters = filters && filters.write
+	  // parse expression for getter/setter
+	  var res = expParser.parse(expression, needSet)
+	  this.getter = res.get
+	  this.setter = res.set
+	  this.value = this.get()
+	}
+
+	var p = Watcher.prototype
+
+	/**
+	 * Add a dependency to this directive.
+	 *
+	 * @param {Dep} dep
+	 */
+
+	p.addDep = function (dep) {
+	  var id = dep.id
+	  if (!this.newDeps[id]) {
+	    this.newDeps[id] = dep
+	    if (!this.deps[id]) {
+	      this.deps[id] = dep
+	      dep.addSub(this)
+	    }
+	  }
+	}
+
+	/**
+	 * Evaluate the getter, and re-collect dependencies.
+	 */
+
+	p.get = function () {
+	  this.beforeGet()
+	  var vm = this.vm
+	  var value
+	  try {
+	    value = this.getter.call(vm, vm)
+	  } catch (e) {
+	    _.warn(e)
+	  }
+	  // "touch" every property so they are all tracked as
+	  // dependencies for deep watching
+	  if (this.deep) {
+	    traverse(value)
+	  }
+	  value = _.applyFilters(value, this.readFilters, vm)
+	  this.afterGet()
+	  return value
+	}
+
+	/**
+	 * Set the corresponding value with the setter.
+	 *
+	 * @param {*} value
+	 */
+
+	p.set = function (value) {
+	  var vm = this.vm
+	  value = _.applyFilters(
+	    value, this.writeFilters, vm, this.value
+	  )
+	  try {
+	    this.setter.call(vm, vm, value)
+	  } catch (e) {}
+	}
+
+	/**
+	 * Prepare for dependency collection.
+	 */
+
+	p.beforeGet = function () {
+	  Observer.target = this
+	  this.newDeps = {}
+	}
+
+	/**
+	 * Clean up for dependency collection.
+	 */
+
+	p.afterGet = function () {
+	  Observer.target = null
+	  for (var id in this.deps) {
+	    if (!this.newDeps[id]) {
+	      this.deps[id].removeSub(this)
+	    }
+	  }
+	  this.deps = this.newDeps
+	}
+
+	/**
+	 * Subscriber interface.
+	 * Will be called when a dependency changes.
+	 */
+
+	p.update = function () {
+	  if (config.async) {
+	    batcher.push(this)
+	  } else {
+	    this.run()
+	  }
+	}
+
+	/**
+	 * Batcher job interface.
+	 * Will be called by the batcher.
+	 */
+
+	p.run = function () {
+	  if (this.active) {
+	    var value = this.get()
+	    if (
+	      (typeof value === 'object' && value !== null) ||
+	      value !== this.value
+	    ) {
+	      var oldValue = this.value
+	      this.value = value
+	      var cbs = this.cbs
+	      for (var i = 0, l = cbs.length; i < l; i++) {
+	        cbs[i](value, oldValue)
+	        // if a callback also removed other callbacks,
+	        // we need to adjust the loop accordingly.
+	        var removed = l - cbs.length
+	        if (removed) {
+	          i -= removed
+	          l -= removed
+	        }
+	      }
+	    }
+	  }
+	}
+
+	/**
+	 * Add a callback.
+	 *
+	 * @param {Function} cb
+	 */
+
+	p.addCb = function (cb) {
+	  this.cbs.push(cb)
+	}
+
+	/**
+	 * Remove a callback.
+	 *
+	 * @param {Function} cb
+	 */
+
+	p.removeCb = function (cb) {
+	  var cbs = this.cbs
+	  if (cbs.length > 1) {
+	    var i = cbs.indexOf(cb)
+	    if (i > -1) {
+	      cbs.splice(i, 1)
+	    }
+	  } else if (cb === cbs[0]) {
+	    this.teardown()
+	  }
+	}
+
+	/**
+	 * Remove self from all dependencies' subcriber list.
+	 */
+
+	p.teardown = function () {
+	  if (this.active) {
+	    // remove self from vm's watcher list
+	    // we can skip this if the vm if being destroyed
+	    // which can improve teardown performance.
+	    if (!this.vm._isBeingDestroyed) {
+	      var list = this.vm._watcherList
+	      list.splice(list.indexOf(this))
+	    }
+	    for (var id in this.deps) {
+	      this.deps[id].removeSub(this)
+	    }
+	    this.active = false
+	    this.vm = this.cbs = this.value = null
+	  }
+	}
+
+
+	/**
+	 * Recrusively traverse an object to evoke all converted
+	 * getters, so that every nested property inside the object
+	 * is collected as a "deep" dependency.
+	 *
+	 * @param {Object} obj
+	 */
+
+	function traverse (obj) {
+	  var key, val, i
+	  for (key in obj) {
+	    val = obj[key]
+	    if (_.isArray(val)) {
+	      i = val.length
+	      while (i--) traverse(val[i])
+	    } else if (_.isObject(val)) {
+	      traverse(val)
+	    }
+	  }
+	}
+
+	module.exports = Watcher
+
+/***/ },
+/* 53 */
+/***/ function(module, exports, __webpack_require__) {
+
 	module.exports = {
 
 	  /**
@@ -8202,7 +8447,7 @@
 	})
 
 /***/ },
-/* 53 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
@@ -8462,251 +8707,6 @@
 	}
 
 /***/ },
-/* 54 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var _ = __webpack_require__(56)
-	var config = __webpack_require__(52)
-	var Observer = __webpack_require__(74)
-	var expParser = __webpack_require__(60)
-	var Batcher = __webpack_require__(48)
-
-	var batcher = new Batcher()
-	var uid = 0
-
-	/**
-	 * A watcher parses an expression, collects dependencies,
-	 * and fires callback when the expression value changes.
-	 * This is used for both the $watch() api and directives.
-	 *
-	 * @param {Vue} vm
-	 * @param {String} expression
-	 * @param {Function} cb
-	 * @param {Array} [filters]
-	 * @param {Boolean} [needSet]
-	 * @param {Boolean} [deep]
-	 * @constructor
-	 */
-
-	function Watcher (vm, expression, cb, filters, needSet, deep) {
-	  this.vm = vm
-	  vm._watcherList.push(this)
-	  this.expression = expression
-	  this.cbs = [cb]
-	  this.id = ++uid // uid for batching
-	  this.active = true
-	  this.deep = deep
-	  this.deps = Object.create(null)
-	  // setup filters if any.
-	  // We delegate directive filters here to the watcher
-	  // because they need to be included in the dependency
-	  // collection process.
-	  this.readFilters = filters && filters.read
-	  this.writeFilters = filters && filters.write
-	  // parse expression for getter/setter
-	  var res = expParser.parse(expression, needSet)
-	  this.getter = res.get
-	  this.setter = res.set
-	  this.value = this.get()
-	}
-
-	var p = Watcher.prototype
-
-	/**
-	 * Add a dependency to this directive.
-	 *
-	 * @param {Dep} dep
-	 */
-
-	p.addDep = function (dep) {
-	  var id = dep.id
-	  if (!this.newDeps[id]) {
-	    this.newDeps[id] = dep
-	    if (!this.deps[id]) {
-	      this.deps[id] = dep
-	      dep.addSub(this)
-	    }
-	  }
-	}
-
-	/**
-	 * Evaluate the getter, and re-collect dependencies.
-	 */
-
-	p.get = function () {
-	  this.beforeGet()
-	  var vm = this.vm
-	  var value
-	  try {
-	    value = this.getter.call(vm, vm)
-	  } catch (e) {
-	    _.warn(e)
-	  }
-	  // "touch" every property so they are all tracked as
-	  // dependencies for deep watching
-	  if (this.deep) {
-	    traverse(value)
-	  }
-	  value = _.applyFilters(value, this.readFilters, vm)
-	  this.afterGet()
-	  return value
-	}
-
-	/**
-	 * Set the corresponding value with the setter.
-	 *
-	 * @param {*} value
-	 */
-
-	p.set = function (value) {
-	  var vm = this.vm
-	  value = _.applyFilters(
-	    value, this.writeFilters, vm, this.value
-	  )
-	  try {
-	    this.setter.call(vm, vm, value)
-	  } catch (e) {}
-	}
-
-	/**
-	 * Prepare for dependency collection.
-	 */
-
-	p.beforeGet = function () {
-	  Observer.target = this
-	  this.newDeps = {}
-	}
-
-	/**
-	 * Clean up for dependency collection.
-	 */
-
-	p.afterGet = function () {
-	  Observer.target = null
-	  for (var id in this.deps) {
-	    if (!this.newDeps[id]) {
-	      this.deps[id].removeSub(this)
-	    }
-	  }
-	  this.deps = this.newDeps
-	}
-
-	/**
-	 * Subscriber interface.
-	 * Will be called when a dependency changes.
-	 */
-
-	p.update = function () {
-	  if (config.async) {
-	    batcher.push(this)
-	  } else {
-	    this.run()
-	  }
-	}
-
-	/**
-	 * Batcher job interface.
-	 * Will be called by the batcher.
-	 */
-
-	p.run = function () {
-	  if (this.active) {
-	    var value = this.get()
-	    if (
-	      (typeof value === 'object' && value !== null) ||
-	      value !== this.value
-	    ) {
-	      var oldValue = this.value
-	      this.value = value
-	      var cbs = this.cbs
-	      for (var i = 0, l = cbs.length; i < l; i++) {
-	        cbs[i](value, oldValue)
-	        // if a callback also removed other callbacks,
-	        // we need to adjust the loop accordingly.
-	        var removed = l - cbs.length
-	        if (removed) {
-	          i -= removed
-	          l -= removed
-	        }
-	      }
-	    }
-	  }
-	}
-
-	/**
-	 * Add a callback.
-	 *
-	 * @param {Function} cb
-	 */
-
-	p.addCb = function (cb) {
-	  this.cbs.push(cb)
-	}
-
-	/**
-	 * Remove a callback.
-	 *
-	 * @param {Function} cb
-	 */
-
-	p.removeCb = function (cb) {
-	  var cbs = this.cbs
-	  if (cbs.length > 1) {
-	    var i = cbs.indexOf(cb)
-	    if (i > -1) {
-	      cbs.splice(i, 1)
-	    }
-	  } else if (cb === cbs[0]) {
-	    this.teardown()
-	  }
-	}
-
-	/**
-	 * Remove self from all dependencies' subcriber list.
-	 */
-
-	p.teardown = function () {
-	  if (this.active) {
-	    // remove self from vm's watcher list
-	    // we can skip this if the vm if being destroyed
-	    // which can improve teardown performance.
-	    if (!this.vm._isBeingDestroyed) {
-	      var list = this.vm._watcherList
-	      list.splice(list.indexOf(this))
-	    }
-	    for (var id in this.deps) {
-	      this.deps[id].removeSub(this)
-	    }
-	    this.active = false
-	    this.vm = this.cbs = this.value = null
-	  }
-	}
-
-
-	/**
-	 * Recrusively traverse an object to evoke all converted
-	 * getters, so that every nested property inside the object
-	 * is collected as a "deep" dependency.
-	 *
-	 * @param {Object} obj
-	 */
-
-	function traverse (obj) {
-	  var key, val, i
-	  for (key in obj) {
-	    val = obj[key]
-	    if (_.isArray(val)) {
-	      i = val.length
-	      while (i--) traverse(val[i])
-	    } else if (_.isObject(val)) {
-	      traverse(val)
-	    }
-	  }
-	}
-
-	module.exports = Watcher
-
-/***/ },
 /* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -8779,7 +8779,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var config = __webpack_require__(52)
+	var config = __webpack_require__(53)
 	var textParser = __webpack_require__(63)
 	var dirParser = __webpack_require__(59)
 	var templateParser = __webpack_require__(62)
@@ -10442,7 +10442,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var Cache = __webpack_require__(49)
-	var config = __webpack_require__(52)
+	var config = __webpack_require__(53)
 	var dirParser = __webpack_require__(59)
 	var regexEscapeRE = /[-.*+?^${}()|[\]\/\\]/g
 	var cache, tagRE, htmlRE, firstChar, lastChar
@@ -10662,6 +10662,29 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
+	var addClass = _.addClass
+	var removeClass = _.removeClass
+
+	module.exports = function (value) {
+	  if (this.arg) {
+	    var method = value ? addClass : removeClass
+	    method(this.el, this.arg)
+	  } else {
+	    if (this.lastVal) {
+	      removeClass(this.el, this.lastVal)
+	    }
+	    if (value) {
+	      addClass(this.el, value)
+	      this.lastVal = value
+	    }
+	  }
+	}
+
+/***/ },
+/* 66 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(56)
 	var templateParser = __webpack_require__(62)
 
 	module.exports = {
@@ -10701,7 +10724,7 @@
 	}
 
 /***/ },
-/* 66 */
+/* 67 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var transition = __webpack_require__(71)
@@ -10711,29 +10734,6 @@
 	  transition.apply(el, value ? 1 : -1, function () {
 	    el.style.display = value ? '' : 'none'
 	  }, this.vm)
-	}
-
-/***/ },
-/* 67 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var _ = __webpack_require__(56)
-	var addClass = _.addClass
-	var removeClass = _.removeClass
-
-	module.exports = function (value) {
-	  if (this.arg) {
-	    var method = value ? addClass : removeClass
-	    method(this.el, this.arg)
-	  } else {
-	    if (this.lastVal) {
-	      removeClass(this.el, this.lastVal)
-	    }
-	    if (value) {
-	      addClass(this.el, value)
-	      this.lastVal = value
-	    }
-	  }
 	}
 
 /***/ },
@@ -11136,7 +11136,7 @@
 /* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var mergeOptions = __webpack_require__(53)
+	var mergeOptions = __webpack_require__(54)
 
 	/**
 	 * The main init sequence. This is called for every
@@ -11218,7 +11218,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var config = __webpack_require__(52)
+	var config = __webpack_require__(53)
 	var Dep = __webpack_require__(55)
 	var arrayMethods = __webpack_require__(86)
 	var arrayKeys = Object.getOwnPropertyNames(arrayMethods)
@@ -12257,7 +12257,7 @@
 /* 80 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var config = __webpack_require__(52)
+	var config = __webpack_require__(53)
 
 	/**
 	 * Check if a node is in the document.
@@ -12536,7 +12536,7 @@
 /* 82 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var config = __webpack_require__(52)
+	var config = __webpack_require__(53)
 
 	/**
 	 * Enable debug utilities. The enableDebug() function and
@@ -13092,7 +13092,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var mergeOptions = __webpack_require__(53)
+	var mergeOptions = __webpack_require__(54)
 
 	/**
 	 * Expose useful internals
@@ -13100,7 +13100,7 @@
 
 	exports.util = _
 	exports.nextTick = _.nextTick
-	exports.config = __webpack_require__(52)
+	exports.config = __webpack_require__(53)
 
 	exports.compiler = {
 	  compile: __webpack_require__(57),
@@ -13243,7 +13243,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Watcher = __webpack_require__(54)
+	var Watcher = __webpack_require__(52)
 	var Path = __webpack_require__(61)
 	var textParser = __webpack_require__(63)
 	var dirParser = __webpack_require__(59)
@@ -13942,10 +13942,10 @@
 
 	// manipulation directives
 	exports.text       = __webpack_require__(69)
-	exports.html       = __webpack_require__(65)
+	exports.html       = __webpack_require__(66)
 	exports.attr       = __webpack_require__(64)
-	exports.show       = __webpack_require__(66)
-	exports['class']   = __webpack_require__(67)
+	exports.show       = __webpack_require__(67)
+	exports['class']   = __webpack_require__(65)
 	exports.el         = __webpack_require__(95)
 	exports.ref        = __webpack_require__(96)
 	exports.cloak      = __webpack_require__(97)
@@ -14014,7 +14014,7 @@
 /* 97 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var config = __webpack_require__(52)
+	var config = __webpack_require__(53)
 
 	module.exports = {
 
@@ -14352,7 +14352,7 @@
 	var templateParser = __webpack_require__(62)
 	var compile = __webpack_require__(57)
 	var transclude = __webpack_require__(58)
-	var mergeOptions = __webpack_require__(53)
+	var mergeOptions = __webpack_require__(54)
 	var uid = 0
 
 	module.exports = {
@@ -14946,7 +14946,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Watcher = __webpack_require__(54)
+	var Watcher = __webpack_require__(52)
 
 	module.exports = {
 
@@ -15218,7 +15218,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Watcher = __webpack_require__(54)
+	var Watcher = __webpack_require__(52)
 
 	module.exports = {
 
