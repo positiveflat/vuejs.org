@@ -4532,7 +4532,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var def = __webpack_require__(68)
+	var def = __webpack_require__(70)
 	var Vue = __webpack_require__(50)
 
 	if (_.inBrowser) {
@@ -4617,7 +4617,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var def = __webpack_require__(69)
+	var def = __webpack_require__(68)
 
 	if (_.inBrowser) {
 	  describe('v-text', function () {
@@ -4654,7 +4654,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var def = __webpack_require__(70)
+	var def = __webpack_require__(69)
 
 	if (_.inBrowser) {
 	  describe('v-transition', function () {
@@ -10740,6 +10740,43 @@
 /* 68 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var _ = __webpack_require__(56)
+
+	module.exports = {
+
+	  bind: function () {
+	    this.attr = this.el.nodeType === 3
+	      ? 'nodeValue'
+	      : 'textContent'
+	  },
+
+	  update: function (value) {
+	    this.el[this.attr] = _.toString(value)
+	  }
+	  
+	}
+
+/***/ },
+/* 69 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+
+	  priority: 1000,
+	  isLiteral: true,
+
+	  bind: function () {
+	    this.el.__v_trans = {
+	      id: this.expression
+	    }
+	  }
+
+	}
+
+/***/ },
+/* 70 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var prefixes = ['-webkit-', '-moz-', '-ms-']
 	var importantRE = /!important;?$/
 
@@ -10794,43 +10831,6 @@
 	          isImportant
 	        )
 	      }
-	    }
-	  }
-
-	}
-
-/***/ },
-/* 69 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var _ = __webpack_require__(56)
-
-	module.exports = {
-
-	  bind: function () {
-	    this.attr = this.el.nodeType === 3
-	      ? 'nodeValue'
-	      : 'textContent'
-	  },
-
-	  update: function (value) {
-	    this.el[this.attr] = _.toString(value)
-	  }
-	  
-	}
-
-/***/ },
-/* 70 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = {
-
-	  priority: 1000,
-	  isLiteral: true,
-
-	  bind: function () {
-	    this.el.__v_trans = {
-	      id: this.expression
 	    }
 	  }
 
@@ -13941,7 +13941,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	// manipulation directives
-	exports.text       = __webpack_require__(69)
+	exports.text       = __webpack_require__(68)
 	exports.html       = __webpack_require__(66)
 	exports.attr       = __webpack_require__(64)
 	exports.show       = __webpack_require__(67)
@@ -13949,9 +13949,9 @@
 	exports.el         = __webpack_require__(95)
 	exports.ref        = __webpack_require__(96)
 	exports.cloak      = __webpack_require__(97)
-	exports.style      = __webpack_require__(68)
+	exports.style      = __webpack_require__(70)
 	exports.partial    = __webpack_require__(98)
-	exports.transition = __webpack_require__(70)
+	exports.transition = __webpack_require__(69)
 
 	// event listener directives
 	exports.on         = __webpack_require__(99)
