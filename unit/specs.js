@@ -157,7 +157,7 @@
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Cache = __webpack_require__(49)
+	var Cache = __webpack_require__(52)
 
 	/**
 	 * Debug function to assert cache state
@@ -216,8 +216,8 @@
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(50)
-	var Directive = __webpack_require__(51)
+	var Vue = __webpack_require__(49)
+	var Directive = __webpack_require__(50)
 	var nextTick = Vue.nextTick
 
 	describe('Directive', function () {
@@ -414,9 +414,9 @@
 /* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(50)
+	var Vue = __webpack_require__(49)
 	var nextTick = Vue.nextTick
-	var Watcher = __webpack_require__(52)
+	var Watcher = __webpack_require__(51)
 	var _ = Vue.util
 	var config = Vue.config
 
@@ -806,7 +806,7 @@
 /* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(50)
+	var Vue = __webpack_require__(49)
 
 	describe('Child API', function () {
 
@@ -889,7 +889,7 @@
 /* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(50)
+	var Vue = __webpack_require__(49)
 	var _ = __webpack_require__(56)
 	var nextTick = _.nextTick
 
@@ -1072,7 +1072,7 @@
 	 * those are tested in transition_spec.js.
 	 */
 
-	var Vue = __webpack_require__(50)
+	var Vue = __webpack_require__(49)
 	var _ = __webpack_require__(56)
 
 	if (_.inBrowser) {
@@ -1247,7 +1247,7 @@
 /* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(50)
+	var Vue = __webpack_require__(49)
 
 	describe('Events API', function () {
 
@@ -1386,7 +1386,7 @@
 /* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(50)
+	var Vue = __webpack_require__(49)
 	var _ = __webpack_require__(56)
 	var config = __webpack_require__(53)
 
@@ -1489,7 +1489,7 @@
 /* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(50)
+	var Vue = __webpack_require__(49)
 	var _ = __webpack_require__(56)
 	var compile = __webpack_require__(57)
 
@@ -1800,7 +1800,7 @@
 /* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(50)
+	var Vue = __webpack_require__(49)
 	var _ = __webpack_require__(56)
 	var dirParser = __webpack_require__(59)
 	var merge = __webpack_require__(54)
@@ -2240,7 +2240,7 @@
 
 	var _ = __webpack_require__(56)
 	var compile = __webpack_require__(57)
-	var Vue = __webpack_require__(50)
+	var Vue = __webpack_require__(49)
 
 	if (_.inBrowser) {
 	  describe('v-cloak', function () {
@@ -2269,7 +2269,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(50)
+	var Vue = __webpack_require__(49)
 
 	if (_.inBrowser) {
 	  describe('v-component', function () {
@@ -2653,7 +2653,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(50)
+	var Vue = __webpack_require__(49)
 
 	if (_.inBrowser) {
 	  describe('v-el', function () {
@@ -2748,7 +2748,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(50)
+	var Vue = __webpack_require__(49)
 
 	if (_.inBrowser) {
 	  describe('v-if', function () {
@@ -2937,7 +2937,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(50)
+	var Vue = __webpack_require__(49)
 
 	/**
 	 * Mock event helper
@@ -3428,7 +3428,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(50)
+	var Vue = __webpack_require__(49)
 
 	function trigger (target, event, process) {
 	  var e = document.createEvent('HTMLEvents')
@@ -3567,7 +3567,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(50)
+	var Vue = __webpack_require__(49)
 
 	if (_.inBrowser) {
 	  describe('v-partial', function () {
@@ -3687,7 +3687,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(50)
+	var Vue = __webpack_require__(49)
 
 	if (_.inBrowser) {
 	  describe('v-pre', function () {
@@ -3711,7 +3711,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(50)
+	var Vue = __webpack_require__(49)
 
 	if (_.inBrowser) {
 	  describe('v-ref', function () {
@@ -3791,7 +3791,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(50)
+	var Vue = __webpack_require__(49)
 
 	if (_.inBrowser) {
 	  describe('v-repeat', function () {
@@ -4498,7 +4498,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(50)
+	var Vue = __webpack_require__(49)
 	var transition = __webpack_require__(71)
 	var def = __webpack_require__(67)
 
@@ -4533,7 +4533,7 @@
 
 	var _ = __webpack_require__(56)
 	var def = __webpack_require__(68)
-	var Vue = __webpack_require__(50)
+	var Vue = __webpack_require__(49)
 
 	if (_.inBrowser) {
 	  describe('v-style', function () {
@@ -4677,7 +4677,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(50)
+	var Vue = __webpack_require__(49)
 
 	if (_.inBrowser) {
 	  describe('v-with', function () {
@@ -4809,7 +4809,7 @@
 /* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(50)
+	var Vue = __webpack_require__(49)
 	var filters = __webpack_require__(72)
 
 	describe('Filters', function () {
@@ -5005,7 +5005,7 @@
 /* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(50)
+	var Vue = __webpack_require__(49)
 	var _ = __webpack_require__(56)
 
 	describe('Instance Events', function () {
@@ -5344,7 +5344,7 @@
 /* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(50)
+	var Vue = __webpack_require__(49)
 
 	describe('Instance Scope', function () {
 
@@ -6413,7 +6413,7 @@
 
 	var textParser = __webpack_require__(63)
 	var config = __webpack_require__(53)
-	var Vue = __webpack_require__(50)
+	var Vue = __webpack_require__(49)
 
 	var testCases = [
 	  {
@@ -6541,7 +6541,7 @@
 /* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(50)
+	var Vue = __webpack_require__(49)
 	var _ = __webpack_require__(56)
 	var transition = __webpack_require__(71)
 
@@ -7337,7 +7337,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(50)
+	var Vue = __webpack_require__(49)
 	var merge = __webpack_require__(54)
 
 	describe('Util - Option merging', function () {
@@ -7691,123 +7691,6 @@
 /* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/**
-	 * A doubly linked list-based Least Recently Used (LRU)
-	 * cache. Will keep most recently used items while
-	 * discarding least recently used items when its limit is
-	 * reached. This is a bare-bone version of
-	 * Rasmus Andersson's js-lru:
-	 *
-	 *   https://github.com/rsms/js-lru
-	 *
-	 * @param {Number} limit
-	 * @constructor
-	 */
-
-	function Cache (limit) {
-	  this.size = 0
-	  this.limit = limit
-	  this.head = this.tail = undefined
-	  this._keymap = {}
-	}
-
-	var p = Cache.prototype
-
-	/**
-	 * Put <value> into the cache associated with <key>.
-	 * Returns the entry which was removed to make room for
-	 * the new entry. Otherwise undefined is returned.
-	 * (i.e. if there was enough room already).
-	 *
-	 * @param {String} key
-	 * @param {*} value
-	 * @return {Entry|undefined}
-	 */
-
-	p.put = function (key, value) {
-	  var entry = {
-	    key:key,
-	    value:value
-	  }
-	  this._keymap[key] = entry
-	  if (this.tail) {
-	    this.tail.newer = entry
-	    entry.older = this.tail
-	  } else {
-	    this.head = entry
-	  }
-	  this.tail = entry
-	  if (this.size === this.limit) {
-	    return this.shift()
-	  } else {
-	    this.size++
-	  }
-	}
-
-	/**
-	 * Purge the least recently used (oldest) entry from the
-	 * cache. Returns the removed entry or undefined if the
-	 * cache was empty.
-	 */
-
-	p.shift = function () {
-	  var entry = this.head
-	  if (entry) {
-	    this.head = this.head.newer
-	    this.head.older = undefined
-	    entry.newer = entry.older = undefined
-	    this._keymap[entry.key] = undefined
-	  }
-	  return entry
-	}
-
-	/**
-	 * Get and register recent use of <key>. Returns the value
-	 * associated with <key> or undefined if not in cache.
-	 *
-	 * @param {String} key
-	 * @param {Boolean} returnEntry
-	 * @return {Entry|*}
-	 */
-
-	p.get = function (key, returnEntry) {
-	  var entry = this._keymap[key]
-	  if (entry === undefined) return
-	  if (entry === this.tail) {
-	    return returnEntry
-	      ? entry
-	      : entry.value
-	  }
-	  // HEAD--------------TAIL
-	  //   <.older   .newer>
-	  //  <--- add direction --
-	  //   A  B  C  <D>  E
-	  if (entry.newer) {
-	    if (entry === this.head) {
-	      this.head = entry.newer
-	    }
-	    entry.newer.older = entry.older // C <-- E.
-	  }
-	  if (entry.older) {
-	    entry.older.newer = entry.newer // C. --> E
-	  }
-	  entry.newer = undefined // D --x
-	  entry.older = this.tail // D. --> E
-	  if (this.tail) {
-	    this.tail.newer = entry // E. <-- D
-	  }
-	  this.tail = entry
-	  return returnEntry
-	    ? entry
-	    : entry.value
-	}
-
-	module.exports = Cache
-
-/***/ },
-/* 50 */
-/***/ function(module, exports, __webpack_require__) {
-
 	var _ = __webpack_require__(56)
 	var extend = _.extend
 
@@ -7894,12 +7777,12 @@
 	module.exports = _.Vue = Vue
 
 /***/ },
-/* 51 */
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
 	var config = __webpack_require__(53)
-	var Watcher = __webpack_require__(52)
+	var Watcher = __webpack_require__(51)
 	var textParser = __webpack_require__(63)
 	var expParser = __webpack_require__(60)
 
@@ -8118,7 +8001,7 @@
 	module.exports = Directive
 
 /***/ },
-/* 52 */
+/* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
@@ -8361,6 +8244,123 @@
 	}
 
 	module.exports = Watcher
+
+/***/ },
+/* 52 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * A doubly linked list-based Least Recently Used (LRU)
+	 * cache. Will keep most recently used items while
+	 * discarding least recently used items when its limit is
+	 * reached. This is a bare-bone version of
+	 * Rasmus Andersson's js-lru:
+	 *
+	 *   https://github.com/rsms/js-lru
+	 *
+	 * @param {Number} limit
+	 * @constructor
+	 */
+
+	function Cache (limit) {
+	  this.size = 0
+	  this.limit = limit
+	  this.head = this.tail = undefined
+	  this._keymap = {}
+	}
+
+	var p = Cache.prototype
+
+	/**
+	 * Put <value> into the cache associated with <key>.
+	 * Returns the entry which was removed to make room for
+	 * the new entry. Otherwise undefined is returned.
+	 * (i.e. if there was enough room already).
+	 *
+	 * @param {String} key
+	 * @param {*} value
+	 * @return {Entry|undefined}
+	 */
+
+	p.put = function (key, value) {
+	  var entry = {
+	    key:key,
+	    value:value
+	  }
+	  this._keymap[key] = entry
+	  if (this.tail) {
+	    this.tail.newer = entry
+	    entry.older = this.tail
+	  } else {
+	    this.head = entry
+	  }
+	  this.tail = entry
+	  if (this.size === this.limit) {
+	    return this.shift()
+	  } else {
+	    this.size++
+	  }
+	}
+
+	/**
+	 * Purge the least recently used (oldest) entry from the
+	 * cache. Returns the removed entry or undefined if the
+	 * cache was empty.
+	 */
+
+	p.shift = function () {
+	  var entry = this.head
+	  if (entry) {
+	    this.head = this.head.newer
+	    this.head.older = undefined
+	    entry.newer = entry.older = undefined
+	    this._keymap[entry.key] = undefined
+	  }
+	  return entry
+	}
+
+	/**
+	 * Get and register recent use of <key>. Returns the value
+	 * associated with <key> or undefined if not in cache.
+	 *
+	 * @param {String} key
+	 * @param {Boolean} returnEntry
+	 * @return {Entry|*}
+	 */
+
+	p.get = function (key, returnEntry) {
+	  var entry = this._keymap[key]
+	  if (entry === undefined) return
+	  if (entry === this.tail) {
+	    return returnEntry
+	      ? entry
+	      : entry.value
+	  }
+	  // HEAD--------------TAIL
+	  //   <.older   .newer>
+	  //  <--- add direction --
+	  //   A  B  C  <D>  E
+	  if (entry.newer) {
+	    if (entry === this.head) {
+	      this.head = entry.newer
+	    }
+	    entry.newer.older = entry.older // C <-- E.
+	  }
+	  if (entry.older) {
+	    entry.older.newer = entry.newer // C. --> E
+	  }
+	  entry.newer = undefined // D --x
+	  entry.older = this.tail // D. --> E
+	  if (this.tail) {
+	    this.tail.newer = entry // E. <-- D
+	  }
+	  this.tail = entry
+	  return returnEntry
+	    ? entry
+	    : entry.value
+	}
+
+	module.exports = Cache
 
 /***/ },
 /* 53 */
@@ -9489,7 +9489,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Cache = __webpack_require__(49)
+	var Cache = __webpack_require__(52)
 	var cache = new Cache(1000)
 	var argRE = /^[^\{\?]+$|^'[^']*'$|^"[^"]*"$/
 	var filterTokenRE = /[^\s'"]+|'[^']+'|"[^"]+"/g
@@ -9654,7 +9654,7 @@
 
 	var _ = __webpack_require__(56)
 	var Path = __webpack_require__(61)
-	var Cache = __webpack_require__(49)
+	var Cache = __webpack_require__(52)
 	var expressionCache = new Cache(1000)
 
 	var keywords =
@@ -9884,7 +9884,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Cache = __webpack_require__(49)
+	var Cache = __webpack_require__(52)
 	var pathCache = new Cache(1000)
 	var identRE = /^[$_a-zA-Z]+[\w$]*$/
 
@@ -10189,7 +10189,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Cache = __webpack_require__(49)
+	var Cache = __webpack_require__(52)
 	var templateCache = new Cache(1000)
 	var idSelectorCache = new Cache(1000)
 
@@ -10441,7 +10441,7 @@
 /* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Cache = __webpack_require__(49)
+	var Cache = __webpack_require__(52)
 	var config = __webpack_require__(53)
 	var dirParser = __webpack_require__(59)
 	var regexEscapeRE = /[-.*+?^${}()|[\]\/\\]/g
@@ -11808,7 +11808,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Directive = __webpack_require__(51)
+	var Directive = __webpack_require__(50)
 	var compile = __webpack_require__(57)
 	var transclude = __webpack_require__(58)
 
@@ -13243,7 +13243,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Watcher = __webpack_require__(52)
+	var Watcher = __webpack_require__(51)
 	var Path = __webpack_require__(61)
 	var textParser = __webpack_require__(63)
 	var dirParser = __webpack_require__(59)
@@ -14946,7 +14946,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Watcher = __webpack_require__(52)
+	var Watcher = __webpack_require__(51)
 
 	module.exports = {
 
@@ -15218,7 +15218,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var _ = __webpack_require__(56)
-	var Watcher = __webpack_require__(52)
+	var Watcher = __webpack_require__(51)
 
 	module.exports = {
 
