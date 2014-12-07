@@ -1,9 +1,8 @@
-var Batcher = require('../../../src/batcher')
+var batcher = require('../../../src/batcher')
 var nextTick = require('../../../src/util').nextTick
 
 describe('Batcher', function () {
 
-  var batcher = new Batcher()
   var spy
 
   beforeEach(function () {
@@ -48,6 +47,35 @@ describe('Batcher', function () {
     })
     nextTick(function () {
       expect(spy.calls.count()).toBe(2)
+      done()
+    })
+  })
+
+  it('calls user watchers after directive updates', function (done) {
+    var vals = []
+    function run () {
+      vals.push(this.id)
+    }
+    batcher.push({
+      id: 2,
+      user: true,
+      run: function () {
+        run.call(this)
+        // user watcher triggering another directive update!
+        batcher.push({
+          id: 3,
+          run: run
+        })
+      }
+    })
+    batcher.push({
+      id: 1,
+      run: run
+    })
+    nextTick(function () {
+      expect(vals[0]).toBe(1)
+      expect(vals[1]).toBe(2)
+      expect(vals[2]).toBe(3)
       done()
     })
   })

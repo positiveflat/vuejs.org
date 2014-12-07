@@ -90,6 +90,8 @@
 	__webpack_require__(45);
 	__webpack_require__(46);
 	__webpack_require__(47);
+	__webpack_require__(48);
+	__webpack_require__(49);
 	module.exports = __webpack_require__(4);
 
 
@@ -97,12 +99,11 @@
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Batcher = __webpack_require__(48)
-	var nextTick = __webpack_require__(56).nextTick
+	var batcher = __webpack_require__(50)
+	var nextTick = __webpack_require__(58).nextTick
 
 	describe('Batcher', function () {
 
-	  var batcher = new Batcher()
 	  var spy
 
 	  beforeEach(function () {
@@ -151,13 +152,42 @@
 	    })
 	  })
 
+	  it('calls user watchers after directive updates', function (done) {
+	    var vals = []
+	    function run () {
+	      vals.push(this.id)
+	    }
+	    batcher.push({
+	      id: 2,
+	      user: true,
+	      run: function () {
+	        run.call(this)
+	        // user watcher triggering another directive update!
+	        batcher.push({
+	          id: 3,
+	          run: run
+	        })
+	      }
+	    })
+	    batcher.push({
+	      id: 1,
+	      run: run
+	    })
+	    nextTick(function () {
+	      expect(vals[0]).toBe(1)
+	      expect(vals[1]).toBe(2)
+	      expect(vals[2]).toBe(3)
+	      done()
+	    })
+	  })
+
 	})
 
 /***/ },
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Cache = __webpack_require__(49)
+	var Cache = __webpack_require__(51)
 
 	/**
 	 * Debug function to assert cache state
@@ -216,8 +246,8 @@
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(50)
-	var Directive = __webpack_require__(51)
+	var Vue = __webpack_require__(52)
+	var Directive = __webpack_require__(53)
 	var nextTick = Vue.nextTick
 
 	describe('Directive', function () {
@@ -414,9 +444,9 @@
 /* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(50)
+	var Vue = __webpack_require__(52)
 	var nextTick = Vue.nextTick
-	var Watcher = __webpack_require__(52)
+	var Watcher = __webpack_require__(54)
 	var _ = Vue.util
 	var config = Vue.config
 
@@ -655,7 +685,9 @@
 	      { name: 'test', args: [3] },
 	      { name: 'test2', args: ['yo']}
 	    ])
-	    var watcher = new Watcher(vm, 'b.c', spy, filters)
+	    var watcher = new Watcher(vm, 'b.c', spy, {
+	      filters: filters
+	    })
 	    expect(watcher.value).toBe('6yo')
 	    vm.b.c = 3
 	    nextTick(function () {
@@ -674,7 +706,10 @@
 	    var filters = _.resolveFilters(vm, [
 	      { name: 'test', args: [5] }
 	    ])
-	    var watcher = new Watcher(vm, 'b["c"]', spy, filters, true)
+	    var watcher = new Watcher(vm, 'b["c"]', spy, {
+	      filters: filters,
+	      twoWay: true
+	    })
 	    expect(watcher.value).toBe(2)
 	    watcher.set(4) // shoud not change the value
 	    nextTick(function () {
@@ -704,7 +739,9 @@
 	  })
 
 	  it('deep watch', function (done) {
-	    var watcher = new Watcher(vm, 'b', spy, null, false, true)
+	    var watcher = new Watcher(vm, 'b', spy, {
+	      deep: true
+	    })
 	    vm.b.c = { d: 4 }
 	    nextTick(function () {
 	      expect(spy).toHaveBeenCalledWith(vm.b, vm.b)
@@ -800,13 +837,19 @@
 	    expect(_.warn).toHaveBeenCalled()
 	  })
 
+	  it('warn setter errors', function () {
+	    var watcher = new Watcher(vm, 'a + b', spy)
+	    watcher.set(123)
+	    expect(_.warn).toHaveBeenCalled()
+	  })
+
 	})
 
 /***/ },
 /* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(50)
+	var Vue = __webpack_require__(52)
 
 	describe('Child API', function () {
 
@@ -889,8 +932,8 @@
 /* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(50)
-	var _ = __webpack_require__(56)
+	var Vue = __webpack_require__(52)
+	var _ = __webpack_require__(58)
 	var nextTick = _.nextTick
 
 	describe('Data API', function () {
@@ -1072,8 +1115,8 @@
 	 * those are tested in transition_spec.js.
 	 */
 
-	var Vue = __webpack_require__(50)
-	var _ = __webpack_require__(56)
+	var Vue = __webpack_require__(52)
+	var _ = __webpack_require__(58)
 
 	if (_.inBrowser) {
 	  describe('DOM API', function () {
@@ -1247,7 +1290,7 @@
 /* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(50)
+	var Vue = __webpack_require__(52)
 
 	describe('Events API', function () {
 
@@ -1386,9 +1429,9 @@
 /* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(50)
-	var _ = __webpack_require__(56)
-	var config = __webpack_require__(53)
+	var Vue = __webpack_require__(52)
+	var _ = __webpack_require__(58)
+	var config = __webpack_require__(55)
 
 	describe('Global API', function () {
 
@@ -1489,9 +1532,9 @@
 /* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(50)
-	var _ = __webpack_require__(56)
-	var compile = __webpack_require__(57)
+	var Vue = __webpack_require__(52)
+	var _ = __webpack_require__(58)
+	var compile = __webpack_require__(59)
 
 	if (_.inBrowser) {
 	  describe('Lifecycle API', function () {
@@ -1800,11 +1843,11 @@
 /* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(50)
-	var _ = __webpack_require__(56)
-	var dirParser = __webpack_require__(59)
-	var merge = __webpack_require__(54)
-	var compile = __webpack_require__(57)
+	var Vue = __webpack_require__(52)
+	var _ = __webpack_require__(58)
+	var dirParser = __webpack_require__(61)
+	var merge = __webpack_require__(56)
+	var compile = __webpack_require__(59)
 
 	if (_.inBrowser) {
 	  describe('Compile', function () {
@@ -2006,13 +2049,13 @@
 	      expect(vm._bindDir.calls.count()).toBe(0)
 	    })
 
-	    it('component parent scope compilation should skip v-ref, v-with & v-component', function () {
-	      el.innerHTML = '<div v-component v-ref="test" v-with="test"></div>'
+	    it('component parent scope compilation should skip v-with & v-component', function () {
+	      el.innerHTML = '<div v-component v-with="test"></div>'
 	      el = el.firstChild
 	      var linker = compile(el, Vue.options, true, true)
 	      linker(vm, el)
 	      expect(vm._directives.length).toBe(0)
-	      expect(el.attributes.length).toBe(3)
+	      expect(el.attributes.length).toBe(2)
 	    })
 
 	  })
@@ -2022,8 +2065,8 @@
 /* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var transclude = __webpack_require__(58)
-	var _ = __webpack_require__(56)
+	var transclude = __webpack_require__(60)
+	var _ = __webpack_require__(58)
 
 	if (_.inBrowser) {
 	  describe('Transclude', function () {
@@ -2140,8 +2183,8 @@
 /* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var def = __webpack_require__(64)
+	var _ = __webpack_require__(58)
+	var def = __webpack_require__(66)
 
 	if (_.inBrowser) {
 	  describe('v-attr', function () {
@@ -2193,8 +2236,8 @@
 /* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var def = __webpack_require__(65)
+	var _ = __webpack_require__(58)
+	var def = __webpack_require__(67)
 
 	if (_.inBrowser) {
 	  describe('v-class', function () {
@@ -2238,9 +2281,9 @@
 /* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var compile = __webpack_require__(57)
-	var Vue = __webpack_require__(50)
+	var _ = __webpack_require__(58)
+	var compile = __webpack_require__(59)
+	var Vue = __webpack_require__(52)
 
 	if (_.inBrowser) {
 	  describe('v-cloak', function () {
@@ -2268,8 +2311,8 @@
 /* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(50)
+	var _ = __webpack_require__(58)
+	var Vue = __webpack_require__(52)
 
 	if (_.inBrowser) {
 	  describe('v-component', function () {
@@ -2652,8 +2695,8 @@
 /* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(50)
+	var _ = __webpack_require__(58)
+	var Vue = __webpack_require__(52)
 
 	if (_.inBrowser) {
 	  describe('v-el', function () {
@@ -2699,8 +2742,87 @@
 /* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var def = __webpack_require__(66)
+	var _ = __webpack_require__(58)
+	var Vue = __webpack_require__(52)
+
+	if (_.inBrowser) {
+	  describe('v-events', function () {
+
+	    var el
+	    beforeEach(function () {
+	      spyOn(_, 'warn')
+	      el = document.createElement('div')
+	    })
+
+	    it('should register events', function () {
+	      var spy = jasmine.createSpy('v-events')
+	      new Vue({
+	        el: el,
+	        template: '<div v-component="test" v-events="test:test"></div>',
+	        methods: {
+	          test: spy
+	        },
+	        components: {
+	          test: {
+	            compiled: function () {
+	              this.$emit('test')
+	            }
+	          }
+	        }
+	      })
+	      expect(spy).toHaveBeenCalled()
+	    })
+
+	    it('should warn when used on non-root node', function () {
+	      new Vue({
+	        el: el,
+	        template: '<div v-events="test:test"></div>'
+	      })
+	      expect(_.warn).toHaveBeenCalled()
+	    })
+
+	    it('should warn when used on child component root', function () {
+	      var spy = jasmine.createSpy('v-events')
+	      new Vue({
+	        el: el,
+	        template: '<div v-component="test"></div>',
+	        methods: {
+	          test: spy
+	        },
+	        components: {
+	          test: {
+	            replace: true,
+	            template: '<div v-events="test:test"></div>',
+	            compiled: function () {
+	              this.$emit('test')
+	            }
+	          }
+	        }
+	      })
+	      expect(_.warn).toHaveBeenCalled()
+	      expect(spy).not.toHaveBeenCalled()
+	    })
+
+	    it('should warn when method not found on parent', function () {
+	      new Vue({
+	        el: el,
+	        template: '<div v-component="test" v-events="test:test"></div>',
+	        components: {
+	          test: {}
+	        }
+	      })
+	      expect(_.warn).toHaveBeenCalled()
+	    })
+
+	  })
+	}
+
+/***/ },
+/* 19 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(58)
+	var def = __webpack_require__(68)
 
 	if (_.inBrowser) {
 	  describe('v-html', function () {
@@ -2744,11 +2866,11 @@
 	}
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(50)
+	var _ = __webpack_require__(58)
+	var Vue = __webpack_require__(52)
 
 	if (_.inBrowser) {
 	  describe('v-if', function () {
@@ -2933,11 +3055,11 @@
 	}
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(50)
+	var _ = __webpack_require__(58)
+	var Vue = __webpack_require__(52)
 
 	/**
 	 * Mock event helper
@@ -3424,11 +3546,11 @@
 	}
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(50)
+	var _ = __webpack_require__(58)
+	var Vue = __webpack_require__(52)
 
 	function trigger (target, event, process) {
 	  var e = document.createEvent('HTMLEvents')
@@ -3563,11 +3685,11 @@
 	}
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(50)
+	var _ = __webpack_require__(58)
+	var Vue = __webpack_require__(52)
 
 	if (_.inBrowser) {
 	  describe('v-partial', function () {
@@ -3683,11 +3805,11 @@
 	}
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(50)
+	var _ = __webpack_require__(58)
+	var Vue = __webpack_require__(52)
 
 	if (_.inBrowser) {
 	  describe('v-pre', function () {
@@ -3707,11 +3829,11 @@
 	}
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(50)
+	var _ = __webpack_require__(58)
+	var Vue = __webpack_require__(52)
 
 	if (_.inBrowser) {
 	  describe('v-ref', function () {
@@ -3775,10 +3897,24 @@
 	      expect(vm.$.c1.$.c2.length).toBe(2)
 	    })
 
-	    it('warn on non-root', function () {
+	    it('should warn on non-root', function () {
 	      var vm = new Vue({
 	        el: el,
 	        template: '<div v-ref="test"></div>'
+	      })
+	      expect(_.warn).toHaveBeenCalled()
+	    })
+
+	    it('should warn when used in child template', function () {
+	      var vm = new Vue({
+	        el: el,
+	        template: '<div v-component="test"></div>',
+	        components: {
+	          test: {
+	            template: '<div v-ref="test"></div>',
+	            replace: true
+	          }
+	        }
 	      })
 	      expect(_.warn).toHaveBeenCalled()
 	    })
@@ -3787,11 +3923,11 @@
 	}
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(50)
+	var _ = __webpack_require__(58)
+	var Vue = __webpack_require__(52)
 
 	if (_.inBrowser) {
 	  describe('v-repeat', function () {
@@ -3925,6 +4061,23 @@
 	        template: '<div v-repeat="items" v-component="test"></div>',
 	        components: {
 	          test: {
+	            template: '<p>{{$index}} {{a}}</p>',
+	            replace: true
+	          }
+	        }
+	      })
+	      expect(el.innerHTML).toBe('<p>0 1</p><p>1 2</p><p>2 3</p><!--v-repeat-->')
+	    })
+
+	    it('custom element component', function () {
+	      var vm = new Vue({
+	        el: el,
+	        data: {
+	          items: [{a:1}, {a:2}, {a:3}]
+	        },
+	        template: '<test-component v-repeat="items"></test-component>',
+	        components: {
+	          'test-component': {
 	            template: '<p>{{$index}} {{a}}</p>',
 	            replace: true
 	          }
@@ -4494,13 +4647,13 @@
 	}
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(50)
-	var transition = __webpack_require__(71)
-	var def = __webpack_require__(67)
+	var _ = __webpack_require__(58)
+	var Vue = __webpack_require__(52)
+	var transition = __webpack_require__(73)
+	var def = __webpack_require__(69)
 
 	if (_.inBrowser) {
 	  describe('v-show', function () {
@@ -4528,12 +4681,27 @@
 	}
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var def = __webpack_require__(68)
-	var Vue = __webpack_require__(50)
+	var _ = __webpack_require__(58)
+	var def = __webpack_require__(70)
+	var Vue = __webpack_require__(52)
+
+	function checkPrefixedProp (prop) {
+	  var el = document.createElement('div')
+	  var upper = prop.charAt(0).toUpperCase() + prop.slice(1)
+	  if (!(prop in el.style)) {
+	    var prefixes = ['Webkit', 'Moz', 'ms']
+	    var i = prefixes.length
+	    while (i--) {
+	      if ((prefixes[i] + upper) in el.style) {
+	        prop = prefixes[i] + upper
+	      }
+	    }  
+	  }
+	  return prop
+	}
 
 	if (_.inBrowser) {
 	  describe('v-style', function () {
@@ -4547,52 +4715,53 @@
 
 	    it('normal with arg', function () {
 	      dir.arg = 'color'
-	      dir.bind()
 	      dir.update('red')
 	      expect(el.style.color).toBe('red')
 	    })
 
 	    it('normal no arg', function () {
-	      dir.bind()
 	      dir.update('color:red;')
 	      expect(el.style.cssText.replace(/\s/g, '')).toBe('color:red;')
 	    })
 
 	    it('!important', function () {
 	      dir.arg = 'color'
-	      dir.bind()
 	      dir.update('red !important;')
 	      expect(el.style.getPropertyPriority('color')).toBe('important')
 	    })
 
+	    it('camel case', function () {
+	      dir.arg = 'marginLeft'
+	      dir.update('30px')
+	      expect(el.style.marginLeft).toBe('30px')
+	    })
+
+	    it('remove on falsy value', function () {
+	      el.style.color = 'red'
+	      dir.arg = 'color'
+	      dir.update(null)
+	      expect(el.style.color).toBe('')
+	    })
+
 	    it('auto prefixing', function () {
-	      var spy = el.style.setProperty = jasmine.createSpy()
-	      dir.arg = '$transform'
-	      dir.bind()
+	      var prop = checkPrefixedProp('transform')
+	      dir.arg = 'transform'
 	      var val = 'scale(0.5)'
 	      dir.update(val)
-	      expect(spy).toHaveBeenCalledWith('transform', val, '')
-	      expect(spy).toHaveBeenCalledWith('-ms-transform', val, '')
-	      expect(spy).toHaveBeenCalledWith('-moz-transform', val, '')
-	      expect(spy).toHaveBeenCalledWith('-webkit-transform', val, '')
+	      expect(el.style[prop]).toBe(val)
 	    })
 
 	    it('update with object', function () {
-	      dir.bind()
-	      dir.update({color: 'red', 'margin-right': '30px'})
+	      dir.update({color: 'red', marginRight: '30px'})
 	      expect(el.style.getPropertyValue('color')).toBe('red')
 	      expect(el.style.getPropertyValue('margin-right')).toBe('30px')
 	    })
 
 	    it('update with object and auto prefix', function () {
-	      var spy = el.style.setProperty = jasmine.createSpy()
-	      dir.bind()
-	      var scale = 'scale(0.5)';
-	      dir.update({'$transform': scale})
-	      expect(spy).toHaveBeenCalledWith('transform', scale, '')
-	      expect(spy).toHaveBeenCalledWith('-ms-transform', scale, '')
-	      expect(spy).toHaveBeenCalledWith('-moz-transform', scale, '')
-	      expect(spy).toHaveBeenCalledWith('-webkit-transform', scale, '')
+	      var prop = checkPrefixedProp('transform')
+	      var val = 'scale(0.5)';
+	      dir.update({transform: val})
+	      expect(el.style[prop]).toBe(val)
 	    })
 
 	    it('updates object deep', function (done) {
@@ -4613,11 +4782,11 @@
 	}
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var def = __webpack_require__(69)
+	var _ = __webpack_require__(58)
+	var def = __webpack_require__(71)
 
 	if (_.inBrowser) {
 	  describe('v-text', function () {
@@ -4650,11 +4819,11 @@
 	}
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var def = __webpack_require__(70)
+	var _ = __webpack_require__(58)
+	var def = __webpack_require__(72)
 
 	if (_.inBrowser) {
 	  describe('v-transition', function () {
@@ -4673,11 +4842,11 @@
 	}
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(50)
+	var _ = __webpack_require__(58)
+	var Vue = __webpack_require__(52)
 
 	if (_.inBrowser) {
 	  describe('v-with', function () {
@@ -4806,11 +4975,11 @@
 	}
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(50)
-	var filters = __webpack_require__(72)
+	var Vue = __webpack_require__(52)
+	var filters = __webpack_require__(74)
 
 	describe('Filters', function () {
 
@@ -5002,11 +5171,11 @@
 	}
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(50)
-	var _ = __webpack_require__(56)
+	var Vue = __webpack_require__(52)
+	var _ = __webpack_require__(58)
 
 	describe('Instance Events', function () {
 
@@ -5283,10 +5452,10 @@
 	})
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var init = __webpack_require__(73)._init
+	var init = __webpack_require__(75)._init
 
 	describe('Instance Init', function () {
 
@@ -5341,10 +5510,10 @@
 	})
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(50)
+	var Vue = __webpack_require__(52)
 
 	describe('Instance Scope', function () {
 
@@ -5501,10 +5670,10 @@
 	})
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Dep = __webpack_require__(55)
+	var Dep = __webpack_require__(57)
 
 	describe('Dep', function () {
 
@@ -5540,13 +5709,13 @@
 	})
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Observer = __webpack_require__(74)
-	var config = __webpack_require__(53)
-	var Dep = __webpack_require__(55)
-	var _ = __webpack_require__(56)
+	var Observer = __webpack_require__(76)
+	var config = __webpack_require__(55)
+	var Dep = __webpack_require__(57)
+	var _ = __webpack_require__(58)
 
 	describe('Observer', function () {
 
@@ -5748,10 +5917,10 @@
 	})
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var parse = __webpack_require__(59).parse
+	var parse = __webpack_require__(61).parse
 
 	describe('Directive Parser', function () {
 
@@ -5881,11 +6050,11 @@
 	})
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var expParser = __webpack_require__(60)
-	var _ = __webpack_require__(56)
+	var expParser = __webpack_require__(62)
+	var _ = __webpack_require__(58)
 
 	var testCases = [
 	  {
@@ -6137,10 +6306,10 @@
 	}
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Path = __webpack_require__(61)
+	var Path = __webpack_require__(63)
 
 	function assertPath (str, expected) {
 	  var path = Path.parse(str)
@@ -6263,11 +6432,11 @@
 	})
 
 /***/ },
-/* 40 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var templateParser = __webpack_require__(62)
+	var _ = __webpack_require__(58)
+	var templateParser = __webpack_require__(64)
 	var parse = templateParser.parse
 	var testString = '<div>hello</div><p class="test">world</p>'
 
@@ -6303,6 +6472,13 @@
 	      expect(res instanceof DocumentFragment).toBeTruthy()
 	      expect(res.childNodes.length).toBe(1)
 	      expect(res.firstChild.nodeType).toBe(3) // Text node
+	    })
+
+	    it('should handle string that contains html entities', function () {
+	      var res = parse('hi&lt;hi')
+	      expect(res instanceof DocumentFragment).toBeTruthy()
+	      expect(res.childNodes.length).toBe(1)
+	      expect(res.firstChild.nodeValue).toBe('hi<hi')
 	    })
 
 	    it('should parse textContent if argument is a script node', function () {
@@ -6408,12 +6584,12 @@
 	}
 
 /***/ },
-/* 41 */
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var textParser = __webpack_require__(63)
-	var config = __webpack_require__(53)
-	var Vue = __webpack_require__(50)
+	var textParser = __webpack_require__(65)
+	var config = __webpack_require__(55)
+	var Vue = __webpack_require__(52)
 
 	var testCases = [
 	  {
@@ -6538,12 +6714,12 @@
 	})
 
 /***/ },
-/* 42 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Vue = __webpack_require__(50)
-	var _ = __webpack_require__(56)
-	var transition = __webpack_require__(71)
+	var Vue = __webpack_require__(52)
+	var _ = __webpack_require__(58)
+	var transition = __webpack_require__(73)
 
 	if (_.inBrowser && !_.isIE9) {
 	  describe('Transition', function () {
@@ -6945,11 +7121,11 @@
 	}
 
 /***/ },
-/* 43 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var config = __webpack_require__(53)
+	var _ = __webpack_require__(58)
+	var config = __webpack_require__(55)
 	var infoPrefix = '[Vue info]: '
 	var warnPrefix = '[Vue warn]: '
 	config.silent = true
@@ -6990,24 +7166,14 @@
 	      expect(console.warn).not.toHaveBeenCalled()
 	    })
 
-	    if (console.trace) {
-	      it('trace when not silent and debugging', function () {
-	        config.debug = true
-	        config.silent = false
-	        _.warn('haha')
-	        expect(console.trace).toHaveBeenCalled()
-	        config.debug = false
-	        config.silent = true
-	      })
-	    }
 	  })
 	}
 
 /***/ },
-/* 44 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
+	var _ = __webpack_require__(58)
 
 	if (_.inBrowser) {
 
@@ -7140,10 +7306,35 @@
 	}
 
 /***/ },
-/* 45 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
+	var _ = __webpack_require__(58)
+
+	describe('Util - Environment', function () {
+
+	  describe('nextTick', function () {
+
+	    it('should accept context', function (done) {
+	      var ctx = {}
+	      _.nextTick(function () {
+	        this.id = 1
+	      }, ctx)
+	      _.nextTick(function () {
+	        expect(ctx.id).toBe(1)
+	        done()
+	      })
+	    })
+
+	  })
+
+	})
+
+/***/ },
+/* 47 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(58)
 
 	describe('Util - Filter', function () {
 	  
@@ -7212,10 +7403,10 @@
 	})
 
 /***/ },
-/* 46 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
+	var _ = __webpack_require__(58)
 
 	describe('Util - Language Enhancement', function () {
 
@@ -7333,12 +7524,12 @@
 	})
 
 /***/ },
-/* 47 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var Vue = __webpack_require__(50)
-	var merge = __webpack_require__(54)
+	var _ = __webpack_require__(58)
+	var Vue = __webpack_require__(52)
+	var merge = __webpack_require__(56)
 
 	describe('Util - Option merging', function () {
 	  
@@ -7573,7 +7764,7 @@
 	  })
 
 	  it('already observed instance data merge with default data', function () {
-	    var Observer = __webpack_require__(74)
+	    var Observer = __webpack_require__(76)
 	    var instanceData = { a: 123 }
 	    // observe it
 	    Observer.create(instanceData)
@@ -7618,21 +7809,59 @@
 	})
 
 /***/ },
-/* 48 */
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
+	var _ = __webpack_require__(58)
+
+	// we have two separate queues: one for directive updates
+	// and one for user watcher registered via $watch().
+	// we want to guarantee directive updates to be called
+	// before user watchers so that when user watchers are
+	// triggered, the DOM would have already been in updated
+	// state.
+	var queue = []
+	var userQueue = []
+	var has = {}
+	var waiting = false
+	var flushing = false
 
 	/**
-	 * The Batcher maintains a job queue to be run
-	 * async on the next event loop.
+	 * Reset the batcher's state.
 	 */
 
-	function Batcher () {
-	  this.reset()
+	function reset () {
+	  queue = []
+	  userQueue = []
+	  has = {}
+	  waiting = false
+	  flushing = false
 	}
 
-	var p = Batcher.prototype
+	/**
+	 * Flush both queues and run the jobs.
+	 */
+
+	function flush () {
+	  flushing = true
+	  run(queue)
+	  run(userQueue)
+	  reset()
+	}
+
+	/**
+	 * Run the jobs in a single queue.
+	 *
+	 * @param {Array} queue
+	 */
+
+	function run (queue) {
+	  // do not cache length because more jobs might be pushed
+	  // as we run existing jobs
+	  for (var i = 0; i < queue.length; i++) {
+	    queue[i].run()
+	  }
+	}
 
 	/**
 	 * Push a job into the job queue.
@@ -7645,50 +7874,27 @@
 	 *   - {Function}      run
 	 */
 
-	p.push = function (job) {
-	  if (!job.id || !this.has[job.id] || this.flushing) {
-	    this.queue.push(job)
-	    this.has[job.id] = job
-	    if (!this.waiting) {
-	      this.waiting = true
-	      _.nextTick(this.flush, this)
-	    }
-	  }
-	}
-
-	/**
-	 * Flush the queue and run the jobs.
-	 * Will call a preFlush hook if has one.
-	 */
-
-	p.flush = function () {
-	  this.flushing = true
-	  // do not cache length because more jobs might be pushed
-	  // as we run existing jobs
-	  for (var i = 0; i < this.queue.length; i++) {
-	    var job = this.queue[i]
-	    if (!job.cancelled) {
+	exports.push = function (job) {
+	  if (!job.id || !has[job.id] || flushing) {
+	    // A user watcher callback could trigger another
+	    // directive update during the flushing; at that time
+	    // the directive queue would already have been run, so
+	    // we call that update immediately as it is pushed.
+	    if (flushing && !job.user) {
 	      job.run()
+	      return
+	    }
+	    ;(job.user ? userQueue : queue).push(job)
+	    has[job.id] = job
+	    if (!waiting) {
+	      waiting = true
+	      _.nextTick(flush)
 	    }
 	  }
-	  this.reset()
 	}
-
-	/**
-	 * Reset the batcher's state.
-	 */
-
-	p.reset = function () {
-	  this.has = {}
-	  this.queue = []
-	  this.waiting = false
-	  this.flushing = false
-	}
-
-	module.exports = Batcher
 
 /***/ },
-/* 49 */
+/* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -7805,10 +8011,10 @@
 	module.exports = Cache
 
 /***/ },
-/* 50 */
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
+	var _ = __webpack_require__(58)
 	var extend = _.extend
 
 	/**
@@ -7833,7 +8039,7 @@
 	 * Mixin global API
 	 */
 
-	extend(Vue, __webpack_require__(88))
+	extend(Vue, __webpack_require__(90))
 
 	/**
 	 * Vue and every constructor that extends Vue has an
@@ -7845,8 +8051,8 @@
 	 */
 
 	Vue.options = {
-	  directives  : __webpack_require__(94),
-	  filters     : __webpack_require__(72),
+	  directives  : __webpack_require__(96),
+	  filters     : __webpack_require__(74),
 	  partials    : {},
 	  transitions : {},
 	  components  : {}
@@ -7876,32 +8082,32 @@
 	 * Mixin internal instance methods
 	 */
 
-	extend(p, __webpack_require__(73))
 	extend(p, __webpack_require__(75))
-	extend(p, __webpack_require__(76))
 	extend(p, __webpack_require__(77))
+	extend(p, __webpack_require__(78))
+	extend(p, __webpack_require__(79))
 
 	/**
 	 * Mixin public API methods
 	 */
 
-	extend(p, __webpack_require__(89))
-	extend(p, __webpack_require__(90))
 	extend(p, __webpack_require__(91))
 	extend(p, __webpack_require__(92))
 	extend(p, __webpack_require__(93))
+	extend(p, __webpack_require__(94))
+	extend(p, __webpack_require__(95))
 
 	module.exports = _.Vue = Vue
 
 /***/ },
-/* 51 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var config = __webpack_require__(53)
-	var Watcher = __webpack_require__(52)
-	var textParser = __webpack_require__(63)
-	var expParser = __webpack_require__(60)
+	var _ = __webpack_require__(58)
+	var config = __webpack_require__(55)
+	var Watcher = __webpack_require__(54)
+	var textParser = __webpack_require__(65)
+	var expParser = __webpack_require__(62)
 
 	/**
 	 * A directive links a DOM element with a piece of data,
@@ -7984,9 +8190,11 @@
 	        this.vm,
 	        this._watcherExp,
 	        update, // callback
-	        this.filters,
-	        this.twoWay, // need setter,
-	        this.deep
+	        {
+	          filters: this.filters,
+	          twoWay: this.twoWay,
+	          deep: this.deep
+	        }
 	      )
 	    } else {
 	      watcher.addCb(update)
@@ -8118,16 +8326,14 @@
 	module.exports = Directive
 
 /***/ },
-/* 52 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var config = __webpack_require__(53)
-	var Observer = __webpack_require__(74)
-	var expParser = __webpack_require__(60)
-	var Batcher = __webpack_require__(48)
-
-	var batcher = new Batcher()
+	var _ = __webpack_require__(58)
+	var config = __webpack_require__(55)
+	var Observer = __webpack_require__(76)
+	var expParser = __webpack_require__(62)
+	var batcher = __webpack_require__(50)
 	var uid = 0
 
 	/**
@@ -8138,29 +8344,35 @@
 	 * @param {Vue} vm
 	 * @param {String} expression
 	 * @param {Function} cb
-	 * @param {Array} [filters]
-	 * @param {Boolean} [needSet]
-	 * @param {Boolean} [deep]
+	 * @param {Object} options
+	 *                 - {Array} filters
+	 *                 - {Boolean} twoWay
+	 *                 - {Boolean} deep
+	 *                 - {Boolean} user
 	 * @constructor
 	 */
 
-	function Watcher (vm, expression, cb, filters, needSet, deep) {
+	function Watcher (vm, expression, cb, options) {
 	  this.vm = vm
 	  vm._watcherList.push(this)
 	  this.expression = expression
 	  this.cbs = [cb]
 	  this.id = ++uid // uid for batching
 	  this.active = true
-	  this.deep = deep
+	  options = options || {}
+	  this.deep = options.deep
+	  this.user = options.user
 	  this.deps = Object.create(null)
 	  // setup filters if any.
 	  // We delegate directive filters here to the watcher
 	  // because they need to be included in the dependency
 	  // collection process.
-	  this.readFilters = filters && filters.read
-	  this.writeFilters = filters && filters.write
+	  if (options.filters) {
+	    this.readFilters = options.filters.read
+	    this.writeFilters = options.filters.write
+	  }
 	  // parse expression for getter/setter
-	  var res = expParser.parse(expression, needSet)
+	  var res = expParser.parse(expression, options.twoWay)
 	  this.getter = res.get
 	  this.setter = res.set
 	  this.value = this.get()
@@ -8196,7 +8408,10 @@
 	  try {
 	    value = this.getter.call(vm, vm)
 	  } catch (e) {
-	    _.warn(e)
+	    _.warn(
+	      'Error when evaluating expression "' +
+	      this.expression + '":\n   ' + e
+	    )
 	  }
 	  // "touch" every property so they are all tracked as
 	  // dependencies for deep watching
@@ -8221,7 +8436,12 @@
 	  )
 	  try {
 	    this.setter.call(vm, vm, value)
-	  } catch (e) {}
+	  } catch (e) {
+	    _.warn(
+	      'Error when evaluating setter "' +
+	      this.expression + '":\n   ' + e
+	    )
+	  }
 	}
 
 	/**
@@ -8253,10 +8473,10 @@
 	 */
 
 	p.update = function () {
-	  if (config.async) {
-	    batcher.push(this)
-	  } else {
+	  if (!config.async || config.debug) {
 	    this.run()
+	  } else {
+	    batcher.push(this)
 	  }
 	}
 
@@ -8363,7 +8583,7 @@
 	module.exports = Watcher
 
 /***/ },
-/* 53 */
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
@@ -8447,10 +8667,10 @@
 	})
 
 /***/ },
-/* 54 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
+	var _ = __webpack_require__(58)
 	var extend = _.extend
 
 	/**
@@ -8707,7 +8927,7 @@
 	}
 
 /***/ },
-/* 55 */
+/* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var uid = 0
@@ -8762,27 +8982,27 @@
 	module.exports = Dep
 
 /***/ },
-/* 56 */
+/* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var lang   = __webpack_require__(78)
+	var lang   = __webpack_require__(80)
 	var extend = lang.extend
 
 	extend(exports, lang)
-	extend(exports, __webpack_require__(79))
-	extend(exports, __webpack_require__(80))
 	extend(exports, __webpack_require__(81))
 	extend(exports, __webpack_require__(82))
+	extend(exports, __webpack_require__(83))
+	extend(exports, __webpack_require__(84))
 
 /***/ },
-/* 57 */
+/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var config = __webpack_require__(53)
-	var textParser = __webpack_require__(63)
-	var dirParser = __webpack_require__(59)
-	var templateParser = __webpack_require__(62)
+	var _ = __webpack_require__(58)
+	var config = __webpack_require__(55)
+	var textParser = __webpack_require__(65)
+	var dirParser = __webpack_require__(61)
+	var templateParser = __webpack_require__(64)
 
 	/**
 	 * Compile a template and return a reusable composite link
@@ -9252,7 +9472,6 @@
 	      dirName = attrName.slice(config.prefix.length)
 	      if (asParent &&
 	          (dirName === 'with' ||
-	           dirName === 'ref' ||
 	           dirName === 'component')) {
 	        continue
 	      }
@@ -9334,11 +9553,11 @@
 	}
 
 /***/ },
-/* 58 */
+/* 60 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var templateParser = __webpack_require__(62)
+	var _ = __webpack_require__(58)
+	var templateParser = __webpack_require__(64)
 
 	/**
 	 * Process an element or a DocumentFragment based on a
@@ -9485,11 +9704,11 @@
 	}
 
 /***/ },
-/* 59 */
+/* 61 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var Cache = __webpack_require__(49)
+	var _ = __webpack_require__(58)
+	var Cache = __webpack_require__(51)
 	var cache = new Cache(1000)
 	var argRE = /^[^\{\?]+$|^'[^']*'$|^"[^"]*"$/
 	var filterTokenRE = /[^\s'"]+|'[^']+'|"[^"]+"/g
@@ -9649,12 +9868,12 @@
 	}
 
 /***/ },
-/* 60 */
+/* 62 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var Path = __webpack_require__(61)
-	var Cache = __webpack_require__(49)
+	var _ = __webpack_require__(58)
+	var Path = __webpack_require__(63)
+	var Cache = __webpack_require__(51)
 	var expressionCache = new Cache(1000)
 
 	var keywords =
@@ -9880,11 +10099,11 @@
 	exports.pathTestRE = pathTestRE
 
 /***/ },
-/* 61 */
+/* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var Cache = __webpack_require__(49)
+	var _ = __webpack_require__(58)
+	var Cache = __webpack_require__(51)
 	var pathCache = new Cache(1000)
 	var identRE = /^[$_a-zA-Z]+[\w$]*$/
 
@@ -10185,11 +10404,11 @@
 	}
 
 /***/ },
-/* 62 */
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var Cache = __webpack_require__(49)
+	var _ = __webpack_require__(58)
+	var Cache = __webpack_require__(51)
 	var templateCache = new Cache(1000)
 	var idSelectorCache = new Cache(1000)
 
@@ -10246,7 +10465,8 @@
 	  '</svg>'
 	]
 
-	var TAG_RE = /<([\w:]+)/
+	var tagRE = /<([\w:]+)/
+	var entityRE = /&\w+;/
 
 	/**
 	 * Convert a string template to a DocumentFragment.
@@ -10265,16 +10485,17 @@
 	  }
 
 	  var frag = document.createDocumentFragment()
-	  var tagMatch = TAG_RE.exec(templateString)
+	  var tagMatch = templateString.match(tagRE)
+	  var entityMatch = entityRE.test(templateString)
 
-	  if (!tagMatch) {
+	  if (!tagMatch && !entityMatch) {
 	    // text only, return a single text node.
 	    frag.appendChild(
 	      document.createTextNode(templateString)
 	    )
 	  } else {
 
-	    var tag    = tagMatch[1]
+	    var tag    = tagMatch && tagMatch[1]
 	    var wrap   = map[tag] || map._default
 	    var depth  = wrap[0]
 	    var prefix = wrap[1]
@@ -10438,12 +10659,12 @@
 	}
 
 /***/ },
-/* 63 */
+/* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Cache = __webpack_require__(49)
-	var config = __webpack_require__(53)
-	var dirParser = __webpack_require__(59)
+	var Cache = __webpack_require__(51)
+	var config = __webpack_require__(55)
+	var dirParser = __webpack_require__(61)
 	var regexEscapeRE = /[-.*+?^${}()|[\]\/\\]/g
 	var cache, tagRE, htmlRE, firstChar, lastChar
 
@@ -10621,7 +10842,7 @@
 	}
 
 /***/ },
-/* 64 */
+/* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// xlink
@@ -10658,10 +10879,10 @@
 	}
 
 /***/ },
-/* 65 */
+/* 67 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
+	var _ = __webpack_require__(58)
 	var addClass = _.addClass
 	var removeClass = _.removeClass
 
@@ -10681,11 +10902,11 @@
 	}
 
 /***/ },
-/* 66 */
+/* 68 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var templateParser = __webpack_require__(62)
+	var _ = __webpack_require__(58)
+	var templateParser = __webpack_require__(64)
 
 	module.exports = {
 
@@ -10724,10 +10945,10 @@
 	}
 
 /***/ },
-/* 67 */
+/* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var transition = __webpack_require__(71)
+	var transition = __webpack_require__(73)
 
 	module.exports = function (value) {
 	  var el = this.el
@@ -10737,29 +10958,36 @@
 	}
 
 /***/ },
-/* 68 */
+/* 70 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var _ = __webpack_require__(58)
 	var prefixes = ['-webkit-', '-moz-', '-ms-']
+	var camelPrefixes = ['Webkit', 'Moz', 'ms']
 	var importantRE = /!important;?$/
+	var camelRE = /([a-z])([A-Z])/g
+	var testEl = null
+	var propCache = {}
 
 	module.exports = {
 
 	  deep: true,
 
-	  bind: function () {
-	    var prop = this.arg
-	    if (!prop) return
-	    this.prop = prop
-	  },
-
 	  update: function (value) {
-	    if (this.prop) {
-	      this.setCssProperty(this.prop, value)
+	    if (this.arg) {
+	      this.setProp(this.arg, value)
 	    } else {
 	      if (typeof value === 'object') {
+	        // cache object styles so that only changed props
+	        // are actually updated.
+	        if (!this.cache) this.cache = {}
 	        for (var prop in value) {
-	          this.setCssProperty(prop, value[prop])
+	          this.setProp(prop, value[prop])
+	          /* jshint eqeqeq: false */
+	          if (value[prop] != this.cache[prop]) {
+	            this.cache[prop] = value[prop]
+	            this.setProp(prop, value[prop])
+	          }
 	        }
 	      } else {
 	        this.el.style.cssText = value
@@ -10767,43 +10995,78 @@
 	    }
 	  },
 
-	  setCssProperty: function (prop, value) {
-	    var prefixed = false
-	    if (prop.charAt(0) === '$') {
-	      // properties that start with $ will be auto-prefixed
-	      prop = prop.slice(1)
-	      prefixed = true
-	    }
+	  setProp: function (prop, value) {
+	    prop = normalize(prop)
+	    if (!prop) return // unsupported prop
 	    // cast possible numbers/booleans into strings
-	    if (value != null) {
-	      value += ''
-	    }
-	    var isImportant = importantRE.test(value)
-	      ? 'important'
-	      : ''
-	    if (isImportant) {
-	      value = value.replace(importantRE, '').trim()
-	    }
-	    this.el.style.setProperty(prop, value, isImportant)
-	    if (prefixed) {
-	      var i = prefixes.length
-	      while (i--) {
-	        this.el.style.setProperty(
-	          prefixes[i] + prop,
-	          value,
-	          isImportant
-	        )
+	    if (value != null) value += ''
+	    if (value) {
+	      var isImportant = importantRE.test(value)
+	        ? 'important'
+	        : ''
+	      if (isImportant) {
+	        value = value.replace(importantRE, '').trim()
 	      }
+	      this.el.style.setProperty(prop, value, isImportant)
+	    } else {
+	      this.el.style.removeProperty(prop)
 	    }
 	  }
 
 	}
 
+	/**
+	 * Normalize a CSS property name.
+	 * - cache result
+	 * - auto prefix
+	 * - camelCase -> dash-case
+	 *
+	 * @param {String} prop
+	 * @return {String}
+	 */
+
+	function normalize (prop) {
+	  if (propCache[prop]) {
+	    return propCache[prop]
+	  }
+	  var res = prefix(prop)
+	  propCache[prop] = propCache[res] = res
+	  return res
+	}
+
+	/**
+	 * Auto detect the appropriate prefix for a CSS property.
+	 * https://gist.github.com/paulirish/523692
+	 *
+	 * @param {String} prop
+	 * @return {String}
+	 */
+
+	function prefix (prop) {
+	  prop = prop.replace(camelRE, '$1-$2').toLowerCase()
+	  var camel = _.camelize(prop)
+	  var upper = camel.charAt(0).toUpperCase() + camel.slice(1)
+	  if (!testEl) {
+	    testEl = document.createElement('div')
+	  }
+	  if (camel in testEl.style) {
+	    return prop
+	  }
+	  var i = prefixes.length
+	  var prefixed
+	  while (i--) {
+	    prefixed = camelPrefixes[i] + upper
+	    if (prefixed in testEl.style) {
+	      return prefixes[i] + prop
+	    }
+	  }
+	}
+
 /***/ },
-/* 69 */
+/* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
+	var _ = __webpack_require__(58)
 
 	module.exports = {
 
@@ -10820,7 +11083,7 @@
 	}
 
 /***/ },
-/* 70 */
+/* 72 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
@@ -10837,12 +11100,12 @@
 	}
 
 /***/ },
-/* 71 */
+/* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var applyCSSTransition = __webpack_require__(83)
-	var applyJSTransition = __webpack_require__(84)
+	var _ = __webpack_require__(58)
+	var applyCSSTransition = __webpack_require__(85)
+	var applyJSTransition = __webpack_require__(86)
 
 	/**
 	 * Append with transition.
@@ -10993,10 +11256,10 @@
 	}
 
 /***/ },
-/* 72 */
+/* 74 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
+	var _ = __webpack_require__(58)
 
 	/**
 	 * Stringify value.
@@ -11130,13 +11393,13 @@
 	 * Install special array filters
 	 */
 
-	_.extend(exports, __webpack_require__(85))
+	_.extend(exports, __webpack_require__(87))
 
 /***/ },
-/* 73 */
+/* 75 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var mergeOptions = __webpack_require__(54)
+	var mergeOptions = __webpack_require__(56)
 
 	/**
 	 * The main init sequence. This is called for every
@@ -11214,15 +11477,15 @@
 	}
 
 /***/ },
-/* 74 */
+/* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var config = __webpack_require__(53)
-	var Dep = __webpack_require__(55)
-	var arrayMethods = __webpack_require__(86)
+	var _ = __webpack_require__(58)
+	var config = __webpack_require__(55)
+	var Dep = __webpack_require__(57)
+	var arrayMethods = __webpack_require__(88)
 	var arrayKeys = Object.getOwnPropertyNames(arrayMethods)
-	__webpack_require__(87)
+	__webpack_require__(89)
 
 	var uid = 0
 
@@ -11455,10 +11718,10 @@
 
 
 /***/ },
-/* 75 */
+/* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
+	var _ = __webpack_require__(58)
 	var inDoc = _.inDoc
 
 	/**
@@ -11582,12 +11845,12 @@
 	}
 
 /***/ },
-/* 76 */
+/* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var Observer = __webpack_require__(74)
-	var Dep = __webpack_require__(55)
+	var _ = __webpack_require__(58)
+	var Observer = __webpack_require__(76)
+	var Dep = __webpack_require__(57)
 
 	/**
 	 * Setup the scope of an instance, which contains:
@@ -11804,13 +12067,13 @@
 	}
 
 /***/ },
-/* 77 */
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var Directive = __webpack_require__(51)
-	var compile = __webpack_require__(57)
-	var transclude = __webpack_require__(58)
+	var _ = __webpack_require__(58)
+	var Directive = __webpack_require__(53)
+	var compile = __webpack_require__(59)
+	var transclude = __webpack_require__(60)
 
 	/**
 	 * Transclude, compile and link element.
@@ -11855,13 +12118,14 @@
 	      }
 	      // tranclude, this possibly replaces original
 	      el = transclude(el, options)
+	      this._initElement(el)
 	      // now call the container linker on the resolved el
 	      this._containerUnlinkFn = containerLinkFn(parent, el)
 	    } else {
 	      // simply transclude
 	      el = transclude(el, options)
+	      this._initElement(el)
 	    }
-	    this._initElement(el)
 	    var linkFn = compile(el, options)
 	    linkFn(this, el)
 	    if (options.replace) {
@@ -11995,7 +12259,7 @@
 	}
 
 /***/ },
-/* 78 */
+/* 80 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -12175,7 +12439,7 @@
 	}
 
 /***/ },
-/* 79 */
+/* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -12254,10 +12518,10 @@
 	}
 
 /***/ },
-/* 80 */
+/* 82 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var config = __webpack_require__(53)
+	var config = __webpack_require__(55)
 
 	/**
 	 * Check if a node is in the document.
@@ -12456,10 +12720,10 @@
 	}
 
 /***/ },
-/* 81 */
+/* 83 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(82)
+	var _ = __webpack_require__(84)
 
 	/**
 	 * Resolve read & write filters for a vm instance. The
@@ -12533,10 +12797,10 @@
 	}
 
 /***/ },
-/* 82 */
+/* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var config = __webpack_require__(53)
+	var config = __webpack_require__(55)
 
 	/**
 	 * Enable debug utilities. The enableDebug() function and
@@ -12570,8 +12834,14 @@
 	  exports.warn = function (msg) {
 	    if (hasConsole && !config.silent) {
 	      console.warn('[Vue warn]: ' + msg)
-	      if (config.debug && console.trace) {
-	        console.trace()
+	      /* istanbul ignore if */
+	      if (config.debug) {
+	        /* jshint debug: true */
+	        debugger
+	      } else {
+	        console.log(
+	          'Set `Vue.config.debug = true` to enable debug mode.'
+	        )
 	      }
 	    }
 	  }
@@ -12588,10 +12858,10 @@
 	}
 
 /***/ },
-/* 83 */
+/* 85 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
+	var _ = __webpack_require__(58)
 	var addClass = _.addClass
 	var removeClass = _.removeClass
 	var transDurationProp = _.transitionProp + 'Duration'
@@ -12782,7 +13052,7 @@
 	}
 
 /***/ },
-/* 84 */
+/* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -12830,11 +13100,11 @@
 	}
 
 /***/ },
-/* 85 */
+/* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var Path = __webpack_require__(61)
+	var _ = __webpack_require__(58)
+	var Path = __webpack_require__(63)
 
 	/**
 	 * Filter filter for v-repeat
@@ -12922,10 +13192,10 @@
 	}
 
 /***/ },
-/* 86 */
+/* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
+	var _ = __webpack_require__(58)
 	var arrayProto = Array.prototype
 	var arrayMethods = Object.create(arrayProto)
 
@@ -13017,10 +13287,10 @@
 	module.exports = arrayMethods
 
 /***/ },
-/* 87 */
+/* 89 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
+	var _ = __webpack_require__(58)
 	var objProto = Object.prototype
 
 	/**
@@ -13088,11 +13358,11 @@
 	)
 
 /***/ },
-/* 88 */
+/* 90 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var mergeOptions = __webpack_require__(54)
+	var _ = __webpack_require__(58)
+	var mergeOptions = __webpack_require__(56)
 
 	/**
 	 * Expose useful internals
@@ -13100,19 +13370,19 @@
 
 	exports.util = _
 	exports.nextTick = _.nextTick
-	exports.config = __webpack_require__(53)
+	exports.config = __webpack_require__(55)
 
 	exports.compiler = {
-	  compile: __webpack_require__(57),
-	  transclude: __webpack_require__(58)
+	  compile: __webpack_require__(59),
+	  transclude: __webpack_require__(60)
 	}
 
 	exports.parsers = {
-	  path: __webpack_require__(61),
-	  text: __webpack_require__(63),
-	  template: __webpack_require__(62),
-	  directive: __webpack_require__(59),
-	  expression: __webpack_require__(60)
+	  path: __webpack_require__(63),
+	  text: __webpack_require__(65),
+	  template: __webpack_require__(64),
+	  directive: __webpack_require__(61),
+	  expression: __webpack_require__(62)
 	}
 
 	/**
@@ -13239,15 +13509,15 @@
 	createAssetRegisters(exports)
 
 /***/ },
-/* 89 */
+/* 91 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var Watcher = __webpack_require__(52)
-	var Path = __webpack_require__(61)
-	var textParser = __webpack_require__(63)
-	var dirParser = __webpack_require__(59)
-	var expParser = __webpack_require__(60)
+	var _ = __webpack_require__(58)
+	var Watcher = __webpack_require__(54)
+	var Path = __webpack_require__(63)
+	var textParser = __webpack_require__(65)
+	var dirParser = __webpack_require__(61)
+	var expParser = __webpack_require__(62)
 	var filterRE = /[^|]\|[^|]/
 
 	/**
@@ -13321,7 +13591,10 @@
 	  }
 	  if (!watcher) {
 	    watcher = vm._userWatchers[key] =
-	      new Watcher(vm, exp, wrappedCb, null, false, deep)
+	      new Watcher(vm, exp, wrappedCb, {
+	        deep: deep,
+	        user: true
+	      })
 	  } else {
 	    watcher.addCb(wrappedCb)
 	  }
@@ -13405,11 +13678,11 @@
 	}
 
 /***/ },
-/* 90 */
+/* 92 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var transition = __webpack_require__(71)
+	var _ = __webpack_require__(58)
+	var transition = __webpack_require__(73)
 
 	/**
 	 * Append instance to target
@@ -13621,10 +13894,10 @@
 	}
 
 /***/ },
-/* 91 */
+/* 93 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
+	var _ = __webpack_require__(58)
 
 	/**
 	 * Listen on the given `event` with `fn`.
@@ -13802,10 +14075,10 @@
 	}
 
 /***/ },
-/* 92 */
+/* 94 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
+	var _ = __webpack_require__(58)
 
 	/**
 	 * Create a child instance that prototypally inehrits
@@ -13860,11 +14133,11 @@
 	}
 
 /***/ },
-/* 93 */
+/* 95 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var compile = __webpack_require__(57)
+	var _ = __webpack_require__(58)
+	var compile = __webpack_require__(59)
 
 	/**
 	 * Set instance target element and kick off the compilation
@@ -13937,34 +14210,37 @@
 	}
 
 /***/ },
-/* 94 */
+/* 96 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// manipulation directives
-	exports.text       = __webpack_require__(69)
-	exports.html       = __webpack_require__(66)
-	exports.attr       = __webpack_require__(64)
-	exports.show       = __webpack_require__(67)
-	exports['class']   = __webpack_require__(65)
-	exports.el         = __webpack_require__(95)
-	exports.ref        = __webpack_require__(96)
-	exports.cloak      = __webpack_require__(97)
-	exports.style      = __webpack_require__(68)
-	exports.partial    = __webpack_require__(98)
-	exports.transition = __webpack_require__(70)
+	exports.text       = __webpack_require__(71)
+	exports.html       = __webpack_require__(68)
+	exports.attr       = __webpack_require__(66)
+	exports.show       = __webpack_require__(69)
+	exports['class']   = __webpack_require__(67)
+	exports.el         = __webpack_require__(97)
+	exports.ref        = __webpack_require__(98)
+	exports.cloak      = __webpack_require__(99)
+	exports.style      = __webpack_require__(70)
+	exports.partial    = __webpack_require__(100)
+	exports.transition = __webpack_require__(72)
 
 	// event listener directives
-	exports.on         = __webpack_require__(99)
-	exports.model      = __webpack_require__(104)
+	exports.on         = __webpack_require__(101)
+	exports.model      = __webpack_require__(107)
 
 	// child vm directives
-	exports.component  = __webpack_require__(100)
-	exports.repeat     = __webpack_require__(101)
-	exports['if']      = __webpack_require__(102)
-	exports['with']    = __webpack_require__(103)
+	exports.component  = __webpack_require__(102)
+	exports.repeat     = __webpack_require__(103)
+	exports['if']      = __webpack_require__(104)
+
+	// child vm communication directives
+	exports['with']    = __webpack_require__(105)
+	exports.events     = __webpack_require__(106)
 
 /***/ },
-/* 95 */
+/* 97 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
@@ -13982,39 +14258,40 @@
 	}
 
 /***/ },
-/* 96 */
+/* 98 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
+	var _ = __webpack_require__(58)
 
 	module.exports = {
 
 	  isLiteral: true,
 
 	  bind: function () {
-	    if (this.el !== this.vm.$el) {
+	    var child = this.el.__vue__
+	    if (!child || this.vm !== child.$parent) {
 	      _.warn(
-	        'v-ref should only be used on instance root nodes.'
+	        'v-ref should only be used on a child component ' +
+	        'from the parent template.'
 	      )
 	      return
 	    }
-	    this.owner = this.vm.$parent
-	    this.owner.$[this.expression] = this.vm
+	    this.vm.$[this.expression] = child
 	  },
 
 	  unbind: function () {
-	    if (this.owner.$[this.expression] === this.vm) {
-	      delete this.owner.$[this.expression]
+	    if (this.vm.$[this.expression] === this.el.__vue__) {
+	      delete this.vm.$[this.expression]
 	    }
 	  }
 	  
 	}
 
 /***/ },
-/* 97 */
+/* 99 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var config = __webpack_require__(53)
+	var config = __webpack_require__(55)
 
 	module.exports = {
 
@@ -14028,12 +14305,12 @@
 	}
 
 /***/ },
-/* 98 */
+/* 100 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var templateParser = __webpack_require__(62)
-	var vIf = __webpack_require__(102)
+	var _ = __webpack_require__(58)
+	var templateParser = __webpack_require__(64)
+	var vIf = __webpack_require__(104)
 
 	module.exports = {
 
@@ -14077,10 +14354,10 @@
 	}
 
 /***/ },
-/* 99 */
+/* 101 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
+	var _ = __webpack_require__(58)
 
 	module.exports = {
 
@@ -14141,11 +14418,11 @@
 	}
 
 /***/ },
-/* 100 */
+/* 102 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var templateParser = __webpack_require__(62)
+	var _ = __webpack_require__(58)
+	var templateParser = __webpack_require__(64)
 
 	module.exports = {
 
@@ -14342,17 +14619,17 @@
 	}
 
 /***/ },
-/* 101 */
+/* 103 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
+	var _ = __webpack_require__(58)
 	var isObject = _.isObject
-	var textParser = __webpack_require__(63)
-	var expParser = __webpack_require__(60)
-	var templateParser = __webpack_require__(62)
-	var compile = __webpack_require__(57)
-	var transclude = __webpack_require__(58)
-	var mergeOptions = __webpack_require__(54)
+	var textParser = __webpack_require__(65)
+	var expParser = __webpack_require__(62)
+	var templateParser = __webpack_require__(64)
+	var compile = __webpack_require__(59)
+	var transclude = __webpack_require__(60)
+	var mergeOptions = __webpack_require__(56)
 	var uid = 0
 
 	module.exports = {
@@ -14459,7 +14736,7 @@
 	            $parent: this.vm
 	          })
 	          this.template = transclude(this.template, merged)
-	          this._linkFn = compile(this.template, merged)
+	          this._linkFn = compile(this.template, merged, false, true)
 	        }
 	      } else {
 	        // to be resolved later
@@ -14850,13 +15127,13 @@
 	}
 
 /***/ },
-/* 102 */
+/* 104 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var compile = __webpack_require__(57)
-	var templateParser = __webpack_require__(62)
-	var transition = __webpack_require__(71)
+	var _ = __webpack_require__(58)
+	var compile = __webpack_require__(59)
+	var templateParser = __webpack_require__(64)
+	var transition = __webpack_require__(73)
 
 	module.exports = {
 
@@ -14942,11 +15219,11 @@
 	}
 
 /***/ },
-/* 103 */
+/* 105 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var Watcher = __webpack_require__(52)
+	var _ = __webpack_require__(58)
+	var Watcher = __webpack_require__(54)
 
 	module.exports = {
 
@@ -14994,16 +15271,48 @@
 	}
 
 /***/ },
-/* 104 */
+/* 106 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
+	var _ = __webpack_require__(58)
+
+	module.exports = { 
+
+	  bind: function () {
+	    var child = this.el.__vue__
+	    if (!child || this.vm !== child.$parent) {
+	      _.warn(
+	        '`v-events` should only be used on a child component ' +
+	        'from the parent template.'
+	      )
+	      return
+	    }
+	    var method = this.vm[this.expression]
+	    if (!method) {
+	      _.warn(
+	        '`v-events` cannot find method "' + this.expression +
+	        '" on the parent instance.'
+	      )
+	    }
+	    child.$on(this.arg, method)
+	  }
+
+	  // when child is destroyed, all events are turned off,
+	  // so no need for unbind here.
+
+	}
+
+/***/ },
+/* 107 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var _ = __webpack_require__(58)
 
 	var handlers = {
-	  _default: __webpack_require__(105),
-	  radio: __webpack_require__(106),
-	  select: __webpack_require__(107),
-	  checkbox: __webpack_require__(108)
+	  _default: __webpack_require__(108),
+	  radio: __webpack_require__(109),
+	  select: __webpack_require__(110),
+	  checkbox: __webpack_require__(111)
 	}
 
 	module.exports = {
@@ -15055,10 +15364,10 @@
 	}
 
 /***/ },
-/* 105 */
+/* 108 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
+	var _ = __webpack_require__(58)
 
 	module.exports = {
 
@@ -15183,10 +15492,10 @@
 	}
 
 /***/ },
-/* 106 */
+/* 109 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
+	var _ = __webpack_require__(58)
 
 	module.exports = {
 
@@ -15214,11 +15523,11 @@
 	}
 
 /***/ },
-/* 107 */
+/* 110 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
-	var Watcher = __webpack_require__(52)
+	var _ = __webpack_require__(58)
+	var Watcher = __webpack_require__(54)
 
 	module.exports = {
 
@@ -15288,7 +15597,8 @@
 	  this.optionWatcher = new Watcher(
 	    this.vm,
 	    expression,
-	    optionUpdateWatcher
+	    optionUpdateWatcher,
+	    { deep: true }
 	  )
 	  // update with initial value
 	  optionUpdateWatcher(this.optionWatcher.value)
@@ -15385,10 +15695,10 @@
 	}
 
 /***/ },
-/* 108 */
+/* 111 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var _ = __webpack_require__(56)
+	var _ = __webpack_require__(58)
 
 	module.exports = {
 
