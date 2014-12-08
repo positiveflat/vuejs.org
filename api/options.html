@@ -138,7 +138,8 @@
 <p>Param attributes can also contain interpolation tags. The interpolation will be evaluated against the parent, and under the hood they will be compiled as <a href="/api/directives.html#v-with"><code>v-with</code></a>, which means when the value of the interpolated expression changes, the component’s corresponding property will also be updated:</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="title">param-demo</span> <span class="attribute">message</span>=<span class="value">"{&#123;parentMessage&#125;}"</span>&gt;</span><span class="tag">&lt;/<span class="title">param-demo</span>&gt;</span></div></pre></td></tr></table></figure>
 
-<p>There are some special cases when using <code>paramAttributes</code> with attributes that contains hyphens:</p>
+<h4 id="Notes_on_hyphened_attributes">Notes on hyphened attributes</h4>
+<p>HTML attribute names ignore upper and lower case differences, so we usually use hyphened attributes instead of camel case. There are some special cases when using <code>paramAttributes</code> with attributes that contains hyphens:</p>
 <ol>
 <li><p>If the attribute is a data attribute, the <code>data-</code> prefix will be auto stripped;</p>
 </li>
