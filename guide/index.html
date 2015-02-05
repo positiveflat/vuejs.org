@@ -135,7 +135,7 @@
 <p>Prefixed HTML attributes that tell Vue.js to do something about a DOM element.</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">v-text</span>=<span class="value">"message"</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span></div></pre></td></tr></table></figure>
 
-<p>Here the div element has a <code>v-text</code> directive with the value <code>message</code>. What it does is telling Vue.js to keep the div’s textContent in sync with the Vue instance’s <code>message</code> property.</p>
+<p>Here the div element has a <code>v-text</code> directive with the value <code>message</code>. This tells Vue.js to keep the div’s textContent in sync with the Vue instance’s <code>message</code> property.</p>
 <p>Directives can encapsulate arbitrary DOM manipulations. For example <code>v-attr</code> manipulates an element’s attributes, <code>v-repeat</code> clones an element based on an Array, <code>v-on</code> attaches event listeners… we will cover them later.</p>
 <h3 id="Mustache_Bindings">Mustache Bindings</h3>
 <p>You can also use mustache-style bindings, both in text and in attributes. They are translated into <code>v-text</code> and <code>v-attr</code> directives under the hood. For example:</p>
