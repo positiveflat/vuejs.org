@@ -196,7 +196,6 @@
 <li>This directive accepts only keypaths, no expressions.</li>
 </ul>
 <p>Allows a child ViewModel to inherit data from the parents. You can either pass in an Object which will be used as the <code>data</code> option, or bind individual parent properties to the child with different keys. This directive must be used in combination with <code>v-component</code>.</p>
-<p>The data inheritance is one-way: when parent property changes, the child will be notified of the change and update accordingly; however if the child sets the property to something else, it will not affect the parent, and the modified property will be overwritten the next time parent property changes.</p>
 <p>Example inheriting an object:</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// parent data looks like this</span></div><div class="line">{</div><div class="line">  user: {</div><div class="line">    name: <span class="string">'Foo Bar'</span>,</div><div class="line">    email: <span class="string">'foo@bar.com'</span></div><div class="line">  }</div><div class="line">}</div></pre></td></tr></table></figure>
 
